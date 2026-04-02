@@ -338,6 +338,12 @@ function shortLabel(ym){
   const [y,mo] = ym.split('-');
   return mo+'/' + y.slice(2);
 }
+function weekLabel(ym){
+  const d = new Date(ym+'-01');
+  const start = new Date(d.getFullYear(),0,1);
+  const wk = Math.ceil(((d-start)/86400000+start.getDay()+1)/7);
+  return 'W'+wk+"'"+String(d.getFullYear()).slice(2);
+}
 function chgBadge(now, prev){
   const p = parseFloat(pct(now,prev));
   const cls = p>=0 ? 'up' : 'dn';
@@ -446,7 +452,8 @@ function buildTrend(){
     src    = trendMode==='dl' ? DATA.dl : (trendMode==='mau' ? DATA.mau : DATA.wau);
   }
 
-  const labels = months.map(shortLabel);
+  const labelFn = trendMode==='wau' ? weekLabel : shortLabel;
+  const labels = months.map(labelFn);
   const datasets = APPS.map(app => ({
     label: C[app].label,
     data: src[app],
@@ -518,7 +525,8 @@ function buildPlat(){
     iosSrc = platMetric==='dl' ? DATA.dl_ios : (platMetric==='mau' ? DATA.mau_ios : DATA.wau_ios);
     andSrc = platMetric==='dl' ? DATA.dl_android : (platMetric==='mau' ? DATA.mau_android : DATA.wau_android);
   }
-  const labels = months.map(shortLabel);
+  const platLabelFn = platMetric==='wau' ? weekLabel : shortLabel;
+  const labels = months.map(platLabelFn);
   const metricLabel = platMetric==='dl' ? 'Downloads' : (platMetric==='mau' ? 'MAU' : 'WAU');
   document.getElementById('platSub').textContent =
     metricLabel+' – '+(platApp==='chatgpt'?'ChatGPT':platApp==='gemini'?'Google Gemini':'Claude');
@@ -570,7 +578,8 @@ let shareChart;
 function buildShare(){
   const months = shareMetric==='dl' ? DATA.dl_months : (shareMetric==='mau' ? DATA.mau_months : DATA.wau_months);
   const src    = shareMetric==='dl' ? DATA.dl_share : (shareMetric==='mau' ? DATA.mau_share : DATA.wau_share);
-  const labels = months.map(shortLabel);
+  const shareLabelFn = shareMetric==='wau' ? weekLabel : shortLabel;
+  const labels = months.map(shareLabelFn);
   const ctx = document.getElementById('shareChart').getContext('2d');
   if(shareChart) shareChart.destroy();
   shareChart = new Chart(ctx,{
