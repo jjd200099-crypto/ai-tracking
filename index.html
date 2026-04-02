@@ -132,7 +132,7 @@ footer{text-align:center;color:var(--sub);font-size:.72rem;margin-top:28px}
 <div class="header">
   <div>
     <div class="header-title">AI App Mobile Intelligence <span>ChatGPT · Gemini · Claude</span></div>
-    <div style="font-size:.75rem;color:var(--sub);margin-top:4px">Jan 2024 – Mar 2026 &nbsp;|&nbsp; iOS + Android &nbsp;|&nbsp; All Countries</div>
+    <div style="font-size:.75rem;color:var(--sub);margin-top:4px">Jan 2025 – Mar 2026 &nbsp;|&nbsp; iOS + Android &nbsp;|&nbsp; All Countries</div>
   </div>
   <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
     <div class="granularity-toggle">
@@ -347,7 +347,12 @@ function toDate(ym){
 }
 function shortLabel(ym){
   const d=toDate(ym);
-  return MON_NAMES[d.getMonth()]+' '+d.getFullYear();
+  return MON_NAMES[d.getMonth()]+" '"+String(d.getFullYear()).slice(2);
+}
+function filterFrom2025(months, ...arrays){
+  const idx=months.findIndex(m=>toDate(m).getFullYear()>=2025);
+  if(idx<0) return [months,...arrays];
+  return [months.slice(idx),...arrays.map(a=>a.slice(idx))];
 }
 function chgBadge(now, prev){
   const p = parseFloat(pct(now,prev));
@@ -431,23 +436,6 @@ Chart.defaults.color = '#8b90a7';
 Chart.defaults.borderColor = '#2a2e42';
 Chart.defaults.font.family = "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif";
 const gridCfg = { color:'rgba(255,255,255,.05)', drawBorder:false };
-function yearTicks(labels){
-  return {
-    autoSkip:false,
-    maxRotation:0,
-    font:{size:11},
-    callback:function(val,idx){
-      const lbl=labels[idx];
-      if(!lbl) return '';
-      const yr=lbl.match(/\d{4}/);
-      if(!yr) return '';
-      if(idx===0) return yr[0];
-      const prev=labels[idx-1];
-      const prevYr=prev?prev.match(/\d{4}/):null;
-      return (prevYr && prevYr[0]!==yr[0]) ? yr[0] : '';
-    }
-  };
-}
 
 // ── Trend Chart ───────────────────────────────────────────────────────────────
 let trendMode = 'wau';
@@ -474,10 +462,16 @@ function buildTrend(){
     src    = trendMode==='dl' ? DATA.dl : (trendMode==='mau' ? DATA.mau : DATA.wau);
   }
 
-  const labels = months.map(shortLabel);
+  // Filter to 2025+
+  const appData={};
+  APPS.forEach(a=>appData[a]=src[a]);
+  const [fMonths,...fArrs]=filterFrom2025(months,...APPS.map(a=>src[a]));
+  APPS.forEach((a,i)=>appData[a]=fArrs[i]);
+
+  const labels = fMonths.map(shortLabel);
   const datasets = APPS.map(app => ({
     label: C[app].label,
-    data: src[app],
+    data: appData[app],
     borderColor: C[app].color,
     backgroundColor: C[app].fill,
     fill: true,
@@ -499,7 +493,7 @@ function buildTrend(){
         }
       }},
       scales:{
-        x:{grid:gridCfg,ticks:yearTicks(labels)},
+        x:{grid:gridCfg,ticks:{maxTicksLimit:13,font:{size:10}}},
         y:{grid:gridCfg,ticks:{callback:v=>v+'M',font:{size:11}}}
       }
     }
@@ -546,7 +540,8 @@ function buildPlat(){
     iosSrc = platMetric==='dl' ? DATA.dl_ios : (platMetric==='mau' ? DATA.mau_ios : DATA.wau_ios);
     andSrc = platMetric==='dl' ? DATA.dl_android : (platMetric==='mau' ? DATA.mau_android : DATA.wau_android);
   }
-  const labels = months.map(shortLabel);
+  const [fMonths,fIos,fAnd]=filterFrom2025(months,iosSrc[platApp],andSrc[platApp]);
+  const labels = fMonths.map(shortLabel);
   const metricLabel = platMetric==='dl' ? 'Downloads' : (platMetric==='mau' ? 'MAU' : 'WAU');
   document.getElementById('platSub').textContent =
     metricLabel+' – '+(platApp==='chatgpt'?'ChatGPT':platApp==='gemini'?'Google Gemini':'Claude');
@@ -563,8 +558,8 @@ function buildPlat(){
     data:{
       labels,
       datasets:[
-        {label:'iOS',data:iosSrc[platApp],backgroundColor:iosColor,stack:'s'},
-        {label:'Android',data:andSrc[platApp],backgroundColor:androidColor,stack:'s'}
+        {label:'iOS',data:fIos,backgroundColor:iosColor,stack:'s'},
+        {label:'Android',data:fAnd,backgroundColor:androidColor,stack:'s'}
       ]
     },
     options:{
@@ -598,7 +593,10 @@ let shareChart;
 function buildShare(){
   const months = shareMetric==='dl' ? DATA.dl_weeks : (shareMetric==='mau' ? DATA.mau_months : DATA.wau_weeks);
   const src    = shareMetric==='dl' ? DATA.dl_share : (shareMetric==='mau' ? DATA.mau_share : DATA.wau_share);
-  const labels = months.map(shortLabel);
+  const sData={};APPS.forEach(a=>sData[a]=src[a]);
+  const [fMonths,...fArrs]=filterFrom2025(months,...APPS.map(a=>src[a]));
+  APPS.forEach((a,i)=>sData[a]=fArrs[i]);
+  const labels = fMonths.map(shortLabel);
   const ctx = document.getElementById('shareChart').getContext('2d');
   if(shareChart) shareChart.destroy();
   shareChart = new Chart(ctx,{
@@ -607,7 +605,7 @@ function buildShare(){
       labels,
       datasets: APPS.map(app=>({
         label:C[app].label,
-        data:src[app],
+        data:sData[app],
         borderColor:C[app].color,
         backgroundColor:C[app].fill,
         fill:true,
@@ -622,7 +620,7 @@ function buildShare(){
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
         tooltip:{callbacks:{label:i=>' '+i.dataset.label+': '+i.parsed.y.toFixed(1)+'%'}}},
       scales:{
-        x:{grid:gridCfg,ticks:yearTicks(labels)},
+        x:{grid:gridCfg,ticks:{maxTicksLimit:13,font:{size:10}}},
         y:{grid:gridCfg,min:0,max:100,ticks:{callback:v=>v+'%',font:{size:11}}}
       }
     }
