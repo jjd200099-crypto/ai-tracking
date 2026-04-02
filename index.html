@@ -68,6 +68,9 @@ tr:last-child td{border-bottom:none}
 .legend{display:flex;gap:16px;flex-wrap:wrap}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--sub)}
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.legend-item.clickable{cursor:pointer;user-select:none;transition:opacity .2s}
+.legend-item.clickable:hover{opacity:.8}
+.legend-item.clickable.hidden{opacity:.35;text-decoration:line-through}
 /* ── footer ── */
 footer{text-align:center;color:var(--sub);font-size:.72rem;margin-top:28px}
 /* ── time granularity toggle ── */
@@ -207,9 +210,9 @@ footer{text-align:center;color:var(--sub);font-size:.72rem;margin-top:28px}
     </div>
   </div>
   <div class="legend" style="margin-bottom:14px">
-    <div class="legend-item"><div class="legend-dot" style="background:var(--gpt)"></div>ChatGPT</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--gem)"></div>Google Gemini</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--cla)"></div>Claude</div>
+    <div class="legend-item clickable" data-app="chatgpt" onclick="toggleTrendDataset(0,this)"><div class="legend-dot" style="background:var(--gpt)"></div>ChatGPT</div>
+    <div class="legend-item clickable" data-app="gemini" onclick="toggleTrendDataset(1,this)"><div class="legend-dot" style="background:var(--gem)"></div>Google Gemini</div>
+    <div class="legend-item clickable" data-app="claude" onclick="toggleTrendDataset(2,this)"><div class="legend-dot" style="background:var(--cla)"></div>Claude</div>
   </div>
   <div class="chart-wrap"><canvas id="trendChart" height="90"></canvas></div>
 </div>
@@ -474,10 +477,19 @@ function buildTrend(){
     }
   });
 }
+function toggleTrendDataset(idx, el){
+  if(!trendChart) return;
+  const meta = trendChart.getDatasetMeta(idx);
+  meta.hidden = !meta.hidden;
+  el.classList.toggle('hidden');
+  trendChart.update();
+}
 function setTrend(mode, btn){
   trendMode=mode;
   document.querySelectorAll('#trendTabs .tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  // reset legend visibility
+  document.querySelectorAll('.legend-item.clickable').forEach(el=>el.classList.remove('hidden'));
   buildTrend();
 }
 
