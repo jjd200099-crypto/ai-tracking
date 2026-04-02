@@ -70,6 +70,12 @@ tr:last-child td{border-bottom:none}
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 /* ── footer ── */
 footer{text-align:center;color:var(--sub);font-size:.72rem;margin-top:28px}
+/* ── time granularity toggle ── */
+.granularity-toggle{display:flex;align-items:center;gap:8px}
+.granularity-label{font-size:.75rem;color:var(--sub);font-weight:500}
+.granularity-switch{display:flex;gap:4px;background:var(--card2);border-radius:8px;padding:3px}
+.granularity-btn{padding:5px 14px;border-radius:6px;border:none;background:transparent;color:var(--sub);font-size:.78rem;cursor:pointer;transition:.15s;font-weight:500}
+.granularity-btn.active{background:var(--gpt);color:white}
 /* ── upload section ── */
 .upload-section{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:20px;overflow:hidden}
 .upload-header{padding:14px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:.2s}
@@ -125,9 +131,18 @@ footer{text-align:center;color:var(--sub);font-size:.72rem;margin-top:28px}
     <div class="header-title">AI App Mobile Intelligence <span>ChatGPT · Gemini · Claude</span></div>
     <div style="font-size:.75rem;color:var(--sub);margin-top:4px">Jan 2024 – Mar 2026 &nbsp;|&nbsp; iOS + Android &nbsp;|&nbsp; All Countries</div>
   </div>
-  <div class="badges">
-    <div class="badge">Source: <b>Sensor Tower</b></div>
-    <div class="badge">Updated: <b>Mar 2026</b></div>
+  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+    <div class="granularity-toggle">
+      <span class="granularity-label">Time Granularity:</span>
+      <div class="granularity-switch">
+        <button class="granularity-btn" onclick="setGranularity('weekly',this)">Weekly</button>
+        <button class="granularity-btn active" onclick="setGranularity('monthly',this)">Monthly</button>
+      </div>
+    </div>
+    <div class="badges">
+      <div class="badge">Source: <b>Sensor Tower</b></div>
+      <div class="badge">Updated: <b>Mar 2026</b></div>
+    </div>
   </div>
 </div>
 
@@ -188,6 +203,7 @@ footer{text-align:center;color:var(--sub);font-size:.72rem;margin-top:28px}
     <div class="tabs" id="trendTabs">
       <button class="tab active" onclick="setTrend('dl',this)">Downloads</button>
       <button class="tab" onclick="setTrend('mau',this)">MAU</button>
+      <button class="tab" onclick="setTrend('wau',this)">WAU</button>
     </div>
   </div>
   <div class="legend" style="margin-bottom:14px">
@@ -210,6 +226,7 @@ footer{text-align:center;color:var(--sub);font-size:.72rem;margin-top:28px}
         <div class="tabs" id="platMetricTabs">
           <button class="tab active" onclick="setPlatMetric('dl',this)">Downloads</button>
           <button class="tab" onclick="setPlatMetric('mau',this)">MAU</button>
+          <button class="tab" onclick="setPlatMetric('wau',this)">WAU</button>
         </div>
         <div class="tabs" id="platAppTabs">
           <button class="tab active" onclick="setPlatApp('chatgpt',this)">ChatGPT</button>
@@ -229,6 +246,7 @@ footer{text-align:center;color:var(--sub);font-size:.72rem;margin-top:28px}
       <div class="tabs" id="shareMetricTabs">
         <button class="tab active" onclick="setShareMetric('dl',this)">Downloads</button>
         <button class="tab" onclick="setShareMetric('mau',this)">MAU</button>
+        <button class="tab" onclick="setShareMetric('wau',this)">WAU</button>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="shareChart" height="180"></canvas></div>
@@ -274,7 +292,7 @@ footer{text-align:center;color:var(--sub);font-size:.72rem;margin-top:28px}
 <footer>Data: Sensor Tower Enterprise &nbsp;|&nbsp; Platforms: App Store + Google Play &nbsp;|&nbsp; Metric: Unified (deduped across devices)</footer>
 
 <script>
-const DATA = {"dl_months":["2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02"],"dl":{"chatgpt":[20.21,19.21,19.3,17.56,25.62,25.53,21.32,27.69,35.46,47.68,45.72,46.8,46.16,53.13,68.53,101.28,97.8,104.54,108.98,113.76,97.0,92.27,82.87,73.49,86.02,79.56],"gemini":[0.0,0.46,0.14,0.46,4.46,6.77,7.31,17.54,13.5,12.94,20.28,20.98,10.87,16.39,16.76,14.87,17.31,20.77,16.88,16.85,88.2,73.1,56.77,51.52,42.02,36.99],"claude":[0.0,0.0,0.0,0.0,0.36,0.25,0.77,1.0,1.03,1.21,1.27,0.99,1.08,1.22,1.57,1.33,1.66,2.1,1.76,1.98,1.61,2.02,1.96,1.93,2.78,7.5]},"dl_ios":{"chatgpt":[8.81,8.75,8.2,7.18,11.24,10.6,8.63,11.76,15.8,19.94,18.8,18.83,18.34,19.04,23.69,29.65,27.56,28.04,27.78,26.77,23.19,22.07,20.78,20.02,25.73,22.71],"gemini":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4.08,6.27,4.64,5.24,4.64,4.6,6.27,7.8,5.01,4.85,25.49,26.07,21.1,21.22,18.36,16.71],"claude":[0.0,0.0,0.0,0.0,0.36,0.25,0.31,0.23,0.29,0.36,0.41,0.38,0.42,0.41,0.54,0.49,0.6,0.67,0.63,0.68,0.56,0.72,0.79,0.75,1.22,3.82]},"dl_android":{"chatgpt":[11.4,10.46,11.1,10.38,14.37,14.93,12.69,15.93,19.66,27.75,26.92,27.97,27.83,34.09,44.85,71.64,70.24,76.5,81.2,86.99,73.81,70.2,62.08,53.46,60.29,56.86],"gemini":[0.0,0.46,0.14,0.46,4.46,6.77,7.31,17.54,13.5,12.94,16.21,14.7,6.23,11.14,12.12,10.26,11.04,12.96,11.87,12.0,62.71,47.03,35.67,30.3,23.66,20.28],"claude":[0.0,0.0,0.0,0.0,0.0,0.0,0.46,0.77,0.75,0.85,0.85,0.62,0.67,0.81,1.02,0.84,1.06,1.43,1.13,1.31,1.04,1.3,1.17,1.19,1.56,3.68]},"dl_share":{"chatgpt":[100.0,97.7,99.3,97.4,84.2,78.4,72.5,59.9,70.9,77.1,68.0,68.1,79.4,75.1,78.9,86.2,83.8,82.1,85.4,85.8,51.9,55.1,58.5,57.9,65.8,64.1],"gemini":[0.0,2.3,0.7,2.6,14.7,20.8,24.9,37.9,27.0,20.9,30.1,30.5,18.7,23.2,19.3,12.7,14.8,16.3,13.2,12.7,47.2,43.7,40.1,40.6,32.1,29.8],"claude":[0.0,0.0,0.0,0.0,1.2,0.8,2.6,2.2,2.1,2.0,1.9,1.4,1.9,1.7,1.8,1.1,1.4,1.6,1.4,1.5,0.9,1.2,1.4,1.5,2.1,6.0]},"mau_months":["2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03"],"mau":{"chatgpt":[84.59,92.37,102.28,112.72,136.97,152.38,161.85,182.69,216.16,256.16,291.29,324.22,358.04,398.07,466.97,559.3,621.64,675.76,739.85,781.81,817.36,845.55,874.8,916.19,960.25,984.35,991.38],"gemini":[0.0,0.37,0.4,2.54,9.46,19.84,30.4,66.36,82.76,102.45,131.99,153.26,149.55,201.06,185.96,201.92,220.43,235.48,255.5,259.84,296.68,316.8,337.01,370.48,385.79,397.8,405.26],"claude":[0.0,0.0,0.0,0.0,0.35,0.59,1.33,1.99,2.67,3.3,3.96,4.43,4.81,5.22,6.24,6.57,7.64,8.37,8.89,9.73,9.91,11.36,12.11,12.38,14.04,20.96,22.59]},"mau_ios":{"chatgpt":[37.73,40.51,44.38,48.5,59.31,65.61,69.18,77.82,92.8,110.18,124.79,137.51,150.54,162.51,181.85,210.64,226.86,239.06,252.55,266.11,277.17,283.72,286.96,291.48,297.26,300.65,302.53],"gemini":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.01,4.28,5.73,7.78,8.59,9.57,11.94,14.78,16.42,19.42,32.08,37.23,46.74,55.84,62.67,69.92,76.58],"claude":[0.0,0.0,0.0,0.0,0.35,0.59,0.89,1.09,1.27,1.43,1.7,1.86,2.04,2.13,2.52,2.64,3.08,3.29,3.46,3.72,3.77,4.37,4.66,4.76,5.37,8.03,9.0]},"mau_android":{"chatgpt":[46.86,51.86,57.9,64.22,77.66,86.76,92.67,104.87,123.37,145.99,166.49,186.71,207.5,235.57,285.11,348.66,394.79,436.7,487.3,515.7,540.2,561.83,587.84,624.72,663.0,683.7,688.85],"gemini":[0.0,0.37,0.4,2.54,9.46,19.84,30.4,66.36,82.76,102.45,129.98,148.97,143.83,193.28,177.37,192.35,208.48,220.7,239.08,240.42,264.6,279.57,290.27,314.64,323.12,327.88,328.68],"claude":[0.0,0.0,0.0,0.0,0.0,0.0,0.44,0.9,1.4,1.87,2.26,2.57,2.77,3.09,3.71,3.93,4.56,5.08,5.43,6.01,6.13,6.98,7.45,7.62,8.67,12.93,13.59]},"mau_share":{"chatgpt":[100.0,99.6,99.6,97.8,93.3,88.2,83.6,72.8,71.7,70.8,68.2,67.3,69.9,65.9,70.8,72.8,73.2,73.5,73.7,74.4,72.7,72.0,71.5,70.5,70.6,70.2,69.9],"gemini":[0.0,0.4,0.4,2.2,6.4,11.5,15.7,26.4,27.4,28.3,30.9,31.8,29.2,33.3,28.2,26.3,25.9,25.6,25.4,24.7,26.4,27.0,27.5,28.5,28.4,28.4,28.6],"claude":[0.0,0.0,0.0,0.0,0.2,0.3,0.7,0.8,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,1.0,1.0,1.0,1.0,1.5,1.6]},"top20":["IN","US","BR","ID","PK","MX","TR","EG","VN","DE","TH","JP","SA","FR","GB","BD","CO","PH","KR","NG"],"country_bar_dl":{"IN":{"chatgpt":15.59,"gemini":6.299,"claude":0.84},"US":{"chatgpt":7.867,"gemini":3.219,"claude":1.931},"BR":{"chatgpt":6.15,"gemini":1.993,"claude":0.319},"ID":{"chatgpt":3.359,"gemini":0.957,"claude":0.14},"PK":{"chatgpt":1.631,"gemini":1.349,"claude":0.072},"MX":{"chatgpt":3.063,"gemini":1.207,"claude":0.123},"TR":{"chatgpt":1.839,"gemini":1.299,"claude":0.118},"EG":{"chatgpt":0.882,"gemini":0.66,"claude":0.046},"VN":{"chatgpt":1.079,"gemini":0.515,"claude":0.06},"DE":{"chatgpt":1.37,"gemini":0.952,"claude":0.309},"TH":{"chatgpt":0.87,"gemini":0.851,"claude":0.104},"JP":{"chatgpt":1.466,"gemini":1.006,"claude":0.211},"SA":{"chatgpt":1.317,"gemini":0.635,"claude":0.059},"FR":{"chatgpt":1.282,"gemini":0.739,"claude":0.253},"GB":{"chatgpt":1.761,"gemini":0.454,"claude":0.302},"BD":{"chatgpt":0.715,"gemini":0.681,"claude":0.041},"CO":{"chatgpt":1.582,"gemini":0.595,"claude":0.085},"PH":{"chatgpt":1.49,"gemini":0.401,"claude":0.113},"KR":{"chatgpt":1.12,"gemini":0.788,"claude":0.267},"NG":{"chatgpt":2.024,"gemini":0.305,"claude":0.084}},"country_bar_mau":{"IN":{"chatgpt":189.85,"gemini":121.31,"claude":1.61},"US":{"chatgpt":92.15,"gemini":22.46,"claude":6.44},"BR":{"chatgpt":61.85,"gemini":23.54,"claude":0.54},"ID":{"chatgpt":42.48,"gemini":21.68,"claude":0.77},"PK":{"chatgpt":38.71,"gemini":8.9,"claude":0.13},"MX":{"chatgpt":30.46,"gemini":15.03,"claude":0.25},"TR":{"chatgpt":27.32,"gemini":14.39,"claude":0.29},"EG":{"chatgpt":23.32,"gemini":13.35,"claude":0.08},"VN":{"chatgpt":19.16,"gemini":7.64,"claude":0.25},"DE":{"chatgpt":24.46,"gemini":6.62,"claude":0.85},"TH":{"chatgpt":18.87,"gemini":7.88,"claude":0.52},"JP":{"chatgpt":24.25,"gemini":10.66,"claude":1.21},"SA":{"chatgpt":17.28,"gemini":4.86,"claude":0.1},"FR":{"chatgpt":21.3,"gemini":5.83,"claude":0.88},"GB":{"chatgpt":19.58,"gemini":5.43,"claude":0.59},"BD":{"chatgpt":0.0,"gemini":0.0,"claude":0.0},"CO":{"chatgpt":19.2,"gemini":7.31,"claude":0.31},"PH":{"chatgpt":18.7,"gemini":7.97,"claude":0.14},"KR":{"chatgpt":18.1,"gemini":9.18,"claude":0.8},"NG":{"chatgpt":21.06,"gemini":2.49,"claude":0.39}},"country_names":{"IN":"India","US":"USA","BR":"Brazil","ID":"Indonesia","PK":"Pakistan","MX":"Mexico","TR":"Turkey","EG":"Egypt","VN":"Vietnam","DE":"Germany","TH":"Thailand","JP":"Japan","SA":"Saudi Arabia","FR":"France","GB":"UK","BD":"Bangladesh","CO":"Colombia","PH":"Philippines","KR":"S. Korea","NG":"Nigeria"}};
+const DATA = {"dl_months":["2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02"],"wau_months":["2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03"],"wau":{"chatgpt":[21.15,23.09,25.57,28.18,34.24,38.10,40.46,45.67,54.04,64.04,72.82,81.06,89.51,99.52,116.74,139.83,155.41,168.94,184.96,195.45,204.34,211.39,218.70,229.05,240.06,246.09,247.85],"gemini":[0.0,0.09,0.10,0.64,2.37,4.96,7.60,16.59,20.69,25.61,32.00,38.32,37.39,50.27,46.49,50.48,55.11,58.87,63.88,64.96,74.17,79.20,84.25,92.62,96.45,99.45,101.32],"claude":[0.0,0.0,0.0,0.0,0.09,0.15,0.33,0.50,0.67,0.83,0.99,1.11,1.20,1.31,1.56,1.64,1.91,2.09,2.22,2.43,2.48,2.84,3.03,3.10,3.51,5.24,5.65]},"wau_ios":{"chatgpt":[9.43,10.13,11.10,12.13,14.83,16.40,17.30,19.46,23.20,27.55,31.20,34.38,37.64,40.63,45.46,52.66,56.72,59.77,63.14,66.53,69.29,70.93,71.74,72.87,74.32,75.16,75.63],"gemini":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.50,1.07,1.43,1.95,2.15,2.39,2.99,3.70,4.11,4.86,8.02,9.31,11.69,13.96,15.67,17.48,19.15],"claude":[0.0,0.0,0.0,0.0,0.09,0.15,0.22,0.27,0.32,0.36,0.43,0.47,0.51,0.53,0.63,0.66,0.77,0.82,0.87,0.93,0.94,1.09,1.17,1.19,1.34,2.01,2.25]},"wau_android":{"chatgpt":[11.72,12.97,14.48,16.05,19.42,21.69,23.15,26.22,30.84,36.50,41.62,46.68,51.87,58.89,71.28,87.17,98.68,109.17,121.83,128.92,135.05,140.45,146.96,156.18,165.75,170.93,172.23],"gemini":[0.0,0.09,0.10,0.64,2.37,4.96,7.60,16.59,20.69,25.61,31.50,37.24,35.96,48.32,44.34,48.09,52.13,55.17,59.77,60.10,66.15,69.89,72.57,78.66,80.78,81.97,82.17],"claude":[0.0,0.0,0.0,0.0,0.0,0.0,0.11,0.23,0.35,0.47,0.57,0.64,0.69,0.77,0.93,0.98,1.14,1.27,1.36,1.50,1.53,1.75,1.86,1.90,2.17,3.23,3.40]},"wau_share":{"chatgpt":[100.0,99.6,99.6,97.8,93.5,88.5,83.8,73.1,71.9,71.1,68.5,67.6,70.1,66.1,71.0,73.0,73.4,73.7,73.9,74.6,72.9,72.2,71.7,70.7,70.8,70.4,70.1],"gemini":[0.0,0.4,0.4,2.2,6.4,11.5,15.7,26.5,27.6,28.5,31.0,32.0,29.2,33.2,28.3,26.2,26.0,25.7,25.5,24.8,26.5,27.0,27.6,28.6,28.5,28.4,28.6],"claude":[0.0,0.0,0.0,0.0,0.2,0.3,0.7,0.8,0.9,0.9,1.0,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,1.0,1.0,1.0,1.0,1.5,1.6]},"dl":{"chatgpt":[20.21,19.21,19.3,17.56,25.62,25.53,21.32,27.69,35.46,47.68,45.72,46.8,46.16,53.13,68.53,101.28,97.8,104.54,108.98,113.76,97.0,92.27,82.87,73.49,86.02,79.56],"gemini":[0.0,0.46,0.14,0.46,4.46,6.77,7.31,17.54,13.5,12.94,20.28,20.98,10.87,16.39,16.76,14.87,17.31,20.77,16.88,16.85,88.2,73.1,56.77,51.52,42.02,36.99],"claude":[0.0,0.0,0.0,0.0,0.36,0.25,0.77,1.0,1.03,1.21,1.27,0.99,1.08,1.22,1.57,1.33,1.66,2.1,1.76,1.98,1.61,2.02,1.96,1.93,2.78,7.5]},"dl_ios":{"chatgpt":[8.81,8.75,8.2,7.18,11.24,10.6,8.63,11.76,15.8,19.94,18.8,18.83,18.34,19.04,23.69,29.65,27.56,28.04,27.78,26.77,23.19,22.07,20.78,20.02,25.73,22.71],"gemini":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4.08,6.27,4.64,5.24,4.64,4.6,6.27,7.8,5.01,4.85,25.49,26.07,21.1,21.22,18.36,16.71],"claude":[0.0,0.0,0.0,0.0,0.36,0.25,0.31,0.23,0.29,0.36,0.41,0.38,0.42,0.41,0.54,0.49,0.6,0.67,0.63,0.68,0.56,0.72,0.79,0.75,1.22,3.82]},"dl_android":{"chatgpt":[11.4,10.46,11.1,10.38,14.37,14.93,12.69,15.93,19.66,27.75,26.92,27.97,27.83,34.09,44.85,71.64,70.24,76.5,81.2,86.99,73.81,70.2,62.08,53.46,60.29,56.86],"gemini":[0.0,0.46,0.14,0.46,4.46,6.77,7.31,17.54,13.5,12.94,16.21,14.7,6.23,11.14,12.12,10.26,11.04,12.96,11.87,12.0,62.71,47.03,35.67,30.3,23.66,20.28],"claude":[0.0,0.0,0.0,0.0,0.0,0.0,0.46,0.77,0.75,0.85,0.85,0.62,0.67,0.81,1.02,0.84,1.06,1.43,1.13,1.31,1.04,1.3,1.17,1.19,1.56,3.68]},"dl_share":{"chatgpt":[100.0,97.7,99.3,97.4,84.2,78.4,72.5,59.9,70.9,77.1,68.0,68.1,79.4,75.1,78.9,86.2,83.8,82.1,85.4,85.8,51.9,55.1,58.5,57.9,65.8,64.1],"gemini":[0.0,2.3,0.7,2.6,14.7,20.8,24.9,37.9,27.0,20.9,30.1,30.5,18.7,23.2,19.3,12.7,14.8,16.3,13.2,12.7,47.2,43.7,40.1,40.6,32.1,29.8],"claude":[0.0,0.0,0.0,0.0,1.2,0.8,2.6,2.2,2.1,2.0,1.9,1.4,1.9,1.7,1.8,1.1,1.4,1.6,1.4,1.5,0.9,1.2,1.4,1.5,2.1,6.0]},"mau_months":["2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03"],"mau":{"chatgpt":[84.59,92.37,102.28,112.72,136.97,152.38,161.85,182.69,216.16,256.16,291.29,324.22,358.04,398.07,466.97,559.3,621.64,675.76,739.85,781.81,817.36,845.55,874.8,916.19,960.25,984.35,991.38],"gemini":[0.0,0.37,0.4,2.54,9.46,19.84,30.4,66.36,82.76,102.45,131.99,153.26,149.55,201.06,185.96,201.92,220.43,235.48,255.5,259.84,296.68,316.8,337.01,370.48,385.79,397.8,405.26],"claude":[0.0,0.0,0.0,0.0,0.35,0.59,1.33,1.99,2.67,3.3,3.96,4.43,4.81,5.22,6.24,6.57,7.64,8.37,8.89,9.73,9.91,11.36,12.11,12.38,14.04,20.96,22.59]},"mau_ios":{"chatgpt":[37.73,40.51,44.38,48.5,59.31,65.61,69.18,77.82,92.8,110.18,124.79,137.51,150.54,162.51,181.85,210.64,226.86,239.06,252.55,266.11,277.17,283.72,286.96,291.48,297.26,300.65,302.53],"gemini":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.01,4.28,5.73,7.78,8.59,9.57,11.94,14.78,16.42,19.42,32.08,37.23,46.74,55.84,62.67,69.92,76.58],"claude":[0.0,0.0,0.0,0.0,0.35,0.59,0.89,1.09,1.27,1.43,1.7,1.86,2.04,2.13,2.52,2.64,3.08,3.29,3.46,3.72,3.77,4.37,4.66,4.76,5.37,8.03,9.0]},"mau_android":{"chatgpt":[46.86,51.86,57.9,64.22,77.66,86.76,92.67,104.87,123.37,145.99,166.49,186.71,207.5,235.57,285.11,348.66,394.79,436.7,487.3,515.7,540.2,561.83,587.84,624.72,663.0,683.7,688.85],"gemini":[0.0,0.37,0.4,2.54,9.46,19.84,30.4,66.36,82.76,102.45,129.98,148.97,143.83,193.28,177.37,192.35,208.48,220.7,239.08,240.42,264.6,279.57,290.27,314.64,323.12,327.88,328.68],"claude":[0.0,0.0,0.0,0.0,0.0,0.0,0.44,0.9,1.4,1.87,2.26,2.57,2.77,3.09,3.71,3.93,4.56,5.08,5.43,6.01,6.13,6.98,7.45,7.62,8.67,12.93,13.59]},"mau_share":{"chatgpt":[100.0,99.6,99.6,97.8,93.3,88.2,83.6,72.8,71.7,70.8,68.2,67.3,69.9,65.9,70.8,72.8,73.2,73.5,73.7,74.4,72.7,72.0,71.5,70.5,70.6,70.2,69.9],"gemini":[0.0,0.4,0.4,2.2,6.4,11.5,15.7,26.4,27.4,28.3,30.9,31.8,29.2,33.3,28.2,26.3,25.9,25.6,25.4,24.7,26.4,27.0,27.5,28.5,28.4,28.4,28.6],"claude":[0.0,0.0,0.0,0.0,0.2,0.3,0.7,0.8,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,1.0,1.0,1.0,1.0,1.5,1.6]},"top20":["IN","US","BR","ID","PK","MX","TR","EG","VN","DE","TH","JP","SA","FR","GB","BD","CO","PH","KR","NG"],"country_bar_dl":{"IN":{"chatgpt":15.59,"gemini":6.299,"claude":0.84},"US":{"chatgpt":7.867,"gemini":3.219,"claude":1.931},"BR":{"chatgpt":6.15,"gemini":1.993,"claude":0.319},"ID":{"chatgpt":3.359,"gemini":0.957,"claude":0.14},"PK":{"chatgpt":1.631,"gemini":1.349,"claude":0.072},"MX":{"chatgpt":3.063,"gemini":1.207,"claude":0.123},"TR":{"chatgpt":1.839,"gemini":1.299,"claude":0.118},"EG":{"chatgpt":0.882,"gemini":0.66,"claude":0.046},"VN":{"chatgpt":1.079,"gemini":0.515,"claude":0.06},"DE":{"chatgpt":1.37,"gemini":0.952,"claude":0.309},"TH":{"chatgpt":0.87,"gemini":0.851,"claude":0.104},"JP":{"chatgpt":1.466,"gemini":1.006,"claude":0.211},"SA":{"chatgpt":1.317,"gemini":0.635,"claude":0.059},"FR":{"chatgpt":1.282,"gemini":0.739,"claude":0.253},"GB":{"chatgpt":1.761,"gemini":0.454,"claude":0.302},"BD":{"chatgpt":0.715,"gemini":0.681,"claude":0.041},"CO":{"chatgpt":1.582,"gemini":0.595,"claude":0.085},"PH":{"chatgpt":1.49,"gemini":0.401,"claude":0.113},"KR":{"chatgpt":1.12,"gemini":0.788,"claude":0.267},"NG":{"chatgpt":2.024,"gemini":0.305,"claude":0.084}},"country_bar_mau":{"IN":{"chatgpt":189.85,"gemini":121.31,"claude":1.61},"US":{"chatgpt":92.15,"gemini":22.46,"claude":6.44},"BR":{"chatgpt":61.85,"gemini":23.54,"claude":0.54},"ID":{"chatgpt":42.48,"gemini":21.68,"claude":0.77},"PK":{"chatgpt":38.71,"gemini":8.9,"claude":0.13},"MX":{"chatgpt":30.46,"gemini":15.03,"claude":0.25},"TR":{"chatgpt":27.32,"gemini":14.39,"claude":0.29},"EG":{"chatgpt":23.32,"gemini":13.35,"claude":0.08},"VN":{"chatgpt":19.16,"gemini":7.64,"claude":0.25},"DE":{"chatgpt":24.46,"gemini":6.62,"claude":0.85},"TH":{"chatgpt":18.87,"gemini":7.88,"claude":0.52},"JP":{"chatgpt":24.25,"gemini":10.66,"claude":1.21},"SA":{"chatgpt":17.28,"gemini":4.86,"claude":0.1},"FR":{"chatgpt":21.3,"gemini":5.83,"claude":0.88},"GB":{"chatgpt":19.58,"gemini":5.43,"claude":0.59},"BD":{"chatgpt":0.0,"gemini":0.0,"claude":0.0},"CO":{"chatgpt":19.2,"gemini":7.31,"claude":0.31},"PH":{"chatgpt":18.7,"gemini":7.97,"claude":0.14},"KR":{"chatgpt":18.1,"gemini":9.18,"claude":0.8},"NG":{"chatgpt":21.06,"gemini":2.49,"claude":0.39}},"country_names":{"IN":"India","US":"USA","BR":"Brazil","ID":"Indonesia","PK":"Pakistan","MX":"Mexico","TR":"Turkey","EG":"Egypt","VN":"Vietnam","DE":"Germany","TH":"Thailand","JP":"Japan","SA":"Saudi Arabia","FR":"France","GB":"UK","BD":"Bangladesh","CO":"Colombia","PH":"Philippines","KR":"S. Korea","NG":"Nigeria"}};
 
 const C = {
   chatgpt: { color:'#10a37f', fill:'rgba(16,163,127,.12)', label:'ChatGPT' },
@@ -282,6 +300,33 @@ const C = {
   claude:  { color:'#e8834a', fill:'rgba(232,131,74,.12)', label:'Claude' }
 };
 const APPS = ['chatgpt','gemini','claude'];
+// ── Time Granularity ──────────────────────────────────────────────────────────
+let GRANULARITY = 'monthly'; // 'weekly' or 'monthly'
+
+// Weekly data (empty initially, will be populated via CSV upload)
+const WEEKLY_DATA = {
+  dl_weeks: [],
+  dl: { chatgpt: [], gemini: [], claude: [] },
+  dl_ios: { chatgpt: [], gemini: [], claude: [] },
+  dl_android: { chatgpt: [], gemini: [], claude: [] },
+  wau_weeks: [],
+  wau: { chatgpt: [], gemini: [], claude: [] },
+  wau_ios: { chatgpt: [], gemini: [], claude: [] },
+  wau_android: { chatgpt: [], gemini: [], claude: [] }
+};
+
+function setGranularity(gran, btn){
+  GRANULARITY = gran;
+  document.querySelectorAll('.granularity-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Rebuild all charts with new granularity
+  buildKPIs();
+  buildTrend();
+  buildPlat();
+  buildShare();
+}
+
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 function fmt(v){ return v>=1000 ? (v/1000).toFixed(1)+'B' : v+'M'; }
@@ -377,8 +422,27 @@ const gridCfg = { color:'rgba(255,255,255,.05)', drawBorder:false };
 let trendMode = 'dl';
 let trendChart;
 function buildTrend(){
-  const months = trendMode==='dl' ? DATA.dl_months : DATA.mau_months;
-  const src    = trendMode==='dl' ? DATA.dl : DATA.mau;
+  let months, src;
+
+  if (GRANULARITY === 'weekly') {
+    // 周度模式：Downloads 和 WAU
+    if (trendMode === 'dl') {
+      months = WEEKLY_DATA.dl_weeks.length > 0 ? WEEKLY_DATA.dl_weeks : DATA.dl_months;
+      src = WEEKLY_DATA.dl_weeks.length > 0 ? WEEKLY_DATA.dl : DATA.dl;
+    } else if (trendMode === 'wau') {
+      months = WEEKLY_DATA.wau_weeks.length > 0 ? WEEKLY_DATA.wau_weeks : DATA.wau_months;
+      src = WEEKLY_DATA.wau_weeks.length > 0 ? WEEKLY_DATA.wau : DATA.wau;
+    } else {
+      // MAU 在周度模式下不显示，使用月度数据
+      months = DATA.mau_months;
+      src = DATA.mau;
+    }
+  } else {
+    // 月度模式：使用 DATA
+    months = trendMode==='dl' ? DATA.dl_months : (trendMode==='mau' ? DATA.mau_months : DATA.wau_months);
+    src    = trendMode==='dl' ? DATA.dl : (trendMode==='mau' ? DATA.mau : DATA.wau);
+  }
+
   const labels = months.map(shortLabel);
   const datasets = APPS.map(app => ({
     label: C[app].label,
@@ -421,13 +485,37 @@ function setTrend(mode, btn){
 let platMetric='dl', platApp='chatgpt';
 let platChart;
 function buildPlat(){
-  const months = platMetric==='dl' ? DATA.dl_months : DATA.mau_months;
-  const iosSrc = platMetric==='dl' ? DATA.dl_ios : DATA.mau_ios;
-  const andSrc = platMetric==='dl' ? DATA.dl_android : DATA.mau_android;
+  let months, iosSrc, andSrc;
+
+  if (GRANULARITY === 'weekly') {
+    if (platMetric === 'dl') {
+      months = WEEKLY_DATA.dl_weeks.length > 0 ? WEEKLY_DATA.dl_weeks : DATA.dl_months;
+      iosSrc = WEEKLY_DATA.dl_weeks.length > 0 ? WEEKLY_DATA.dl_ios : DATA.dl_ios;
+      andSrc = WEEKLY_DATA.dl_weeks.length > 0 ? WEEKLY_DATA.dl_android : DATA.dl_android;
+    } else if (platMetric === 'wau') {
+      months = WEEKLY_DATA.wau_weeks.length > 0 ? WEEKLY_DATA.wau_weeks : DATA.wau_months;
+      iosSrc = WEEKLY_DATA.wau_weeks.length > 0 ? WEEKLY_DATA.wau_ios : DATA.wau_ios;
+      andSrc = WEEKLY_DATA.wau_weeks.length > 0 ? WEEKLY_DATA.wau_android : DATA.wau_android;
+    } else {
+      months = DATA.mau_months;
+      iosSrc = DATA.mau_ios;
+      andSrc = DATA.mau_android;
+    }
+  } else {
+    months = platMetric==='dl' ? DATA.dl_months : (platMetric==='mau' ? DATA.mau_months : DATA.wau_months);
+    iosSrc = platMetric==='dl' ? DATA.dl_ios : (platMetric==='mau' ? DATA.mau_ios : DATA.wau_ios);
+    andSrc = platMetric==='dl' ? DATA.dl_android : (platMetric==='mau' ? DATA.mau_android : DATA.wau_android);
+  }
   const labels = months.map(shortLabel);
+  const metricLabel = platMetric==='dl' ? 'Downloads' : (platMetric==='mau' ? 'MAU' : 'WAU');
   document.getElementById('platSub').textContent =
-    (platMetric==='dl'?'Downloads':'MAU')+' – '+(platApp==='chatgpt'?'ChatGPT':platApp==='gemini'?'Google Gemini':'Claude');
+    metricLabel+' – '+(platApp==='chatgpt'?'ChatGPT':platApp==='gemini'?'Google Gemini':'Claude');
   const col = C[platApp].color;
+  // 使用明显不同的颜色：iOS 用主色，Android 用对比色
+  const iosColor = col;
+  const androidColor = col === '#10a37f' ? '#14b8a6' :
+                       col === '#4285F4' ? '#60a5fa' :
+                       '#fb923c'; // chatgpt绿->青绿, gemini蓝->天蓝, claude橙->亮橙
   const ctx = document.getElementById('platChart').getContext('2d');
   if(platChart) platChart.destroy();
   platChart = new Chart(ctx,{
@@ -435,8 +523,8 @@ function buildPlat(){
     data:{
       labels,
       datasets:[
-        {label:'iOS',data:iosSrc[platApp],backgroundColor:col,stack:'s'},
-        {label:'Android',data:andSrc[platApp],backgroundColor:col.replace(')',',0.4)').replace('rgb','rgba'),stack:'s'}
+        {label:'iOS',data:iosSrc[platApp],backgroundColor:iosColor,stack:'s'},
+        {label:'Android',data:andSrc[platApp],backgroundColor:androidColor,stack:'s'}
       ]
     },
     options:{
@@ -468,8 +556,8 @@ function setPlatApp(a,btn){
 let shareMetric='dl';
 let shareChart;
 function buildShare(){
-  const months = shareMetric==='dl' ? DATA.dl_months : DATA.mau_months;
-  const src    = shareMetric==='dl' ? DATA.dl_share : DATA.mau_share;
+  const months = shareMetric==='dl' ? DATA.dl_months : (shareMetric==='mau' ? DATA.mau_months : DATA.wau_months);
+  const src    = shareMetric==='dl' ? DATA.dl_share : (shareMetric==='mau' ? DATA.mau_share : DATA.wau_share);
   const labels = months.map(shortLabel);
   const ctx = document.getElementById('shareChart').getContext('2d');
   if(shareChart) shareChart.destroy();
@@ -622,7 +710,7 @@ function parseCSV(text){
 
 // Validate timeseries CSV data
 function validateTimeseriesData(rows){
-  const required = ['month','app','downloads','mau','ios_downloads','android_downloads','ios_mau','android_mau'];
+  const required = ['month','app','downloads','mau','wau','ios_downloads','android_downloads','ios_mau','android_mau','ios_wau','android_wau'];
   const errors = [];
 
   // Check headers
@@ -647,7 +735,7 @@ function validateTimeseriesData(rows){
     }
 
     // Check numeric fields
-    const numFields = ['downloads','mau','ios_downloads','android_downloads','ios_mau','android_mau'];
+    const numFields = ['downloads','mau','wau','ios_downloads','android_downloads','ios_mau','android_mau','ios_wau','android_wau'];
     numFields.forEach(field => {
       const val = parseFloat(row[field]);
       if(isNaN(val) || val < 0){
@@ -710,7 +798,12 @@ function transformTimeseriesData(rows){
     mau: { chatgpt: [], gemini: [], claude: [] },
     mau_ios: { chatgpt: [], gemini: [], claude: [] },
     mau_android: { chatgpt: [], gemini: [], claude: [] },
-    mau_share: { chatgpt: [], gemini: [], claude: [] }
+    mau_share: { chatgpt: [], gemini: [], claude: [] },
+    wau_months: [],
+    wau: { chatgpt: [], gemini: [], claude: [] },
+    wau_ios: { chatgpt: [], gemini: [], claude: [] },
+    wau_android: { chatgpt: [], gemini: [], claude: [] },
+    wau_share: { chatgpt: [], gemini: [], claude: [] }
   };
 
   // Group by month
@@ -720,10 +813,13 @@ function transformTimeseriesData(rows){
     byMonth[row.month][row.app] = {
       downloads: parseFloat(row.downloads),
       mau: parseFloat(row.mau),
+      wau: parseFloat(row.wau),
       ios_downloads: parseFloat(row.ios_downloads),
       android_downloads: parseFloat(row.android_downloads),
       ios_mau: parseFloat(row.ios_mau),
-      android_mau: parseFloat(row.android_mau)
+      android_mau: parseFloat(row.android_mau),
+      ios_wau: parseFloat(row.ios_wau),
+      android_wau: parseFloat(row.android_wau)
     };
   });
 
@@ -734,14 +830,16 @@ function transformTimeseriesData(rows){
   months.forEach(month => {
     result.dl_months.push(month);
     result.mau_months.push(month);
+    result.wau_months.push(month);
 
     const apps = ['chatgpt','gemini','claude'];
     let dlTotal = 0;
     let mauTotal = 0;
+    let wauTotal = 0;
 
     apps.forEach(app => {
       const data = byMonth[month][app] || {
-        downloads:0, mau:0, ios_downloads:0, android_downloads:0, ios_mau:0, android_mau:0
+        downloads:0, mau:0, wau:0, ios_downloads:0, android_downloads:0, ios_mau:0, android_mau:0, ios_wau:0, android_wau:0
       };
 
       result.dl[app].push(data.downloads);
@@ -750,18 +848,24 @@ function transformTimeseriesData(rows){
       result.mau[app].push(data.mau);
       result.mau_ios[app].push(data.ios_mau);
       result.mau_android[app].push(data.android_mau);
+      result.wau[app].push(data.wau);
+      result.wau_ios[app].push(data.ios_wau);
+      result.wau_android[app].push(data.android_wau);
 
       dlTotal += data.downloads;
       mauTotal += data.mau;
+      wauTotal += data.wau;
     });
 
     // Calculate share
     apps.forEach(app => {
-      const data = byMonth[month][app] || { downloads:0, mau:0 };
+      const data = byMonth[month][app] || { downloads:0, mau:0, wau:0 };
       const dlShare = dlTotal > 0 ? (data.downloads / dlTotal * 100) : 0;
       const mauShare = mauTotal > 0 ? (data.mau / mauTotal * 100) : 0;
+      const wauShare = wauTotal > 0 ? (data.wau / wauTotal * 100) : 0;
       result.dl_share[app].push(parseFloat(dlShare.toFixed(1)));
       result.mau_share[app].push(parseFloat(mauShare.toFixed(1)));
+      result.wau_share[app].push(parseFloat(wauShare.toFixed(1)));
     });
   });
 
@@ -968,17 +1072,20 @@ function downloadTemplate(type){
 
   if(type === 'timeseries'){
     // Generate from current DATA
-    csv = 'month,app,downloads,mau,ios_downloads,android_downloads,ios_mau,android_mau\n';
+    csv = 'month,app,downloads,mau,wau,ios_downloads,android_downloads,ios_mau,android_mau,ios_wau,android_wau\n';
 
     DATA.dl_months.forEach((month, i) => {
       APPS.forEach(app => {
         const dl = DATA.dl[app][i] || 0;
         const mau = DATA.mau[app][i] || 0;
+        const wau = DATA.wau[app][i] || 0;
         const dlIos = DATA.dl_ios[app][i] || 0;
         const dlAnd = DATA.dl_android[app][i] || 0;
         const mauIos = DATA.mau_ios[app][i] || 0;
         const mauAnd = DATA.mau_android[app][i] || 0;
-        csv += `${month},${app},${dl},${mau},${dlIos},${dlAnd},${mauIos},${mauAnd}\n`;
+        const wauIos = DATA.wau_ios[app][i] || 0;
+        const wauAnd = DATA.wau_android[app][i] || 0;
+        csv += `${month},${app},${dl},${mau},${wau},${dlIos},${dlAnd},${mauIos},${mauAnd},${wauIos},${wauAnd}\n`;
       });
     });
   } else if(type === 'countries'){
