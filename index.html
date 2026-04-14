@@ -359,11 +359,18 @@ function buildKPIs(){
     html += '</div>';
     html += '</div>';
 
-    // Share bar
+    // Share bars
     html += '<div class="kpi-share" style="margin-top:10px">';
     html += '<span class="share-label" title="This app\'s MAU as percentage of combined ChatGPT + Gemini + Claude MAU">MAU as % of Total</span>';
     html += '<div class="share-bar-wrap"><div class="share-bar" style="width:'+mauShareVal+'%;background:'+barColor+'"></div></div>';
     html += '<span class="share-pct" style="color:'+barColor+'">'+mauShareVal+'%</span>';
+    html += '</div>';
+
+    const dauShareVal = dauLast>=0 ? DATA.dau_share[app][dauLast] : 0;
+    html += '<div class="kpi-share" style="margin-top:4px">';
+    html += '<span class="share-label" title="This app\'s DAU as percentage of combined ChatGPT + Gemini + Claude DAU">DAU as % of Total</span>';
+    html += '<div class="share-bar-wrap"><div class="share-bar" style="width:'+dauShareVal+'%;background:'+barColor+'"></div></div>';
+    html += '<span class="share-pct" style="color:'+barColor+'">'+dauShareVal+'%</span>';
     html += '</div>';
 
     html += '</div>';
