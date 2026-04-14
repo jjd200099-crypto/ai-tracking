@@ -669,18 +669,13 @@ const zeroLinePlugin = {
       const ctx = chart.ctx;
       const yPos = y.getPixelForValue(0);
       ctx.save();
-      // Solid bright line
       ctx.beginPath();
       ctx.moveTo(chart.chartArea.left, yPos);
       ctx.lineTo(chart.chartArea.right, yPos);
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.setLineDash([4,3]);
       ctx.stroke();
-      // "0" label
-      ctx.fillStyle = 'rgba(255,255,255,0.5)';
-      ctx.font = '10px sans-serif';
-      ctx.textAlign = 'right';
-      ctx.fillText('0', chart.chartArea.left - 4, yPos + 3);
       ctx.restore();
     }
   }
