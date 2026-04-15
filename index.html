@@ -1839,7 +1839,18 @@ buildDauRatio();
   <div class="chart-wrap"><canvas id="c_githubChart" height="80"></canvas></div>
 </div>
 
-<footer class="fade-up">Data: npm Registry + GitHub &nbsp;|&nbsp; Metric: Downloads &amp; Commits &nbsp;|&nbsp; Global</footer>
+<!-- VS Code Marketplace -->
+<div class="section fade-up" style="margin-bottom:16px">
+  <div class="section-header">
+    <div>
+      <div class="section-title">VS Code Extension Installs</div>
+      <div class="section-sub">Total cumulative installs from VS Code Marketplace &nbsp;|&nbsp; <a href="https://bloomberry.com/coding-tools.html" target="_blank" style="color:var(--sub);text-decoration:underline">Daily trends on Bloomberry</a></div>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="c_vscodeChart" height="120"></canvas></div>
+</div>
+
+<footer class="fade-up">Data: npm Registry + GitHub + VS Code Marketplace &nbsp;|&nbsp; <a href="https://bloomberry.com/coding-tools.html" target="_blank" style="color:var(--muted)">Bloomberry daily install trends</a></footer>
 
 </div><!-- /#codingView -->
 
@@ -1852,7 +1863,19 @@ const DATA_CODING = {
   codex_monthly: [["2025-05",81990],["2025-06",104618],["2025-07",122799],["2025-08",392237],["2025-09",871011],["2025-10",1083560],["2025-11",1453966],["2025-12",1980311],["2026-01",2327895],["2026-02",5801153],["2026-03",14529757]],
   cc_cumulative: [["2025-05-20",69866],["2025-05-27",446735],["2025-06-03",975409],["2025-06-10",1655471],["2025-06-17",2602926],["2025-06-24",3837873],["2025-07-01",5644428],["2025-07-08",8553443],["2025-07-15",11911942],["2025-07-22",15844731],["2025-07-29",20408659],["2025-08-05",25089187],["2025-08-12",30224040],["2025-08-19",34856893],["2025-08-26",40201500],["2025-09-02",45185272],["2025-09-09",50703954],["2025-09-16",56003991],["2025-09-23",60578106],["2025-09-30",66394127],["2025-10-07",71408209],["2025-10-14",76378968],["2025-10-21",82441146],["2025-10-28",87347440],["2025-11-04",92744220],["2025-11-11",98009552],["2025-11-18",103251710],["2025-11-25",109332835],["2025-12-02",113802076],["2025-12-09",119998781],["2025-12-16",126180638],["2025-12-23",131521310],["2025-12-30",133234903],["2026-01-06",135735484],["2026-01-13",142539029],["2026-01-20",148922605],["2026-01-27",156204602],["2026-02-03",163719313],["2026-02-10",171459847],["2026-02-17",177975568],["2026-02-24",185475649],["2026-03-03",194782680],["2026-03-10",204874457],["2026-03-17",214879205],["2026-03-24",224887523],["2026-03-31",236038725]],
   codex_cumulative: [["2025-05-20",5842],["2025-05-27",60549],["2025-06-03",90343],["2025-06-10",113420],["2025-06-17",137231],["2025-06-24",163249],["2025-07-01",190529],["2025-07-08",213024],["2025-07-15",242369],["2025-07-22",268491],["2025-07-29",297960],["2025-08-05",337471],["2025-08-12",422433],["2025-08-19",496740],["2025-08-26",581917],["2025-09-02",736710],["2025-09-09",908035],["2025-09-16",1104095],["2025-09-23",1365826],["2025-09-30",1572655],["2025-10-07",1744422],["2025-10-14",2027630],["2025-10-21",2197945],["2025-10-28",2486848],["2025-11-04",2817040],["2025-11-11",3173879],["2025-11-18",3521895],["2025-11-25",3933469],["2025-12-02",4278903],["2025-12-09",4734595],["2025-12-16",5280316],["2025-12-23",5740114],["2025-12-30",6052472],["2026-01-06",6383654],["2026-01-13",6885622],["2026-01-20",7452935],["2026-01-27",8088502],["2026-02-03",8711772],["2026-02-10",9730024],["2026-02-17",11105830],["2026-02-24",12789865],["2026-03-03",15267960],["2026-03-10",18663020],["2026-03-17",21722259],["2026-03-24",25385035],["2026-03-31",28749297]],
-  github_commits: [["2025-06",200000],["2025-07",350000],["2025-08",500000],["2025-09",700000],["2025-10",1000000],["2025-11",1100000],["2025-12",1500000],["2026-01",3000000],["2026-02",5200000],["2026-03",10300000]]
+  github_commits: [["2025-06",200000],["2025-07",350000],["2025-08",500000],["2025-09",700000],["2025-10",1000000],["2025-11",1100000],["2025-12",1500000],["2026-01",3000000],["2026-02",5200000],["2026-03",10300000]],
+  vscode_extensions: [
+    ["GitHub Copilot",72943733,"#000000"],
+    ["Tabnine",9531035,"#E8655E"],
+    ["Gemini Code Assist",3767880,"#3b7dd8"],
+    ["Windsurf (Codeium)",3640279,"#09B6A2"],
+    ["Cline",3615966,"#EC6E35"],
+    ["Continue",2628788,"#FF4500"],
+    ["Roo Code",1482651,"#7C3AED"],
+    ["Kilo Code",975720,"#F59E0B"],
+    ["Cody",823616,"#FF5733"],
+    ["Supermaven",374365,"#6366F1"]
+  ]
 };
 
 // ── Coding Chart Functions ────────────────────────────────────────────────────
@@ -2059,9 +2082,42 @@ function coding_buildGithub(){
   });
 }
 
+let c_vscodeChart;
+function coding_buildVscode(){
+  const D = DATA_CODING;
+  const exts = D.vscode_extensions;
+  const labels = exts.map(e=>e[0]);
+  const data = exts.map(e=>e[1]/1e6);
+  const colors = exts.map(e=>e[2]);
+  const ctx = document.getElementById('c_vscodeChart').getContext('2d');
+  if(c_vscodeChart) c_vscodeChart.destroy();
+  c_vscodeChart = new Chart(ctx,{
+    type:'bar',
+    data:{labels, datasets:[{
+      data:data,
+      backgroundColor:colors.map(c=>c+'cc'),
+      borderColor:colors,
+      borderWidth:0,
+      borderRadius:3,
+      barPercentage:.7
+    }]},
+    options:{
+      indexAxis:'y',
+      responsive:true,
+      interaction:{mode:'nearest',axis:'y',intersect:true},
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:i=>' '+i.parsed.x.toFixed(1)+'M total installs'}}},
+      scales:{
+        x:{grid:gridCfg,ticks:{callback:v=>v>=1000?(v/1000).toFixed(0)+'B':v+'M',font:{size:10}}},
+        y:{grid:{display:false},ticks:{font:{size:10,family:"'Plus Jakarta Sans',sans-serif"},padding:4}}
+      }
+    }
+  });
+}
+
 function coding_rebuildAll(){
   if(c_chartsBuilt){
-    [c_weeklyChart, c_shareChart, c_ratioChart, c_cumulativeChart, c_githubChart].forEach(c=>{if(c)c.destroy()});
+    [c_weeklyChart, c_shareChart, c_ratioChart, c_cumulativeChart, c_githubChart, c_vscodeChart].forEach(c=>{if(c)c.destroy()});
   }
   coding_buildKPIs();
   coding_buildWeekly();
@@ -2069,6 +2125,7 @@ function coding_rebuildAll(){
   coding_buildRatio();
   coding_buildCumulative();
   coding_buildGithub();
+  coding_buildVscode();
   c_chartsBuilt = true;
 }
 </script>
