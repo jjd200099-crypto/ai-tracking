@@ -1554,31 +1554,40 @@ buildDauRatio();
   <div class="chart-wrap"><canvas id="w_trendChart" height="90"></canvas></div>
 </div>
 
-<!-- Row 2: Market Share (no platform split for web) -->
-<div class="row2 fade-up">
-  <div class="section" style="grid-column:1/-1">
-    <div class="section-header">
-      <div>
-        <div class="section-title">Market Share Evolution</div>
-        <div class="section-sub">% share among 3 apps</div>
-      </div>
-      <div class="tabs" id="w_shareMetricTabs">
-        <button class="tab active" onclick="web_setShareMetric('dau',this)">DAU</button>
-        <button class="tab" onclick="web_setShareMetric('wau',this)">WAU</button>
-        <button class="tab" onclick="web_setShareMetric('mau',this)">MAU</button>
-      </div>
+<!-- DAU/MAU Ratio -->
+<div class="section fade-up" style="margin-bottom:16px">
+  <div class="section-header">
+    <div>
+      <div class="section-title">DAU / MAU Ratio</div>
+      <div class="section-sub">User stickiness — Daily Active as % of Monthly Active</div>
     </div>
-    <div class="chart-wrap"><canvas id="w_shareChart" height="100"></canvas></div>
   </div>
+  <div class="chart-wrap"><canvas id="w_dauMauRatioChart" height="80"></canvas></div>
 </div>
 
-<!-- Row 3: Countries -->
+<!-- Market Share -->
+<div class="section fade-up" style="margin-bottom:16px">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Market Share Evolution</div>
+      <div class="section-sub">% share among 3 apps</div>
+    </div>
+    <div class="tabs" id="w_shareMetricTabs">
+      <button class="tab active" onclick="web_setShareMetric('dau',this)">DAU</button>
+      <button class="tab" onclick="web_setShareMetric('wau',this)">WAU</button>
+      <button class="tab" onclick="web_setShareMetric('mau',this)">MAU</button>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="w_shareChart" height="100"></canvas></div>
+</div>
+
+<!-- Countries -->
 <div class="row2 fade-up">
   <div class="section">
     <div class="section-header">
       <div>
         <div class="section-title">Top 20 Countries</div>
-        <div class="section-sub">Mar 2026 · Unique Visitors (aggregate)</div>
+        <div class="section-sub">Mar 2026 · Unique Visitors</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="w_ctryChart" height="500"></canvas></div>
@@ -1606,17 +1615,6 @@ buildDauRatio();
     </table>
     </div>
   </div>
-</div>
-
-<!-- DAU/MAU Ratio -->
-<div class="section fade-up" style="margin-bottom:16px">
-  <div class="section-header">
-    <div>
-      <div class="section-title">DAU / MAU Ratio</div>
-      <div class="section-sub">User stickiness — Daily Active Visitors as % of Monthly Active Visitors</div>
-    </div>
-  </div>
-  <div class="chart-wrap"><canvas id="w_dauMauRatioChart" height="80"></canvas></div>
 </div>
 
 <div class="row2 fade-up">
