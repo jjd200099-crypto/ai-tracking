@@ -963,21 +963,21 @@ function web_buildKPIs(){
     html += '<div class="kpi-name">'+names[app]+'</div>';
 
     const period = latestMauMonth;
-    // Row 1: MAV + WAV
+    // Row 1: MAU + WAU
     html += '<div class="kpi-metrics">';
-    html += '<div class="kpi-metric"><label>MAV ('+period+')</label>';
+    html += '<div class="kpi-metric"><label>MAU ('+period+')</label>';
     html += '<div class="val">'+fmt(mauNow)+'</div>';
     html += '<div>'+chgBadge(mauNow,mauPrev)+'</div>';
     html += '</div>';
-    html += '<div class="kpi-metric"><label>WAV ('+period+')</label>';
+    html += '<div class="kpi-metric"><label>WAU ('+period+')</label>';
     html += '<div class="val">'+fmt(wauNow)+'</div>';
     html += '<div>'+chgBadge(wauNow,wauPrev)+'</div>';
     html += '</div>';
     html += '</div>';
 
-    // Row 2: DAV only (no downloads for web)
+    // Row 2: DAU only (no downloads for web)
     html += '<div class="kpi-metrics" style="margin-top:8px">';
-    html += '<div class="kpi-metric"><label>DAV ('+period+')</label>';
+    html += '<div class="kpi-metric"><label>DAU ('+period+')</label>';
     html += '<div class="val">'+fmt(dauNow)+'</div>';
     html += '<div>'+chgBadge(dauNow,dauPrev)+'</div>';
     html += '</div>';
@@ -986,14 +986,14 @@ function web_buildKPIs(){
 
     // Share bars
     html += '<div class="kpi-share" style="margin-top:10px">';
-    html += '<span class="share-label" title="This app MAV as % of total">MAV as % of Total</span>';
+    html += '<span class="share-label" title="This app MAU as % of total">MAU as % of Total</span>';
     html += '<div class="share-bar-wrap"><div class="share-bar" style="width:'+mauShareVal+'%;background:'+barColor+'"></div></div>';
     html += '<span class="share-pct" style="color:'+barColor+'">'+mauShareVal+'%</span>';
     html += '</div>';
 
     const dauShareVal = dauLast>=0 ? DATA_WEB.dau_share[app][dauLast] : 0;
     html += '<div class="kpi-share" style="margin-top:4px">';
-    html += '<span class="share-label" title="This app DAV as % of total">DAV as % of Total</span>';
+    html += '<span class="share-label" title="This app DAU as % of total">DAU as % of Total</span>';
     html += '<div class="share-bar-wrap"><div class="share-bar" style="width:'+dauShareVal+'%;background:'+barColor+'"></div></div>';
     html += '<span class="share-pct" style="color:'+barColor+'">'+dauShareVal+'%</span>';
     html += '</div>';
@@ -1207,7 +1207,7 @@ function web_buildDauMauRatio(){
   });
 }
 
-// ── Web Net DAV Increase ──
+// ── Web Net DAU Increase ──
 function web_buildDauNet(){
   const labels = DATA_WEB.dau_net_months.map(shortLabel);
   const ctx = document.getElementById('w_dauNetChart').getContext('2d');
@@ -1240,7 +1240,7 @@ function web_buildDauNet(){
   });
 }
 
-// ── Web New DAV Share ──
+// ── Web New DAU Share ──
 function web_buildDauNewShare(){
   const labels = DATA_WEB.dau_net_months.map(shortLabel);
   const ctx = document.getElementById('w_dauNewShareChart').getContext('2d');
@@ -1327,7 +1327,7 @@ function web_buildDauRatio(){
   const rawSrc = w_ratioMetric==='dau' ? DATA_WEB.dau_ratio : DATA_WEB.mau_ratio;
   const [months, gemD, claD] = web_sliceFrom(rawMonths, rawSrc.gemini, rawSrc.claude);
   const labels = months.map(shortLabel);
-  const metricName = w_ratioMetric==='dau'?'DAV':'MAV';
+  const metricName = w_ratioMetric==='dau'?'DAU':'MAU';
   const ctx = document.getElementById('w_dauRatioChart').getContext('2d');
   if(w_ratioChart) w_ratioChart.destroy();
   w_ratioChart = new Chart(ctx,{
@@ -1454,12 +1454,12 @@ buildDauRatio();
   <div class="section-header">
     <div>
       <div class="section-title">Monthly Trend</div>
-      <div class="section-sub">DAV / WAV / MAV over time</div>
+      <div class="section-sub">DAU / WAU / MAU over time</div>
     </div>
     <div class="tabs" id="w_trendTabs">
-      <button class="tab active" onclick="web_setTrend('dau',this)">DAV</button>
-      <button class="tab" onclick="web_setTrend('wau',this)">WAV</button>
-      <button class="tab" onclick="web_setTrend('mau',this)">MAV</button>
+      <button class="tab active" onclick="web_setTrend('dau',this)">DAU</button>
+      <button class="tab" onclick="web_setTrend('wau',this)">WAU</button>
+      <button class="tab" onclick="web_setTrend('mau',this)">MAU</button>
     </div>
   </div>
   <div class="chart-wrap"><canvas id="w_trendChart" height="90"></canvas></div>
@@ -1474,9 +1474,9 @@ buildDauRatio();
         <div class="section-sub">% share among 3 apps</div>
       </div>
       <div class="tabs" id="w_shareMetricTabs">
-        <button class="tab active" onclick="web_setShareMetric('dau',this)">DAV</button>
-        <button class="tab" onclick="web_setShareMetric('wau',this)">WAV</button>
-        <button class="tab" onclick="web_setShareMetric('mau',this)">MAV</button>
+        <button class="tab active" onclick="web_setShareMetric('dau',this)">DAU</button>
+        <button class="tab" onclick="web_setShareMetric('wau',this)">WAU</button>
+        <button class="tab" onclick="web_setShareMetric('mau',this)">MAU</button>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="w_shareChart" height="100"></canvas></div>
@@ -1497,8 +1497,8 @@ buildDauRatio();
   <div class="section">
     <div class="section-header">
       <div>
-        <div class="section-title">Country UV Growth</div>
-        <div class="section-sub">Feb &rarr; Mar 2026 &middot; UV Net Change (K) &amp; MoM %</div>
+        <div class="section-title">Country DAU Growth</div>
+        <div class="section-sub">Feb &rarr; Mar 2026 &middot; DAU Net Change (K) &amp; MoM %</div>
       </div>
     </div>
     <div style="overflow-x:auto">
@@ -1509,9 +1509,9 @@ buildDauRatio();
         <th colspan="3" style="color:var(--gem);text-align:center;border-bottom:1px solid var(--border)">Gemini</th>
         <th colspan="3" style="color:var(--cla);text-align:center;border-bottom:1px solid var(--border)">Claude</th>
       </tr><tr>
-        <th style="color:var(--gpt)">Mar UV</th><th style="color:var(--gpt)">Net</th><th style="color:var(--gpt)">MoM</th>
-        <th style="color:var(--gem)">Mar UV</th><th style="color:var(--gem)">Net</th><th style="color:var(--gem)">MoM</th>
-        <th style="color:var(--cla)">Mar UV</th><th style="color:var(--cla)">Net</th><th style="color:var(--cla)">MoM</th>
+        <th style="color:var(--gpt)">Mar DAU</th><th style="color:var(--gpt)">Net</th><th style="color:var(--gpt)">MoM</th>
+        <th style="color:var(--gem)">Mar DAU</th><th style="color:var(--gem)">Net</th><th style="color:var(--gem)">MoM</th>
+        <th style="color:var(--cla)">Mar DAU</th><th style="color:var(--cla)">Net</th><th style="color:var(--cla)">MoM</th>
       </tr></thead>
       <tbody id="w_ctryBody"></tbody>
     </table>
@@ -1519,11 +1519,11 @@ buildDauRatio();
   </div>
 </div>
 
-<!-- DAV/MAV Ratio -->
+<!-- DAU/MAU Ratio -->
 <div class="section fade-up" style="margin-bottom:16px">
   <div class="section-header">
     <div>
-      <div class="section-title">DAV / MAV Ratio</div>
+      <div class="section-title">DAU / MAU Ratio</div>
       <div class="section-sub">User stickiness — Daily Active Visitors as % of Monthly Active Visitors</div>
     </div>
   </div>
@@ -1534,8 +1534,8 @@ buildDauRatio();
   <div class="section">
     <div class="section-header">
       <div>
-        <div class="section-title">Monthly Net DAV Increase</div>
-        <div class="section-sub">Net new DAV per month (M)</div>
+        <div class="section-title">Monthly Net DAU Increase</div>
+        <div class="section-sub">Net new DAU per month (M)</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="w_dauNetChart" height="200"></canvas></div>
@@ -1543,8 +1543,8 @@ buildDauRatio();
   <div class="section">
     <div class="section-header">
       <div>
-        <div class="section-title">New DAV Share Distribution</div>
-        <div class="section-sub">% of monthly net DAV increase captured by each app</div>
+        <div class="section-title">New DAU Share Distribution</div>
+        <div class="section-sub">% of monthly net DAU increase captured by each app</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="w_dauNewShareChart" height="200"></canvas></div>
@@ -1559,8 +1559,8 @@ buildDauRatio();
         <div class="section-sub">Month-over-month growth %</div>
       </div>
       <div class="tabs" id="w_momMetricTabs">
-        <button class="tab active" onclick="web_setMomMetric('dau',this)">DAV</button>
-        <button class="tab" onclick="web_setMomMetric('mau',this)">MAV</button>
+        <button class="tab active" onclick="web_setMomMetric('dau',this)">DAU</button>
+        <button class="tab" onclick="web_setMomMetric('mau',this)">MAU</button>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="w_dauMomChart" height="200"></canvas></div>
@@ -1572,8 +1572,8 @@ buildDauRatio();
         <div class="section-sub">Gemini &amp; Claude as % of ChatGPT</div>
       </div>
       <div class="tabs" id="w_ratioMetricTabs">
-        <button class="tab active" onclick="web_setRatioMetric('dau',this)">DAV</button>
-        <button class="tab" onclick="web_setRatioMetric('mau',this)">MAV</button>
+        <button class="tab active" onclick="web_setRatioMetric('dau',this)">DAU</button>
+        <button class="tab" onclick="web_setRatioMetric('mau',this)">MAU</button>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="w_dauRatioChart" height="200"></canvas></div>
