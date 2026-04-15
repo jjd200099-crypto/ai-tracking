@@ -110,6 +110,7 @@ footer{text-align:center;color:var(--muted);font-size:.72rem;margin-top:32px;pad
   <div class="tabs" id="viewToggle">
     <button class="tab active" onclick="setView('mobile',this)">Mobile</button>
     <button class="tab" onclick="setView('web',this)">Web</button>
+    <button class="tab" onclick="setView('coding',this)">Coding</button>
   </div>
 </div>
 <div class="container" id="mobileView">
@@ -1524,7 +1525,9 @@ function setView(view, btn){
   btn.classList.add('active');
   document.getElementById('mobileView').style.display = view === 'mobile' ? '' : 'none';
   document.getElementById('webView').style.display = view === 'web' ? '' : 'none';
+  document.getElementById('codingView').style.display = view === 'coding' ? '' : 'none';
   if(view === 'web') web_rebuildAll();
+  if(view === 'coding') coding_rebuildAll();
 }
 
 // ── Time Spent Chart ─────────────────────────────────────────────────────────
@@ -1763,5 +1766,330 @@ buildDauRatio();
 <footer class="fade-up">Data: Semrush &nbsp;|&nbsp; Metric: Unique Visitors (Web) &nbsp;|&nbsp; Global</footer>
 
 </div><!-- /#webView -->
+
+<div id="codingView" class="container" style="display:none">
+
+<div class="header fade-up">
+  <div class="header-top">
+    <div>
+      <div class="header-title">Coding Agent Intelligence</div>
+      <div class="header-subtitle">Claude Code vs Codex &nbsp;&mdash;&nbsp; npm Downloads &amp; GitHub Commits</div>
+    </div>
+    <div class="badges">
+      <div class="badge">Source: <b>npm Registry + GitHub</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- KPI Cards (2 cols) -->
+<div class="kpi-row fade-up" style="grid-template-columns:1fr 1fr" id="c_kpiRow"></div>
+
+<!-- Weekly Downloads Trend -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Weekly Downloads Trend</div>
+      <div class="section-sub">npm weekly download counts</div>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="c_weeklyChart" height="90"></canvas></div>
+</div>
+
+<!-- Row: Market Share + Ratio -->
+<div class="row2 fade-up">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Market Share Evolution</div>
+        <div class="section-sub">% share among CC + Codex by month</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="c_shareChart" height="180"></canvas></div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">CC / Codex Ratio</div>
+        <div class="section-sub">Monthly download ratio (x times)</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="c_ratioChart" height="180"></canvas></div>
+  </div>
+</div>
+
+<!-- Cumulative Downloads -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Cumulative Downloads</div>
+      <div class="section-sub">Running total since launch (weekly sampled)</div>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="c_cumulativeChart" height="90"></canvas></div>
+</div>
+
+<!-- Row: GitHub Commits + Insights -->
+<div class="row2 fade-up">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">GitHub Commits (Claude Code)</div>
+        <div class="section-sub">Monthly co-authored commits &nbsp;|&nbsp; Codex does not tag co-author commits</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="c_githubChart" height="180"></canvas></div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Key Insights</div>
+        <div class="section-sub">As of Apr 2026</div>
+      </div>
+    </div>
+    <div style="font-size:.8125rem;color:var(--sub);line-height:1.7;padding:8px 0">
+      <ul style="padding-left:18px;list-style:disc">
+        <li style="margin-bottom:10px"><strong style="color:var(--text)">Cumulative gap:</strong> Claude Code 246M vs Codex 32M total npm downloads (7.7x lead)</li>
+        <li style="margin-bottom:10px"><strong style="color:var(--text)">Share narrowing:</strong> CC share declined from 99% (Jul &rsquo;25) &rarr; 75% (Mar &rsquo;26) as Codex surged</li>
+        <li style="margin-bottom:10px"><strong style="color:var(--text)">Codex surge post GPT-5:</strong> Feb &rsquo;26 +300% MoM, Mar &rsquo;26 sustained &gt;14M monthly</li>
+        <li style="margin-bottom:10px"><strong style="color:var(--text)">GitHub footprint:</strong> CC co-authored &sim;4% of all public commits (Feb), reached 10.3M in Mar</li>
+        <li><strong style="color:var(--text)">CC daily peak:</strong> 326K GitHub commits on Mar 15, 2026</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer class="fade-up">Data: npm Registry + GitHub &nbsp;|&nbsp; Metric: Downloads &amp; Commits &nbsp;|&nbsp; Global</footer>
+
+</div><!-- /#codingView -->
+
+<script>
+// ── Coding Agent Data ─────────────────────────────────────────────────────────
+const DATA_CODING = {
+  cc_weekly: [["2025-05-19",386930],["2025-05-26",367622],["2025-06-02",716567],["2025-06-09",802939],["2025-06-16",1114759],["2025-06-23",1244116],["2025-06-30",2728179],["2025-07-07",3266408],["2025-07-14",3733041],["2025-07-21",4390566],["2025-07-28",4711628],["2025-08-04",4618192],["2025-08-11",5280100],["2025-08-18",4960891],["2025-08-25",5337903],["2025-09-01",5387153],["2025-09-08",5146030],["2025-09-15",5004468],["2025-09-22",5186263],["2025-09-29",5077905],["2025-10-06",5435153],["2025-10-13",5518376],["2025-10-20",5126268],["2025-10-27",5272810],["2025-11-03",5557478],["2025-11-10",4589807],["2025-11-17",6141581],["2025-11-24",4852017],["2025-12-01",6135960],["2025-12-08",6024298],["2025-12-15",6009711],["2025-12-22",2384896],["2025-12-29",1834925],["2026-01-05",5894829],["2026-01-12",6732871],["2026-01-19",6911600],["2026-01-26",7539823],["2026-02-02",7605631],["2026-02-09",6647213],["2026-02-16",6974485],["2026-02-23",9342431],["2026-03-02",9511030],["2026-03-09",9874094],["2026-03-16",10199146],["2026-03-23",10830850],["2026-03-30",10175272],["2026-04-06",12081962],["2026-04-13",1889092]],
+  codex_weekly: [["2025-05-19",24328],["2025-05-26",59740],["2025-06-02",21768],["2025-06-09",23539],["2025-06-16",24759],["2025-06-23",28232],["2025-06-30",21730],["2025-07-07",28992],["2025-07-14",27273],["2025-07-21",27063],["2025-07-28",35967],["2025-08-04",76304],["2025-08-11",71999],["2025-08-18",84004],["2025-08-25",145946],["2025-09-01",154032],["2025-09-08",170793],["2025-09-15",279484],["2025-09-22",208176],["2025-09-29",163455],["2025-10-06",276572],["2025-10-13",208809],["2025-10-20",220398],["2025-10-27",341615],["2025-11-03",334425],["2025-11-10",358757],["2025-11-17",399007],["2025-11-24",293014],["2025-12-01",487286],["2025-12-08",508150],["2025-12-15",483944],["2025-12-22",361453],["2025-12-29",318035],["2026-01-05",471395],["2026-01-12",551562],["2026-01-19",572317],["2026-01-26",618412],["2026-02-02",1044097],["2026-02-09",1192758],["2026-02-16",1587719],["2026-02-23",2140172],["2026-03-02",2746932],["2026-03-09",3563873],["2026-03-16",3680908],["2026-03-23",3273827],["2026-03-30",3129283],["2026-04-06",3148947],["2026-04-13",598687]],
+  cc_monthly: [["2025-05",735184],["2025-06",4338148],["2025-07",17045271],["2025-08",21541238],["2025-09",22734286],["2025-10",23989032],["2025-11",21571991],["2025-12",21551967],["2026-01",27575444],["2026-02",30510428],["2026-03",44445736],["2026-04",20516544]],
+  codex_monthly: [["2025-05",81990],["2025-06",104618],["2025-07",122799],["2025-08",392237],["2025-09",871011],["2025-10",1083560],["2025-11",1453966],["2025-12",1980311],["2026-01",2327895],["2026-02",5801153],["2026-03",14529757],["2026-04",5840641]],
+  cc_cumulative: [["2025-05-20",69866],["2025-05-27",446735],["2025-06-03",975409],["2025-06-10",1655471],["2025-06-17",2602926],["2025-06-24",3837873],["2025-07-01",5644428],["2025-07-08",8553443],["2025-07-15",11911942],["2025-07-22",15844731],["2025-07-29",20408659],["2025-08-05",25089187],["2025-08-12",30224040],["2025-08-19",34856893],["2025-08-26",40201500],["2025-09-02",45185272],["2025-09-09",50703954],["2025-09-16",56003991],["2025-09-23",60578106],["2025-09-30",66394127],["2025-10-07",71408209],["2025-10-14",76378968],["2025-10-21",82441146],["2025-10-28",87347440],["2025-11-04",92744220],["2025-11-11",98009552],["2025-11-18",103251710],["2025-11-25",109332835],["2025-12-02",113802076],["2025-12-09",119998781],["2025-12-16",126180638],["2025-12-23",131521310],["2025-12-30",133234903],["2026-01-06",135735484],["2026-01-13",142539029],["2026-01-20",148922605],["2026-01-27",156204602],["2026-02-03",163719313],["2026-02-10",171459847],["2026-02-17",177975568],["2026-02-24",185475649],["2026-03-03",194782680],["2026-03-10",204874457],["2026-03-17",214879205],["2026-03-24",224887523],["2026-03-31",236038725],["2026-04-07",246193858]],
+  codex_cumulative: [["2025-05-20",5842],["2025-05-27",60549],["2025-06-03",90343],["2025-06-10",113420],["2025-06-17",137231],["2025-06-24",163249],["2025-07-01",190529],["2025-07-08",213024],["2025-07-15",242369],["2025-07-22",268491],["2025-07-29",297960],["2025-08-05",337471],["2025-08-12",422433],["2025-08-19",496740],["2025-08-26",581917],["2025-09-02",736710],["2025-09-09",908035],["2025-09-16",1104095],["2025-09-23",1365826],["2025-09-30",1572655],["2025-10-07",1744422],["2025-10-14",2027630],["2025-10-21",2197945],["2025-10-28",2486848],["2025-11-04",2817040],["2025-11-11",3173879],["2025-11-18",3521895],["2025-11-25",3933469],["2025-12-02",4278903],["2025-12-09",4734595],["2025-12-16",5280316],["2025-12-23",5740114],["2025-12-30",6052472],["2026-01-06",6383654],["2026-01-13",6885622],["2026-01-20",7452935],["2026-01-27",8088502],["2026-02-03",8711772],["2026-02-10",9730024],["2026-02-17",11105830],["2026-02-24",12789865],["2026-03-03",15267960],["2026-03-10",18663020],["2026-03-17",21722259],["2026-03-24",25385035],["2026-03-31",28749297],["2026-04-07",31775398]],
+  github_commits: [["2025-06",200000],["2025-07",350000],["2025-08",500000],["2025-09",700000],["2025-10",1000000],["2025-11",1100000],["2025-12",1500000],["2026-01",3000000],["2026-02",5200000],["2026-03",10300000],["2026-04",5000000]]
+};
+
+// ── Coding Chart Functions ────────────────────────────────────────────────────
+let c_chartsBuilt = false;
+let c_weeklyChart, c_shareChart, c_ratioChart, c_cumulativeChart, c_githubChart;
+
+const CC_COLOR = '#8B5CF6';
+const CODEX_COLOR = '#06B6D4';
+const CC_BG = 'rgba(139,92,246,.08)';
+const CODEX_BG = 'rgba(6,182,212,.08)';
+
+function coding_fmtNum(n){
+  if(n>=1e9) return (n/1e9).toFixed(1)+'B';
+  if(n>=1e6) return (n/1e6).toFixed(1)+'M';
+  if(n>=1e3) return (n/1e3).toFixed(0)+'K';
+  return n.toString();
+}
+
+function coding_shortDate(d){
+  const parts = d.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  if(parts.length===2) return months[parseInt(parts[1])-1]+' \''+parts[0].slice(2);
+  return months[parseInt(parts[1])-1]+' '+parseInt(parts[2]);
+}
+
+function coding_buildKPIs(){
+  const D = DATA_CODING;
+  // Latest full week = -2 (last entry is partial)
+  const ccW = D.cc_weekly[D.cc_weekly.length-2][1];
+  const ccWPrev = D.cc_weekly[D.cc_weekly.length-3][1];
+  const codexW = D.codex_weekly[D.codex_weekly.length-2][1];
+  const codexWPrev = D.codex_weekly[D.codex_weekly.length-3][1];
+  const ccWoW = ((ccW-ccWPrev)/ccWPrev*100);
+  const codexWoW = ((codexW-codexWPrev)/codexWPrev*100);
+
+  // Latest full month = -2
+  const ccM = D.cc_monthly[D.cc_monthly.length-2][1];
+  const ccMPrev = D.cc_monthly[D.cc_monthly.length-3][1];
+  const codexM = D.codex_monthly[D.codex_monthly.length-2][1];
+  const codexMPrev = D.codex_monthly[D.codex_monthly.length-3][1];
+  const ccMoM = ((ccM-ccMPrev)/ccMPrev*100);
+  const codexMoM = ((codexM-codexMPrev)/codexMPrev*100);
+
+  // Cumulative
+  const ccCum = D.cc_cumulative[D.cc_cumulative.length-1][1];
+  const codexCum = D.codex_cumulative[D.codex_cumulative.length-1][1];
+
+  // Share
+  const totalM = ccM + codexM;
+  const ccShare = (ccM/totalM*100).toFixed(1);
+  const codexShare = (codexM/totalM*100).toFixed(1);
+
+  function card(name, color, wVal, wow, mVal, mom, cum, share){
+    const wowCls = wow>=0?'up':'dn';
+    const momCls = mom>=0?'up':'dn';
+    return '<div class="kpi" style="border-top:3px solid '+color+'">'+
+      '<div class="kpi-name" style="color:'+color+'">'+name+'</div>'+
+      '<div class="kpi-metrics">'+
+        '<div class="kpi-metric"><label>Weekly DL</label><div class="val">'+coding_fmtNum(wVal)+'</div><span class="chg '+wowCls+'">'+(wow>=0?'+':'')+wow.toFixed(1)+'% WoW</span></div>'+
+        '<div class="kpi-metric"><label>Monthly DL</label><div class="val">'+coding_fmtNum(mVal)+'</div><span class="chg '+momCls+'">'+(mom>=0?'+':'')+mom.toFixed(1)+'% MoM</span></div>'+
+      '</div>'+
+      '<div class="kpi-metrics" style="margin-top:8px">'+
+        '<div class="kpi-metric"><label>Cumulative</label><div class="val">'+coding_fmtNum(cum)+'</div></div>'+
+        '<div class="kpi-metric"><label>Market Share</label><div class="val">'+share+'%</div></div>'+
+      '</div>'+
+      '<div class="kpi-share" style="margin-top:10px">'+
+        '<span class="share-label">DL Share</span>'+
+        '<div class="share-bar-wrap"><div class="share-bar" style="width:'+share+'%;background:'+color+'"></div></div>'+
+        '<span class="share-pct" style="color:'+color+'">'+share+'%</span>'+
+      '</div>'+
+    '</div>';
+  }
+
+  document.getElementById('c_kpiRow').innerHTML =
+    card('Claude Code', CC_COLOR, ccW, ccWoW, ccM, ccMoM, ccCum, ccShare) +
+    card('Codex', CODEX_COLOR, codexW, codexWoW, codexM, codexMoM, codexCum, codexShare);
+}
+
+function coding_buildWeekly(){
+  const D = DATA_CODING;
+  // Exclude last partial week
+  const weeks = D.cc_weekly.slice(0,-1);
+  const codexWeeks = D.codex_weekly.slice(0,-1);
+  const labels = weeks.map(w=>coding_shortDate(w[0]));
+  const ccData = weeks.map(w=>w[1]/1e6);
+  const codexData = codexWeeks.map(w=>w[1]/1e6);
+  const ctx = document.getElementById('c_weeklyChart').getContext('2d');
+  if(c_weeklyChart) c_weeklyChart.destroy();
+  c_weeklyChart = new Chart(ctx,{
+    type:'line',
+    data:{labels, datasets:[
+      {label:'Claude Code',data:ccData,borderColor:CC_COLOR,backgroundColor:CC_BG,tension:.3,pointRadius:2,pointBackgroundColor:CC_COLOR,borderWidth:2,fill:true},
+      {label:'Codex',data:codexData,borderColor:CODEX_COLOR,backgroundColor:CODEX_BG,tension:.3,pointRadius:2,pointBackgroundColor:CODEX_COLOR,borderWidth:2,fill:true}
+    ]},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
+        tooltip:{callbacks:{label:i=>' '+i.dataset.label+': '+i.parsed.y.toFixed(2)+'M'}}},
+      scales:{
+        x:{grid:gridCfg,ticks:{maxTicksLimit:18,font:{size:10}}},
+        y:{grid:gridCfg,ticks:{callback:v=>v+'M',font:{size:11}}}
+      }
+    }
+  });
+}
+
+function coding_buildShare(){
+  const D = DATA_CODING;
+  const labels = D.cc_monthly.map(m=>coding_shortDate(m[0]));
+  const ccShare = D.cc_monthly.map((m,i)=>{
+    const total = m[1]+D.codex_monthly[i][1];
+    return (m[1]/total*100);
+  });
+  const codexShare = D.cc_monthly.map((m,i)=>{
+    const total = m[1]+D.codex_monthly[i][1];
+    return (D.codex_monthly[i][1]/total*100);
+  });
+  const ctx = document.getElementById('c_shareChart').getContext('2d');
+  if(c_shareChart) c_shareChart.destroy();
+  c_shareChart = new Chart(ctx,{
+    type:'line',
+    data:{labels, datasets:[
+      {label:'Claude Code %',data:ccShare,borderColor:CC_COLOR,backgroundColor:'transparent',tension:.3,pointRadius:3,pointBackgroundColor:CC_COLOR,borderWidth:2},
+      {label:'Codex %',data:codexShare,borderColor:CODEX_COLOR,backgroundColor:'transparent',tension:.3,pointRadius:3,pointBackgroundColor:CODEX_COLOR,borderWidth:2}
+    ]},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
+        tooltip:{callbacks:{label:i=>' '+i.dataset.label+': '+i.parsed.y.toFixed(1)+'%'}}},
+      scales:{
+        x:{grid:gridCfg,ticks:{font:{size:10}}},
+        y:{grid:gridCfg,min:0,max:100,ticks:{callback:v=>v+'%',font:{size:11}}}
+      }
+    }
+  });
+}
+
+function coding_buildRatio(){
+  const D = DATA_CODING;
+  const labels = D.cc_monthly.map(m=>coding_shortDate(m[0]));
+  const ratios = D.cc_monthly.map((m,i)=>{
+    return m[1]/D.codex_monthly[i][1];
+  });
+  const ctx = document.getElementById('c_ratioChart').getContext('2d');
+  if(c_ratioChart) c_ratioChart.destroy();
+  c_ratioChart = new Chart(ctx,{
+    type:'line',
+    data:{labels, datasets:[
+      {label:'CC/Codex Ratio',data:ratios,borderColor:CC_COLOR,backgroundColor:'rgba(139,92,246,.12)',tension:.3,pointRadius:3,pointBackgroundColor:CC_COLOR,borderWidth:2,fill:true}
+    ]},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
+        tooltip:{callbacks:{label:i=>' '+i.parsed.y.toFixed(1)+'x'}}},
+      scales:{
+        x:{grid:gridCfg,ticks:{font:{size:10}}},
+        y:{grid:gridCfg,min:0,ticks:{callback:v=>v.toFixed(0)+'x',font:{size:11}}}
+      }
+    }
+  });
+}
+
+function coding_buildCumulative(){
+  const D = DATA_CODING;
+  const labels = D.cc_cumulative.map(c=>coding_shortDate(c[0]));
+  const ccData = D.cc_cumulative.map(c=>c[1]/1e6);
+  const codexData = D.codex_cumulative.map(c=>c[1]/1e6);
+  const ctx = document.getElementById('c_cumulativeChart').getContext('2d');
+  if(c_cumulativeChart) c_cumulativeChart.destroy();
+  c_cumulativeChart = new Chart(ctx,{
+    type:'line',
+    data:{labels, datasets:[
+      {label:'Claude Code',data:ccData,borderColor:CC_COLOR,backgroundColor:'rgba(139,92,246,.12)',tension:.3,pointRadius:1,borderWidth:2,fill:true},
+      {label:'Codex',data:codexData,borderColor:CODEX_COLOR,backgroundColor:'rgba(6,182,212,.12)',tension:.3,pointRadius:1,borderWidth:2,fill:true}
+    ]},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
+        tooltip:{callbacks:{label:i=>' '+i.dataset.label+': '+i.parsed.y.toFixed(1)+'M'}}},
+      scales:{
+        x:{grid:gridCfg,ticks:{maxTicksLimit:18,font:{size:10}}},
+        y:{grid:gridCfg,ticks:{callback:v=>v+'M',font:{size:11}}}
+      }
+    }
+  });
+}
+
+function coding_buildGithub(){
+  const D = DATA_CODING;
+  const labels = D.github_commits.map(g=>coding_shortDate(g[0]));
+  const data = D.github_commits.map(g=>g[1]/1e6);
+  const ctx = document.getElementById('c_githubChart').getContext('2d');
+  if(c_githubChart) c_githubChart.destroy();
+  c_githubChart = new Chart(ctx,{
+    type:'bar',
+    data:{labels, datasets:[
+      {label:'CC Commits',data:data,backgroundColor:CC_COLOR+'cc',borderColor:CC_COLOR,borderWidth:1,borderRadius:4}
+    ]},
+    options:{responsive:true,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
+        tooltip:{callbacks:{label:i=>' '+i.parsed.y.toFixed(1)+'M commits'}}},
+      scales:{
+        x:{grid:gridCfg,ticks:{font:{size:10}}},
+        y:{grid:gridCfg,ticks:{callback:v=>v+'M',font:{size:11}}}
+      }
+    }
+  });
+}
+
+function coding_rebuildAll(){
+  if(c_chartsBuilt){
+    [c_weeklyChart, c_shareChart, c_ratioChart, c_cumulativeChart, c_githubChart].forEach(c=>{if(c)c.destroy()});
+  }
+  coding_buildKPIs();
+  coding_buildWeekly();
+  coding_buildShare();
+  coding_buildRatio();
+  coding_buildCumulative();
+  coding_buildGithub();
+  c_chartsBuilt = true;
+}
+</script>
+
 </body>
 </html>
