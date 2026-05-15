@@ -1999,9 +1999,9 @@ function coding_buildKPIs(){
 let c_weeklyScale = 'log';
 function coding_buildWeekly(){
   const D = DATA_CODING;
-  // Exclude last partial week
-  const weeks = D.cc_weekly.slice(0,-1);
-  const codexWeeks = D.codex_weekly.slice(0,-1);
+  // All stored weeks are complete (5/4-5/10 finished before May 12)
+  const weeks = D.cc_weekly;
+  const codexWeeks = D.codex_weekly;
   const labels = weeks.map(w=>coding_shortDate(w[0]));
   const sanitize = arr => c_weeklyScale==='log' ? arr.map(v => v<=0 ? null : v) : arr;
   const ccData = sanitize(weeks.map(w=>w[1]/1e6));
