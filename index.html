@@ -143,8 +143,6 @@ footer{text-align:center;color:var(--muted);font-size:.72rem;margin-top:32px;pad
       <button class="tab" onclick="setTrend('wau',this)">WAU</button>
       <button class="tab" onclick="setTrend('mau',this)">MAU</button>
       <button class="tab" onclick="setTrend('dl',this)">Downloads</button>
-      <button class="tab" style="margin-left:8px" onclick="setTrendScale('linear',this)" id="trendScaleLinear">Linear</button>
-      <button class="tab active" onclick="setTrendScale('log',this)" id="trendScaleLog">Log</button>
     </div>
   </div>
   <div class="chart-wrap"><canvas id="trendChart" height="90"></canvas></div>
@@ -461,14 +459,11 @@ const gridCfg = { color:'rgba(0,0,0,0.05)', drawBorder:false };
 // ── Trend Chart ───────────────────────────────────────────────────────────────
 let trendMode = 'dau';
 let trendChart;
-let trendScale = 'log';
 function buildTrend(){
   const rawMonths = trendMode==='dau' ? DATA.dau_months : (trendMode==='dl' ? DATA.dl_months : (trendMode==='mau' ? DATA.mau_months : DATA.wau_months));
   const rawSrc    = trendMode==='dau' ? DATA.dau : (trendMode==='dl' ? DATA.dl : (trendMode==='mau' ? DATA.mau : DATA.wau));
   const [months, ...appData] = sliceFrom(rawMonths, rawSrc.chatgpt, rawSrc.gemini, rawSrc.claude);
-  // Log scale cannot plot 0 — substitute a small sentinel for zero values when in log mode
-  const sanitize = arr => trendScale==='log' ? arr.map(v => v<=0 ? null : v) : arr;
-  const src = {chatgpt:sanitize(appData[0]), gemini:sanitize(appData[1]), claude:sanitize(appData[2])};
+  const src = {chatgpt:appData[0], gemini:appData[1], claude:appData[2]};
   const labels = months.map(shortLabel);
   const isWeekly = trendMode==='wau';
   const datasets = APPS.map(app => ({
@@ -476,23 +471,14 @@ function buildTrend(){
     data: src[app],
     borderColor: C[app].color,
     backgroundColor: C[app].fill,
-    fill: trendScale==='linear',
+    fill: true,
     tension: .4,
     pointRadius: isWeekly ? 0 : 2,
     pointHoverRadius: isWeekly ? 3 : 4,
-    borderWidth: isWeekly ? 1.5 : 2,
-    spanGaps: true
+    borderWidth: isWeekly ? 1.5 : 2
   }));
   const ctx = document.getElementById('trendChart').getContext('2d');
   if(trendChart) trendChart.destroy();
-  const yScale = trendScale==='log'
-    ? {type:'logarithmic',grid:gridCfg,ticks:{font:{size:11},callback:v=>{
-        const s = v.toString();
-        // Only label major decades (1, 10, 100, 1000...)
-        if(/^1(0+)?$/.test(s)) return v>=1000 ? (v/1000).toFixed(0)+'B' : v+'M';
-        return '';
-      }}}
-    : {type:'linear',grid:gridCfg,ticks:{callback:v=>v+'M',font:{size:11}}};
   trendChart = new Chart(ctx,{
     type:'line',
     data:{labels,datasets},
@@ -501,30 +487,19 @@ function buildTrend(){
       interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},tooltip:{
         callbacks:{
-          label: i => ' '+i.dataset.label+': '+(i.parsed.y==null?'—':i.parsed.y.toFixed(2)+'M')
+          label: i => ' '+i.dataset.label+': '+i.parsed.y.toFixed(2)+'M'
         }
       }},
       scales:{
         x:{grid:gridCfg,ticks:{maxTicksLimit:18,font:{size:10}}},
-        y: yScale
+        y:{grid:gridCfg,ticks:{callback:v=>v+'M',font:{size:11}}}
       }
     }
   });
 }
 function setTrend(mode, btn){
   trendMode=mode;
-  // Only deactivate the metric tabs (DAU/WAU/MAU/DL), not the scale toggle
-  ['dau','wau','mau','dl'].forEach(m => {
-    const b = document.querySelector(`#trendTabs .tab[onclick*="setTrend('${m}'"]`);
-    if(b) b.classList.remove('active');
-  });
-  btn.classList.add('active');
-  buildTrend();
-}
-function setTrendScale(s, btn){
-  trendScale = s;
-  document.getElementById('trendScaleLinear').classList.remove('active');
-  document.getElementById('trendScaleLog').classList.remove('active');
+  document.querySelectorAll('#trendTabs .tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   buildTrend();
 }
@@ -1106,14 +1081,12 @@ function web_buildKPIs(){
 
 // ── Web Trend Chart ──
 let w_trendMode = 'dau';
-let w_trendScale = 'log';
 let w_trendChart;
 function web_buildTrend(){
   const rawMonths = w_trendMode==='dau' ? DATA_WEB.dau_months : (w_trendMode==='mau' ? DATA_WEB.mau_months : DATA_WEB.wau_months);
   const rawSrc    = w_trendMode==='dau' ? DATA_WEB.dau : (w_trendMode==='mau' ? DATA_WEB.mau : DATA_WEB.wau);
   const [months, ...appData] = web_sliceFrom(rawMonths, rawSrc.chatgpt, rawSrc.gemini, rawSrc.claude);
-  const sanitize = arr => w_trendScale==='log' ? arr.map(v => v<=0 ? null : v) : arr;
-  const src = {chatgpt:sanitize(appData[0]), gemini:sanitize(appData[1]), claude:sanitize(appData[2])};
+  const src = {chatgpt:appData[0], gemini:appData[1], claude:appData[2]};
   const labels = months.map(shortLabel);
   const isWeekly = w_trendMode==='wau';
   const datasets = APPS.map(app => ({
@@ -1121,22 +1094,14 @@ function web_buildTrend(){
     data: src[app],
     borderColor: C[app].color,
     backgroundColor: C[app].fill,
-    fill: w_trendScale==='linear',
+    fill: true,
     tension: .4,
     pointRadius: isWeekly ? 0 : 2,
     pointHoverRadius: isWeekly ? 3 : 4,
-    borderWidth: isWeekly ? 1.5 : 2,
-    spanGaps: true
+    borderWidth: isWeekly ? 1.5 : 2
   }));
   const ctx = document.getElementById('w_trendChart').getContext('2d');
   if(w_trendChart) w_trendChart.destroy();
-  const yScale = w_trendScale==='log'
-    ? {type:'logarithmic',grid:gridCfg,ticks:{font:{size:11},callback:v=>{
-        const s = v.toString();
-        if(/^1(0+)?$/.test(s)) return v>=1000 ? (v/1000).toFixed(0)+'B' : v+'M';
-        return '';
-      }}}
-    : {type:'linear',grid:gridCfg,ticks:{callback:v=>v+'M',font:{size:11}}};
   w_trendChart = new Chart(ctx,{
     type:'line',
     data:{labels,datasets},
@@ -1144,28 +1109,18 @@ function web_buildTrend(){
       responsive:true,
       interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},tooltip:{
-        callbacks:{label: i => ' '+i.dataset.label+': '+(i.parsed.y==null?'—':i.parsed.y.toFixed(2)+'M')}
+        callbacks:{label: i => ' '+i.dataset.label+': '+i.parsed.y.toFixed(2)+'M'}
       }},
       scales:{
         x:{grid:gridCfg,ticks:{maxTicksLimit:18,font:{size:10}}},
-        y: yScale
+        y:{grid:gridCfg,ticks:{callback:v=>v+'M',font:{size:11}}}
       }
     }
   });
 }
 function web_setTrend(mode, btn){
   w_trendMode=mode;
-  ['dau','wau','mau'].forEach(m => {
-    const b = document.querySelector(`#w_trendTabs .tab[onclick*="web_setTrend('${m}'"]`);
-    if(b) b.classList.remove('active');
-  });
-  btn.classList.add('active');
-  web_buildTrend();
-}
-function web_setTrendScale(s, btn){
-  w_trendScale = s;
-  document.getElementById('w_trendScaleLinear').classList.remove('active');
-  document.getElementById('w_trendScaleLog').classList.remove('active');
+  document.querySelectorAll('#w_trendTabs .tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   web_buildTrend();
 }
@@ -1671,8 +1626,6 @@ buildDauRatio();
       <button class="tab active" onclick="web_setTrend('dau',this)">DAU</button>
       <button class="tab" onclick="web_setTrend('wau',this)">WAU</button>
       <button class="tab" onclick="web_setTrend('mau',this)">MAU</button>
-      <button class="tab" style="margin-left:8px" onclick="web_setTrendScale('linear',this)" id="w_trendScaleLinear">Linear</button>
-      <button class="tab active" onclick="web_setTrendScale('log',this)" id="w_trendScaleLog">Log</button>
     </div>
   </div>
   <div class="chart-wrap"><canvas id="w_trendChart" height="90"></canvas></div>
