@@ -54,8 +54,8 @@ ChatGPT / Gemini / Claude 全平台数据追踪仪表盘，覆盖 Mobile、Web�
 - Mobile：**2026 年 4 月**（DAU / WAU / MAU / Downloads / iOS-Android / 国家级 / 份额 / MoM 全部更新）
 - Mobile Avg Time Spent：**2026 年 4 月（1–12 日均值快照）**
 - Web Monthly UV / Weekly UV / Daily UV / 国家分布 / Avg Visit Duration (Semrush)：**2026 年 4 月**（Weekly 含 5/4 收尾周）
-- Coding Agent npm：**2026 年 4 月 13 日**
-- Coding Agent GitHub Commits：**2026 年 3 月**
+- Coding Agent npm：**2026 年 5 月 12 日**（weekly 到 5/4 收尾周，monthly 到 4 月，cumulative 到 5/12）
+- Coding Agent GitHub Commits：**2026 年 3 月**（GitHub 公开数据无新源）
 
 ## 技术栈
 
