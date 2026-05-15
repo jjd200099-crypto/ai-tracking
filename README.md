@@ -27,7 +27,9 @@ ChatGPT / Gemini / Claude 全平台数据追踪仪表盘，覆盖 Mobile、Web�
 - **Avg Visit Duration**：15 个月平均访问时长趋势
 - 国家数据按 ChatGPT / Gemini / Claude 分别展示
 
-### Coding Agent (npm + GitHub)
+### Coding / 2B
+- **Ramp AI Index B2B Penetration**：6 个 AI 供应商在美国企业付费订阅渗透率的月度趋势（Anthropic / OpenAI / Google / xAI / DeepSeek + Overall），数据从 Ramp 每月发布的 AI Index 图中数字化
+- 其余 Coding 内容（Claude Code vs Codex npm + GitHub）见下
 - **Claude Code vs Codex**：npm 周下载量趋势
 - **Market Share**：CC 份额从 99%（Jul '25）收窄至 75%（Mar '26）
 - **CC / Codex Ratio**：倍数变化趋势

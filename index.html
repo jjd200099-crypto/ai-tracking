@@ -110,7 +110,7 @@ footer{text-align:center;color:var(--muted);font-size:.72rem;margin-top:32px;pad
   <div class="tabs" id="viewToggle">
     <button class="tab active" onclick="setView('mobile',this)">Mobile</button>
     <button class="tab" onclick="setView('web',this)">Web</button>
-    <button class="tab" onclick="setView('coding',this)">Coding</button>
+    <button class="tab" onclick="setView('coding',this)">Coding / 2B</button>
   </div>
 </div>
 <div class="container" id="mobileView">
@@ -1772,14 +1772,26 @@ buildDauRatio();
 <div class="header fade-up">
   <div class="header-top">
     <div>
-      <div class="header-title">Coding Agent Intelligence</div>
-      <div class="header-subtitle">Claude Code vs Codex &nbsp;&mdash;&nbsp; npm Downloads &amp; GitHub Commits</div>
+      <div class="header-title">Coding Agent &amp; B2B Adoption</div>
+      <div class="header-subtitle">Claude Code · Codex · npm · GitHub · Ramp AI Index</div>
     </div>
     <div class="badges">
-      <div class="badge">Source: <b>npm Registry + GitHub</b></div>
+      <div class="badge">Source: <b>npm + GitHub + Ramp</b></div>
       <div class="badge">Updated: <b>May 2026</b></div>
     </div>
   </div>
+</div>
+
+<!-- B2B Subscription Penetration (Ramp AI Index) -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title">B2B AI Subscription Penetration <span style="font-size:11px;font-weight:400;color:var(--muted)">— US businesses with paid subscriptions, Ramp AI Index</span></div>
+      <div class="section-sub">Apr 2026: Anthropic 34.4% surpasses OpenAI 32.3% for the first time · <a href="https://ramp.com/leading-indicators/ai-index-may-2026" target="_blank" style="color:var(--cla);text-decoration:underline">source ↗</a></div>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="rampChart" height="80"></canvas></div>
+  <div style="margin-top:8px;font-size:10px;color:var(--muted);font-style:italic">Time series digitized from the Ramp AI Index May 2026 release chart; refresh by re-reading the published image each month.</div>
 </div>
 
 <!-- KPI Cards (2 cols) -->
@@ -1871,6 +1883,21 @@ const DATA_CODING = {
   github_commits: [["2025-06",200000],["2025-07",350000],["2025-08",500000],["2025-09",700000],["2025-10",1000000],["2025-11",1100000],["2025-12",1500000],["2026-01",3000000],["2026-02",5200000],["2026-03",10300000],["2026-04",11354573]],
   vscode_cc: [["2025-03-07",0],["2025-03-17",0],["2025-03-27",0],["2025-04-06",0],["2025-04-16",0],["2025-04-26",0],["2025-05-06",0],["2025-05-16",0],["2025-05-26",0],["2025-06-05",0],["2025-06-15",0],["2025-06-25",0],["2025-07-05",500],["2025-07-15",1500],["2025-07-25",3000],["2025-08-04",5000],["2025-08-14",7000],["2025-08-24",9000],["2025-09-03",7500],["2025-09-13",10000],["2025-09-23",14000],["2025-10-03",12000],["2025-10-13",13000],["2025-10-23",15000],["2025-11-02",17000],["2025-11-12",18000],["2025-11-22",20000],["2025-12-02",19000],["2025-12-12",20000],["2025-12-22",18000],["2026-01-01",20000],["2026-01-11",22000],["2026-01-21",25000],["2026-01-31",28000],["2026-02-10",32000],["2026-02-20",40000],["2026-03-02",55000],["2026-03-12",70000],["2026-03-22",85000],["2026-04-01",95000],["2026-04-11",115000],["2026-04-21",121759],["2026-05-01",122576],["2026-05-11",117414]],
   vscode_codex: [["2025-03-07",5500],["2025-03-17",6000],["2025-03-27",6500],["2025-04-06",6000],["2025-04-16",5500],["2025-04-26",5000],["2025-05-06",4000],["2025-05-16",3500],["2025-05-26",3000],["2025-06-05",2500],["2025-06-15",2000],["2025-06-25",1500],["2025-07-05",1000],["2025-07-15",800],["2025-07-25",500],["2025-08-04",1000],["2025-08-14",2000],["2025-08-24",3000],["2025-09-03",5000],["2025-09-13",8000],["2025-09-23",15000],["2025-10-03",18000],["2025-10-13",16000],["2025-10-23",19000],["2025-11-02",18000],["2025-11-12",20000],["2025-11-22",21000],["2025-12-02",20000],["2025-12-12",22000],["2025-12-22",18000],["2026-01-01",19000],["2026-01-11",20000],["2026-01-21",20000],["2026-01-31",22000],["2026-02-10",35000],["2026-02-20",45000],["2026-03-02",55000],["2026-03-12",50000],["2026-03-22",47000],["2026-04-01",45000],["2026-04-11",46000],["2026-04-21",48628],["2026-05-01",54782],["2026-05-11",55474]]
+};
+
+// ── Ramp AI Index Data ────────────────────────────────────────────────────────
+// % of US businesses with paid AI subscriptions, monthly. Anchor points (Apr 2026)
+// from Ramp AI Index May 2026 release; intermediate months digitized visually from
+// the published chart (ramp.com/leading-indicators/ai-index-may-2026). Apr value is
+// authoritative; pre-Apr-2026 values are ±1pp approximations.
+const DATA_RAMP = {
+  months: ["2023-01","2023-02","2023-03","2023-04","2023-05","2023-06","2023-07","2023-08","2023-09","2023-10","2023-11","2023-12","2024-01","2024-02","2024-03","2024-04","2024-05","2024-06","2024-07","2024-08","2024-09","2024-10","2024-11","2024-12","2025-01","2025-02","2025-03","2025-04","2025-05","2025-06","2025-07","2025-08","2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03","2026-04"],
+  overall:   [6.5,9,11,12,13,13.5,13.5,13,13,13,13,13.5,14,14,14.5,15,15.5,16,16.5,17,17,17.5,18,18.5,19,19,20,20.5,21,25,27,33,37,40,41.5,42.5,44,45,47,50.6],
+  anthropic: [0,0,0,0,0,0,0,0,0,0,0,0.1,0.2,0.3,0.5,1,1.5,2,2.2,2.3,2.5,2.5,2.8,3,3,3.2,3.5,4,4.5,7,4,5,6,8,10,12,15,18,24.4,34.4],
+  openai:    [2,3,4,5,6,6,6,6,6,6,6.5,7,7,7.5,8,8.5,9,9.5,10,10,10.5,11,11.5,12,12.5,12.5,13,13,13,18,27,31,33,35,36,36.5,36,35.5,35.2,32.3],
+  google:    [1.5,1.8,2,2,2.2,2.3,2.3,2.4,2.4,2.5,2.5,2.5,2.5,2.6,2.7,2.8,2.8,2.9,3,3,3.2,3.3,3.5,3.5,3.5,3.5,3.8,4,4.2,4.5,3,3,3.2,3.3,3.5,4,4,4.2,4.3,4.5],
+  xai:       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,1,1.3,1.6,1.9],
+  deepseek:  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.02,0.03,0.04,0.05,0.06,0.06,0.07,0.07]
 };
 
 // ── Coding Chart Functions ────────────────────────────────────────────────────
@@ -2127,10 +2154,54 @@ function coding_buildVscode(){
   });
 }
 
+let c_rampChart;
+function coding_buildRamp(){
+  const D = DATA_RAMP;
+  const labels = D.months.map(coding_shortDate);
+  const sanitize = arr => arr.map(v => v<=0 ? null : v); // hide leading zeros for cleaner lines
+  const series = [
+    {key:'overall',   label:'Overall',   color:'#1F1F1F', dash:[]},
+    {key:'anthropic', label:'Anthropic', color:'#CDA77A', dash:[]},
+    {key:'openai',    label:'OpenAI',    color:'#2BA37D', dash:[]},
+    {key:'google',    label:'Google',    color:'#E15A3A', dash:[]},
+    {key:'xai',       label:'xAI',       color:'#444444', dash:[4,4]},
+    {key:'deepseek',  label:'DeepSeek',  color:'#999999', dash:[]},
+  ];
+  const datasets = series.map(s => ({
+    label: s.label,
+    data: sanitize(D[s.key]),
+    borderColor: s.color,
+    backgroundColor: 'transparent',
+    borderWidth: s.key==='overall' ? 2.4 : 1.8,
+    borderDash: s.dash,
+    tension: .35,
+    pointRadius: 0,
+    pointHoverRadius: 4,
+    pointBackgroundColor: s.color,
+    spanGaps: true,
+    fill: false
+  }));
+  const ctx = document.getElementById('rampChart').getContext('2d');
+  if(c_rampChart) c_rampChart.destroy();
+  c_rampChart = new Chart(ctx,{
+    type:'line',
+    data:{labels, datasets},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',align:'start',labels:{boxWidth:14,boxHeight:2,font:{size:11}}},
+        tooltip:{callbacks:{label:i=>' '+i.dataset.label+': '+(i.parsed.y==null?'—':i.parsed.y.toFixed(2)+'%')}}},
+      scales:{
+        x:{grid:gridCfg,ticks:{maxTicksLimit:14,font:{size:10}}},
+        y:{grid:gridCfg,min:0,max:55,ticks:{callback:v=>v+'%',font:{size:11}}}
+      }
+    }
+  });
+}
+
 function coding_rebuildAll(){
   if(c_chartsBuilt){
-    [c_weeklyChart, c_shareChart, c_ratioChart, c_cumulativeChart, c_githubChart, c_vscodeChart].forEach(c=>{if(c)c.destroy()});
+    [c_weeklyChart, c_shareChart, c_ratioChart, c_cumulativeChart, c_githubChart, c_vscodeChart, c_rampChart].forEach(c=>{if(c)c.destroy()});
   }
+  coding_buildRamp();
   coding_buildKPIs();
   coding_buildWeekly();
   coding_buildShare();
