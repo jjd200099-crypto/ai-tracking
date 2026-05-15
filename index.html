@@ -2185,13 +2185,25 @@ let c_wauChart;
 function coding_buildWau(){
   const D = DATA_WAU;
   const labels = D.months.map(coding_shortDate);
+  // A segment is "estimated" when its endpoint (p1) is a commit-based CC value.
+  const isEst = ctx => {
+    const t = D.cc_type[ctx.p1DataIndex];
+    return t && t.startsWith('commit-based');
+  };
+  // Per-point style: hollow circle for estimated CC points, filled for official.
+  const ccPointBg = D.cc_type.map(t => t && t.startsWith('commit-based') ? '#FFFFFF' : CC_COLOR);
+  const ccPointBorder = D.cc_type.map(_ => CC_COLOR);
   const ctx = document.getElementById('c_wauChart').getContext('2d');
   if(c_wauChart) c_wauChart.destroy();
   c_wauChart = new Chart(ctx,{
     type:'line',
     data:{labels, datasets:[
-      {label:'Claude Code', data:D.cc, borderColor:CC_COLOR, backgroundColor:CC_BG, tension:.3, pointRadius:4, pointBackgroundColor:CC_COLOR, borderWidth:2, fill:true, spanGaps:true},
-      {label:'Codex',       data:D.codex, borderColor:CODEX_COLOR, backgroundColor:CODEX_BG, tension:.3, pointRadius:4, pointBackgroundColor:CODEX_COLOR, borderWidth:2, fill:true, spanGaps:true},
+      {label:'Claude Code', data:D.cc, borderColor:CC_COLOR, backgroundColor:CC_BG, tension:.3,
+        pointRadius:5, pointBackgroundColor:ccPointBg, pointBorderColor:ccPointBorder, pointBorderWidth:2,
+        borderWidth:2, fill:true, spanGaps:true,
+        segment:{ borderDash: c => isEst(c) ? [6,4] : undefined }},
+      {label:'Codex',       data:D.codex, borderColor:CODEX_COLOR, backgroundColor:CODEX_BG, tension:.3,
+        pointRadius:5, pointBackgroundColor:CODEX_COLOR, borderWidth:2, fill:true, spanGaps:true},
     ]},
     options:{responsive:true,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
