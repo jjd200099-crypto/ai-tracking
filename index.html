@@ -1833,15 +1833,26 @@ buildDauRatio();
   <div class="chart-wrap"><canvas id="c_cumulativeChart" height="90"></canvas></div>
 </div>
 
-<!-- GitHub Commits -->
-<div class="section fade-up" style="margin-bottom:16px">
-  <div class="section-header">
-    <div>
-      <div class="section-title">GitHub Commits (Claude Code)</div>
-      <div class="section-sub">Monthly co-authored commits &nbsp;|&nbsp; Codex does not tag co-author — not comparable</div>
+<!-- GitHub Commits + WAU side-by-side -->
+<div class="row2 fade-up" style="margin-bottom:16px">
+  <div class="section" style="margin-bottom:0">
+    <div class="section-header">
+      <div>
+        <div class="section-title">GitHub Commits (Claude Code)</div>
+        <div class="section-sub">Monthly co-authored commits &nbsp;|&nbsp; Codex does not tag co-author — not comparable</div>
+      </div>
     </div>
+    <div class="chart-wrap"><canvas id="c_githubChart" height="170"></canvas></div>
   </div>
-  <div class="chart-wrap"><canvas id="c_githubChart" height="80"></canvas></div>
+  <div class="section" style="margin-bottom:0">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Weekly Active Users <span style="font-size:11px;font-weight:400;color:var(--muted)">— Claude Code vs Codex</span></div>
+        <div class="section-sub">CC: commits ÷ 3.25 (anchor: Feb 5.2M commits = 1.6M WAU) &nbsp;|&nbsp; Codex: official disclosures</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="c_wauChart" height="170"></canvas></div>
+  </div>
 </div>
 
 <!-- VS Code Marketplace -->
@@ -1898,6 +1909,22 @@ const DATA_RAMP = {
   google:    [1.5,1.8,2,2,2.2,2.3,2.3,2.4,2.4,2.5,2.5,2.5,2.5,2.6,2.7,2.8,2.8,2.9,3,3,3.2,3.3,3.5,3.5,3.5,3.5,3.8,4,4.2,4.5,3,3,3.2,3.3,3.5,4,4,4.2,4.3,4.5],
   xai:       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,1,1.3,1.6,1.9],
   deepseek:  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.02,0.03,0.04,0.05,0.06,0.06,0.07,0.07]
+};
+
+// ── Coding-Agent WAU Data ────────────────────────────────────────────────────
+// CC anchor: Feb 2026 = 1.6M WAU (Stormy AI / official Anthropic disclosure)
+//            paired with 5.2M monthly GitHub co-authored commits → ratio = 3.25
+// CC pre-anchor Jan 2026 (0.8M) from official Anthropic; CC post-anchor Mar/Apr
+//   are commit-based estimates (commits / 3.25): 10.3M ÷ 3.25 ≈ 3.17M, 11.4M ÷ 3.25 ≈ 3.51M
+// Codex: 2025-12 0.4M (back-calc from "5x in prior quarter" / Fortune);
+//        2026-01 0.6M (Daniel Vaughan blog); 2026-03 2M (Fortune);
+//        2026-04 4M (Neowin/FourWeekMBA, week of Apr 21)
+const DATA_WAU = {
+  months: ["2025-12","2026-01","2026-02","2026-03","2026-04"],
+  // null where no anchor; we draw with spanGaps to bridge gaps
+  cc:      [null, 0.8, 1.6, 3.17, 3.51],
+  cc_type: ["—",  "official", "official", "commit-based (10.3M÷3.25)", "commit-based (11.4M÷3.25)"],
+  codex:   [0.4,  0.6, null, 2.0,  4.0],
 };
 
 // ── Coding Chart Functions ────────────────────────────────────────────────────
@@ -2154,6 +2181,34 @@ function coding_buildVscode(){
   });
 }
 
+let c_wauChart;
+function coding_buildWau(){
+  const D = DATA_WAU;
+  const labels = D.months.map(coding_shortDate);
+  const ctx = document.getElementById('c_wauChart').getContext('2d');
+  if(c_wauChart) c_wauChart.destroy();
+  c_wauChart = new Chart(ctx,{
+    type:'line',
+    data:{labels, datasets:[
+      {label:'Claude Code', data:D.cc, borderColor:CC_COLOR, backgroundColor:CC_BG, tension:.3, pointRadius:4, pointBackgroundColor:CC_COLOR, borderWidth:2, fill:true, spanGaps:true},
+      {label:'Codex',       data:D.codex, borderColor:CODEX_COLOR, backgroundColor:CODEX_BG, tension:.3, pointRadius:4, pointBackgroundColor:CODEX_COLOR, borderWidth:2, fill:true, spanGaps:true},
+    ]},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
+        tooltip:{callbacks:{label:(i)=>{
+          if(i.parsed.y==null) return ' '+i.dataset.label+': —';
+          const idx = i.dataIndex;
+          const note = i.dataset.label==='Claude Code' ? ' ('+D.cc_type[idx]+')' : ' (official)';
+          return ' '+i.dataset.label+': '+i.parsed.y.toFixed(2)+'M'+note;
+        }}}},
+      scales:{
+        x:{grid:gridCfg,ticks:{font:{size:10}}},
+        y:{grid:gridCfg,min:0,ticks:{callback:v=>v+'M',font:{size:11}}}
+      }
+    }
+  });
+}
+
 let c_rampChart;
 function coding_buildRamp(){
   const D = DATA_RAMP;
@@ -2199,7 +2254,7 @@ function coding_buildRamp(){
 
 function coding_rebuildAll(){
   if(c_chartsBuilt){
-    [c_weeklyChart, c_shareChart, c_ratioChart, c_cumulativeChart, c_githubChart, c_vscodeChart, c_rampChart].forEach(c=>{if(c)c.destroy()});
+    [c_weeklyChart, c_shareChart, c_ratioChart, c_cumulativeChart, c_githubChart, c_vscodeChart, c_rampChart, c_wauChart].forEach(c=>{if(c)c.destroy()});
   }
   coding_buildRamp();
   coding_buildKPIs();
@@ -2208,6 +2263,7 @@ function coding_rebuildAll(){
   coding_buildRatio();
   coding_buildCumulative();
   coding_buildGithub();
+  coding_buildWau();
   coding_buildVscode();
   c_chartsBuilt = true;
 }
