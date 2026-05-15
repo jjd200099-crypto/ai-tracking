@@ -51,7 +51,9 @@ ChatGPT / Gemini / Claude 全平台数据追踪仪表盘，覆盖 Mobile、Web�
 
 ## 数据截止
 
-- Mobile / Web：**2026 年 3 月**（月度完整数据）
+- Mobile：**2026 年 4 月**（月度完整数据；DAU/WAU/MAU、iOS/Android、国家级、份额、MoM 均已更新）
+- Mobile Downloads / Avg Time Spent：**2026 年 3 月**（需单独导出 Sensor Tower）
+- Web (Semrush)：**2026 年 3 月**
 - Coding Agent npm：**2026 年 4 月 13 日**
 - Coding Agent GitHub Commits：**2026 年 3 月**
 
