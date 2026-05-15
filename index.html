@@ -2129,20 +2129,31 @@ function coding_buildGithub(){
   const D = DATA_CODING;
   const labels = D.github_commits.map(g=>coding_shortDate(g[0]));
   const data = D.github_commits.map(g=>g[1]/1e6);
+  // MoM % (null for first month since no prior month)
+  const mom = D.github_commits.map((g, i) => {
+    if (i === 0) return null;
+    const prev = D.github_commits[i-1][1];
+    return prev ? ((g[1] - prev) / prev * 100) : null;
+  });
   const ctx = document.getElementById('c_githubChart').getContext('2d');
   if(c_githubChart) c_githubChart.destroy();
   c_githubChart = new Chart(ctx,{
-    type:'line',
+    type:'bar',
     data:{labels, datasets:[
-      {label:'Claude Code Commits',data:data,borderColor:CC_COLOR,backgroundColor:CC_BG,fill:true,tension:.3,pointRadius:4,pointBackgroundColor:CC_COLOR,borderWidth:2}
+      {type:'bar', label:'Commits (M)', data:data, backgroundColor:CC_BG, borderColor:CC_COLOR, borderWidth:1, yAxisID:'y', order:2},
+      {type:'line', label:'MoM %', data:mom, borderColor:'#1F1F1F', backgroundColor:'transparent', tension:.3, pointRadius:3, pointBackgroundColor:'#1F1F1F', borderWidth:2, yAxisID:'y1', spanGaps:true, order:1}
     ]},
     options:{responsive:true,
       interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},
-        tooltip:{callbacks:{label:i=>' '+i.parsed.y.toFixed(1)+'M commits'}}},
+        tooltip:{callbacks:{label:i=>{
+          if(i.dataset.label==='MoM %') return i.parsed.y==null ? ' MoM: —' : ' MoM: '+(i.parsed.y>=0?'+':'')+i.parsed.y.toFixed(1)+'%';
+          return ' '+i.parsed.y.toFixed(2)+'M commits';
+        }}}},
       scales:{
         x:{grid:gridCfg,ticks:{font:{size:10}}},
-        y:{grid:gridCfg,min:0,ticks:{callback:v=>v+'M',font:{size:11}}}
+        y:{grid:gridCfg,min:0,position:'left',ticks:{callback:v=>v+'M',font:{size:11}},title:{display:false}},
+        y1:{grid:{drawOnChartArea:false},position:'right',ticks:{callback:v=>v+'%',font:{size:11}},title:{display:false}}
       }
     }
   });
