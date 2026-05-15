@@ -2141,7 +2141,7 @@ function coding_buildGithub(){
     type:'bar',
     data:{labels, datasets:[
       {type:'bar', label:'Commits (M)', data:data, backgroundColor:CC_BG, borderColor:CC_COLOR, borderWidth:1, yAxisID:'y', order:2},
-      {type:'line', label:'MoM %', data:mom, borderColor:'#1F1F1F', backgroundColor:'transparent', tension:.3, pointRadius:3, pointBackgroundColor:'#1F1F1F', borderWidth:2, yAxisID:'y1', spanGaps:true, order:1}
+      {type:'line', label:'MoM %', data:mom, borderColor:'#6D28D9', backgroundColor:'transparent', borderDash:[5,4], tension:.3, pointRadius:3, pointBackgroundColor:'#6D28D9', borderWidth:2, yAxisID:'y1', spanGaps:true, order:1}
     ]},
     options:{responsive:true,
       interaction:{mode:'index',intersect:false},
