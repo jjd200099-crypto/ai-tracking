@@ -51,10 +51,10 @@ ChatGPT / Gemini / Claude 全平台数据追踪仪表盘，覆盖 Mobile、Web�
 
 ## 数据截止
 
-- Mobile：**2026 年 4 月**（月度完整数据；DAU / WAU / MAU / Downloads、iOS/Android、国家级、份额、MoM 全部更新）
+- Mobile：**2026 年 4 月**（DAU / WAU / MAU / Downloads / iOS-Android / 国家级 / 份额 / MoM 全部更新）
 - Mobile Avg Time Spent：**2026 年 4 月（1–12 日均值快照）**
-- Web Monthly UV (Semrush)：**2026 年 4 月**（趋势/份额/MoM/比值已更新）
-- Web 国家分布 & 周/日粒度：**2026 年 3 月**（claude.ai 国家 CSV 因 URL 拼成 "cluade" 暂未入；待补完整 Apr export）
+- Web Monthly UV / Daily UV / 国家分布 / Avg Visit Duration (Semrush)：**2026 年 4 月**
+- Web Weekly UV：**2026 年 3 月**（Semrush 周粒度 CSV claude.ai 列拼成 "cluade"，待重导）
 - Coding Agent npm：**2026 年 4 月 13 日**
 - Coding Agent GitHub Commits：**2026 年 3 月**
 
