@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Anthropic Revenue Deep Dive — YipitData 2026-05-27</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f8f7f4;--card:#ffffff;--card2:#f5f3f0;--border:#e8e5df;--tertiary:#eceae5;
+  --text:#1c1917;--sub:#57534e;--muted:#a8a29e;
+  --accent:#d97429;--accent2:#c2410c;
+  --bull:#0d9668;--bear:#dc2626;--neutral:#6b7280;
+  --cloud:#d97429;--or:#3b7dd8;--b2b:#0d9668;--subs:#a855f7;
+  --aws:#ff9500;--gcp:#4285f4;--azure:#0078d4;
+  --opus:#7c3aed;--sonnet:#d97429;--haiku:#0d9668;
+  --font-body:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+  --font-heading:'Fraunces','Georgia',serif;
+  --font-mono:'IBM Plex Mono','SF Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;padding:40px 24px 56px;font-size:.8125rem;line-height:1.55;-webkit-font-smoothing:antialiased}
+.container{max-width:1200px;margin:0 auto}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both}
+a{color:var(--accent2);text-decoration:none}
+a:hover{text-decoration:underline}
+/* Header */
+.header{margin-bottom:24px;padding-bottom:20px;border-bottom:2px solid var(--text)}
+.header-eyebrow{font-family:var(--font-mono);font-size:.68rem;letter-spacing:1.6px;color:var(--accent2);text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.header-title{font-family:var(--font-heading);font-size:clamp(1.75rem,3.5vw,2.5rem);font-weight:600;letter-spacing:-.02em;line-height:1.15;color:var(--text);margin-bottom:8px}
+.header-subtitle{color:var(--sub);font-size:.95rem;margin-bottom:14px;font-weight:400}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:.7rem;color:var(--sub);font-family:var(--font-mono)}
+.badge b{color:var(--text);font-weight:600}
+/* Thesis box */
+.thesis{background:#fff7ed;border-left:4px solid var(--accent2);border-radius:6px;padding:18px 22px;margin:24px 0 28px}
+.thesis-eyebrow{font-family:var(--font-mono);font-size:.65rem;text-transform:uppercase;letter-spacing:1.4px;color:var(--accent2);font-weight:700;margin-bottom:10px}
+.thesis ul{list-style:none;padding:0}
+.thesis li{padding:5px 0 5px 22px;position:relative;font-size:.85rem;line-height:1.55}
+.thesis li::before{content:"▸";position:absolute;left:0;color:var(--accent2);font-weight:bold}
+.thesis li b{color:var(--accent2)}
+/* KPI cards */
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:24px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;position:relative;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.kpi-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px}
+.kpi-val{font-family:var(--font-mono);font-size:1.3rem;font-weight:700;color:var(--text);line-height:1.1}
+.kpi-val small{font-size:.85rem;font-weight:400;color:var(--sub)}
+.kpi-delta{font-size:.68rem;margin-top:3px;font-family:var(--font-mono);font-weight:600}
+.kpi-delta.up{color:#0d7c5a}
+.kpi-delta.dn{color:#c0392b}
+.kpi-sub{font-size:.65rem;color:var(--muted);margin-top:2px}
+/* Sections */
+.section{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.section-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.section-title{font-family:var(--font-heading);font-size:1.05rem;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.section-sub{font-size:.74rem;color:var(--muted);margin-top:3px;line-height:1.5}
+.section-num{display:inline-block;font-family:var(--font-mono);color:var(--accent2);font-size:.7rem;margin-right:8px;font-weight:600;letter-spacing:.05em}
+.chart-wrap{position:relative}
+/* Tabs */
+.tabs{display:flex;gap:3px;background:var(--card2);border-radius:8px;padding:3px}
+.tab{padding:5px 12px;border-radius:6px;border:none;background:transparent;color:var(--muted);font-family:var(--font-body);font-size:.74rem;cursor:pointer;transition:all .15s ease;font-weight:600}
+.tab:hover{color:var(--sub)}
+.tab.active{background:var(--card);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+/* Row 2 col */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+/* Tables */
+table{width:100%;border-collapse:collapse;font-size:.78rem;margin:8px 0}
+th{text-align:left;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--border);font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;background:#fafaf7}
+td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle;color:var(--text);font-family:var(--font-mono);font-size:.75rem}
+td:first-child{font-family:var(--font-body);font-weight:500;font-size:.78rem}
+td.bull{color:var(--bull);font-weight:600}
+td.bear{color:var(--bear);font-weight:600}
+td.neu{color:var(--neutral);font-weight:600}
+/* Mini stats */
+.mini-stat{display:flex;gap:24px;margin-top:8px;font-size:.72rem;color:var(--sub);flex-wrap:wrap}
+.mini-stat b{color:var(--text);font-family:var(--font-mono);font-weight:700}
+/* Methodology box */
+.method-box{background:#fafaf7;border:1px solid var(--border);border-radius:8px;padding:16px 18px;margin:12px 0}
+.method-grid{display:grid;grid-template-columns:160px 1fr 60px 1fr;gap:8px 12px;font-size:.78rem;align-items:start}
+.method-grid > div{padding:6px 0;border-bottom:1px solid var(--border)}
+.method-grid > div:nth-last-child(-n+4){border-bottom:none}
+.method-key{font-weight:600;color:var(--text)}
+.method-val{color:var(--sub)}
+.method-reweight{font-family:var(--font-mono);color:var(--accent2);font-weight:700;text-align:center}
+.method-reason{color:var(--muted);font-size:.72rem}
+/* Cohort heatmap */
+.cohort-table{width:100%;border-collapse:separate;border-spacing:2px;font-family:var(--font-mono);font-size:.7rem}
+.cohort-table th{text-align:center;color:var(--muted);font-weight:600;padding:4px 2px;font-size:.62rem;text-transform:uppercase;letter-spacing:.04em;background:transparent;border:none}
+.cohort-table td{text-align:center;padding:5px 4px;border:none;border-radius:3px;font-weight:600;color:var(--text);min-width:42px;font-family:var(--font-mono);font-size:.72rem}
+.cohort-table td.empty{background:transparent;color:var(--tertiary)}
+.cohort-table td.cohort-label{background:transparent;text-align:right;padding-right:10px;font-weight:600;color:var(--sub);font-size:.72rem;font-family:var(--font-mono);min-width:64px}
+.cohort-table tr:hover td:not(.empty):not(.cohort-label){box-shadow:inset 0 0 0 1.5px var(--text)}
+.cohort-legend{display:flex;gap:6px;align-items:center;font-size:.72rem;color:var(--muted);margin-top:10px;font-family:var(--font-mono)}
+.cohort-legend-bar{display:inline-block;height:12px;width:160px;border-radius:3px;background:linear-gradient(to right,#fef3c7,#fed7aa,#fb923c,#d97429,#7c2d12)}
+/* Bull/Bear boxes */
+.verdict-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.verdict-box{padding:18px 20px;border-radius:8px}
+.verdict-bull{background:#ecfdf5;border-left:4px solid var(--bull)}
+.verdict-bear{background:#fef2f2;border-left:4px solid var(--bear)}
+.verdict-box h4{font-family:var(--font-heading);font-size:.92rem;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;font-weight:700}
+.verdict-bull h4{color:var(--bull)}
+.verdict-bear h4{color:var(--bear)}
+.verdict-box ul{list-style:none;padding:0}
+.verdict-box li{padding:5px 0;font-size:.8rem;border-bottom:1px dotted rgba(0,0,0,.07);line-height:1.4}
+.verdict-box li:last-child{border:none}
+.verdict-box li b{font-family:var(--font-mono);font-weight:700}
+/* Caveat box */
+.caveat-box{background:#fffbeb;border:1px solid #fde68a;padding:16px 20px;border-radius:8px;margin:14px 0}
+.caveat-box h4{font-family:var(--font-heading);font-size:.92rem;text-transform:uppercase;letter-spacing:.04em;color:#92400e;margin-bottom:10px;font-weight:700}
+.caveat-box ol{padding-left:22px;font-size:.8rem;line-height:1.55}
+.caveat-box li{margin-bottom:6px}
+.caveat-box li b{color:#92400e}
+/* Insights grid */
+.insights-section h3{font-family:var(--font-heading);font-size:1rem;color:var(--text);margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border);font-weight:600}
+.insights-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;margin:6px 0 12px}
+.insight-item{font-size:.8rem;padding:4px 0;line-height:1.5}
+.insight-item .ins-num{font-family:var(--font-mono);color:var(--accent2);font-weight:700;margin-right:4px}
+.insight-item b{font-family:var(--font-mono);font-weight:600;color:var(--text)}
+/* Pull quote */
+.pull-quote{margin:20px 0;padding:14px 24px;border-left:4px solid var(--text);font-family:var(--font-heading);font-size:1.05rem;line-height:1.5;color:var(--text);font-style:italic;background:#fafaf7;border-radius:0 6px 6px 0}
+.pull-quote span{display:block;margin-top:8px;font-size:.7rem;font-style:normal;color:var(--muted);font-family:var(--font-mono)}
+/* Footer */
+footer{margin-top:32px;padding:20px 0;border-top:1px solid var(--border);font-size:.7rem;color:var(--muted);font-family:var(--font-mono);line-height:1.6;text-align:center}
+footer a{color:var(--sub)}
+/* Responsive */
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(3,1fr)}.row2,.row3{grid-template-columns:1fr}.verdict-row,.insights-grid{grid-template-columns:1fr}.method-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="header fade-up">
+  <div class="header-eyebrow">YIPITDATA · ALT DATA · ANTHROPIC</div>
+  <div class="header-title">Anthropic at $45B ARR：alt data 深度拆解</div>
+  <div class="header-subtitle">从 ARR 来源、订阅用户行为、B2B Cohort 留存扩张、模型生命周期、价格弹性、Cloud 集中度六个维度，验证 Anthropic 增长 thesis 是否成立</div>
+  <div class="badges">
+    <div class="badge">数据日期 <b>2026-05-27</b></div>
+    <div class="badge">覆盖窗口 <b>2024-11 → 2026-05</b></div>
+    <div class="badge">报告日期 <b>2026-05-29</b></div>
+    <div class="badge">Yipit Coverage <b>~1.5%</b></div>
+    <div class="badge">Backtest <b>±5% median error</b></div>
+    <div class="badge">18 charts · 50+ insights</div>
+  </div>
+</header>
+
+<div class="thesis fade-up">
+  <div class="thesis-eyebrow">核心结论 / Thesis</div>
+  <ul>
+    <li><b>$45B ARR 真实，且 5 月仍在 reaccelerate</b>。Yipit panel 测算 ($44.3B Apr / $48.4B May) 与 CFO 披露 ($45B "imminently") 误差 &lt;3%；5 月部分数据已超 4 月 18%，全月 run-rate 可能落在 $50-55B。</li>
+    <li><b>这是一家 API 公司，不是 SaaS 公司</b>。API（Cloud + OpenRouter + B2B Direct）占 ARR 87.2%；Consumer Subs 仅 12.8%。跟 OpenAI 50%+ ChatGPT 完全相反的路径。</li>
+    <li><b>Enterprise 已经是现在不是未来</b>。Cloud API 占 reweighted ARR 从 25% (2024-11) 升至 48.5% (2026-05)；Consumer Subs 反向从 37% 缩到 13%；mix 翻转完成。</li>
+    <li><b>AWS Bedrock 单一通道占 cloud 82.7% · 占总 ARR ~40%</b>。表面"多云"实际 single-cloud dependency；GCP/Vertex 加速但仍小一个数量级（$58M vs $290M T28D 年化）。</li>
+    <li><b>Opus 已超过 Sonnet 成为最大模型 (May 2026 新发现)</b>。Opus tier $25M vs Sonnet $15M；token 量 12.5T vs 10.9T。Mix 在向更贵的 tier 升级 — 客单价上行。</li>
+    <li><b>NDR &gt;500% 真实但 bimodal</b>。Cohort 数据显示 2025-Q2/Q3 cohort 扩张 50-160x；2024 早期 cohort 只 5-25x。新客户 ramping 速度远超老客户。</li>
+  </ul>
+</div>
+
+<div class="pull-quote fade-up">
+  "Yipit 这份数据把 CFO 的话从 vibes 变成 hard——$45B 是实的，Anthropic 的下半场战场是 enterprise via AWS Bedrock，不是 consumer 也不是 OpenRouter。"
+  <span>—— Investment view, 2026-05-29</span>
+</div>
+
+<!-- KPI Cards -->
+<div class="kpi-grid fade-up" id="kpiGrid"></div>
+
+<!-- ════════════ METHODOLOGY ════════════ -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="section-num">00</span>YipitData Methodology — 必须先懂这个</div>
+      <div class="section-sub">4 panel + reweighting + coverage ratio 反推 · Calibration anchor: Anthropic Oct-2025 "80% enterprise" 披露</div>
+    </div>
+  </div>
+  <div class="method-box">
+    <div class="method-grid">
+      <div class="method-key">Panel</div>
+      <div class="method-key">捕捉什么</div>
+      <div class="method-key">Reweight</div>
+      <div class="method-key">为什么这个倍数</div>
+      <div class="method-val">OpenRouter Scrape</div>
+      <div class="method-val">第三方 API 聚合平台上 Claude 模型的消费</div>
+      <div class="method-reweight">× 0.4</div>
+      <div class="method-reason">Panel 100% 捕捉 OR 平台，但这块在总 ARR 中 weight 小，需 deweight 避免高估</div>
+      <div class="method-val">B2B Spend Panel</div>
+      <div class="method-val">企业信用卡 / 财务系统对 Anthropic 的直接付款</div>
+      <div class="method-reweight">× 3.5</div>
+      <div class="method-reason">Panel 仅覆盖一部分企业，需 gross up 3.5x 推到总 SMB 体量</div>
+      <div class="method-val">Cloud API</div>
+      <div class="method-val">AWS Bedrock + GCP Vertex + Azure Foundry 上的 Claude 消费</div>
+      <div class="method-reweight">× 1.0</div>
+      <div class="method-reason">Panel 接近全量捕捉公开 hyperscaler 计费数据，不需 reweight</div>
+      <div class="method-val">Claude Subscriptions</div>
+      <div class="method-val">Pro / Max 订阅 panel 用户数 (consumer)</div>
+      <div class="method-reweight">× 25</div>
+      <div class="method-reason">Panel ~10k 用户 × 25 推到总订阅基础 (~250k+)，calibrated to "80% enterprise" 目标 mix</div>
+    </div>
+  </div>
+  <p style="margin-top:12px;font-size:.78rem;color:var(--sub);line-height:1.6">
+    <b>两步反推 ARR</b>：(1) 4 channel reweighted 加总 = "Tracked ARR" ≈ $720M @ 2026-05；(2) Tracked / 上月披露 ARR = coverage ratio (稳定在 1.4-2.0%)；(3) 当月未披露 → Tracked / 上月 coverage = Estimated ARR。
+    <b>Coverage 1.5% 不是 panel 太弱</b>，而是 Anthropic 大量收入通过 Yipit 看不到的渠道（大企业私有合约、AWS rebate、co-sell deals、8-9 digit ACV 客户）。
+    <b>Historical accuracy</b>: 中位误差 ±5%，最差 -18%（2025-04 因 panel data lag），当前期 ±3%。
+  </p>
+</div>
+
+<!-- 1. ARR Trajectory -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="section-num">01</span>ARR Trajectory — Reported vs YipitData Estimate</div>
+      <div class="section-sub">$1B → $45B in 16 months · panel cross-check 误差 &lt;5% · Log scale 显示前后期 momentum</div>
+    </div>
+    <div class="tabs" id="arrScaleTabs">
+      <button class="tab active" onclick="setArrScale('log',this)">Log</button>
+      <button class="tab" onclick="setArrScale('linear',this)">Linear</button>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="arrChart" height="78"></canvas></div>
+  <div class="mini-stat">
+    <span>Dec 2024: <b>$1.0B</b></span>
+    <span>Dec 2025: <b>$9.25B</b> (+825% YoY)</span>
+    <span>Mar 2026: <b>$30B</b> (+25% MoM)</span>
+    <span>Apr 2026: <b>$41B</b> (Reported)</span>
+    <span>May 2026: <b>$48.4B</b> (Yipit Est., partial)</span>
+  </div>
+</div>
+
+<!-- 2. M/M Growth -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="section-num">02</span>M/M Growth — 增速本身在加速</div>
+      <div class="section-sub">2025 大部分时间 10-20% · 2026 跳到 30-50% step-function · 5 月 partial = 17% (折全月仍加速)</div>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="mmChart" height="70"></canvas></div>
+</div>
+
+<!-- 3 + 4. Channel Mix % + $ -->
+<div class="row2 fade-up">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span class="section-num">03</span>ARR Mix (%) — Cloud 25% → 48.5%</div>
+        <div class="section-sub">4 channel 占 reweighted ARR 的份额演变</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="mixPctChart" height="180"></canvas></div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span class="section-num">04</span>ARR Mix ($ 绝对量)</div>
+        <div class="section-sub">Annualized $M reweighted · 看绝对体量演进</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="mixAbsChart" height="180"></canvas></div>
+  </div>
+</div>
+
+<!-- 5. Direct vs Cloud-driven (NEW) -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="section-num">05</span>Direct vs Cloud-driven Mix (NEW) — Anthropic 已被"中介化"</div>
+      <div class="section-sub">客户接 Claude 的路径：直接 (OpenRouter + B2B Panel + Anthropic Direct API) vs 间接 (Cloud APIs) · 18 个月内 71/29 → 21/79</div>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="directCloudChart" height="80"></canvas></div>
+  <div class="mini-stat">
+    <span>2024-11 Direct: <b>71%</b></span>
+    <span>2026-05 Direct: <b>21%</b></span>
+    <span>含义: 79% 的客户通过 hyperscaler 接 Claude，Anthropic 已嵌入 cloud distribution layer</span>
+  </div>
+</div>
+
+<!-- 6. Channel Growth Tabs -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="section-num">06</span>每个渠道的增长情况</div>
+      <div class="section-sub" id="channelSub">4 个 channel 各自的 ARR 演进 ($M annualized reweighted)</div>
+    </div>
+    <div class="tabs" id="channelTabs">
+      <button class="tab active" onclick="setChannel('all',this)">All 4 channels</button>
+      <button class="tab" onclick="setChannel('cloud',this)">Cloud (Enterprise)</button>
+      <button class="tab" onclick="setChannel('or',this)">OpenRouter (Dev)</button>
+      <button class="tab" onclick="setChannel('b2b',this)">B2B Direct (SMB)</button>
+      <button class="tab" onclick="setChannel('subs',this)">Subs (Consumer)</button>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="channelChart" height="82"></canvas></div>
+  <div class="mini-stat" id="channelStats"></div>
+</div>
+
+<!-- 7 + 8. Cloud Provider absolute + share% -->
+<div class="row2 fade-up">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span class="section-num">07</span>Cloud Provider 绝对量 (log)</div>
+        <div class="section-sub">AWS Bedrock $290M / GCP Vertex $58.6M / Azure $2M (Apr 2026 T28D × 13)</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="cloudAbsChart" height="180"></canvas></div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span class="section-num">08</span>Cloud Provider Share (%, NEW)</div>
+        <div class="section-sub">AWS 占 cloud 82.7% · GCP 加速 (16.7%) · Azure 出现 (0.6%)</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="cloudShareChart" height="180"></canvas></div>
+  </div>
+</div>
+
+<!-- 9 + 10. Subscription Growth + Pro/Max behavior -->
+<div class="row2 fade-up">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span class="section-num">09</span>订阅用户增长 (Pro + Max stacked)</div>
+        <div class="section-sub">Panel: 1064 (2024-11) → 11,103 (2026-05) · +943%</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="subsGrowthChart" height="180"></canvas></div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span class="section-num">10</span>订阅用户行为 — Pro vs Max</div>
+        <div class="section-sub">3 个视角切换：mix / 隐含 $ / M/M 增速</div>
+      </div>
+      <div class="tabs" id="subsBhTabs">
+        <button class="tab active" onclick="setSubsBh('mix',this)">Mix %</button>
+        <button class="tab" onclick="setSubsBh('arr',this)">Implied $</button>
+        <button class="tab" onclick="setSubsBh('growth',this)">M/M %</button>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="subsBhChart" height="180"></canvas></div>
+  </div>
+</div>
+
+<!-- 11. Cohort Heatmap -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="section-num">11</span>B2B Cohort 留存与扩张分析 (Heatmap)</div>
+      <div class="section-sub">每行一个 cohort (按首次消费月份分组)，每个 cell = 当月 spend / month 0 spend · 颜色越深扩张越猛 · 这是 NDR &gt; 500% 的视觉证据</div>
+    </div>
+  </div>
+  <div id="cohortHeatmap" style="overflow-x:auto;padding-top:4px"></div>
+  <div class="cohort-legend">
+    <span>低扩张</span>
+    <span class="cohort-legend-bar"></span>
+    <span>高扩张</span>
+    <span style="margin-left:24px">Scale: log10 · 1x → 10x → 100x → 1000x</span>
+  </div>
+  <p style="font-size:.74rem;color:var(--sub);margin-top:8px;line-height:1.6"><b>关键观察</b>：<br>
+  • <b>2025-06 cohort</b> 10 个月达 164x — 最强 outlier (21 panelists)<br>
+  • <b>2025-09 cohort</b> 7 个月达 57x — Claude 4 release wave 客户<br>
+  • <b>2025-12 cohort</b> 4 个月达 95x — 最近 cohort 仍极速扩张<br>
+  • <b>2024 cohorts</b> 12 个月仅 5-15x — bimodal NDR，老客户温和扩张，新客户爆炸</p>
+</div>
+
+<!-- 12. Selected cohort lines -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="section-num">12</span>Cohort 扩张曲线对比 (NEW)</div>
+      <div class="section-sub">挑选 6 个代表性 cohort 画扩张曲线 · log scale 看不同时期客户的 NDR 速率差异</div>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="cohortLineChart" height="80"></canvas></div>
+</div>
+
+<!-- 13. New Customer Acquisition -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="section-num">13</span>新客户获取速度 (Leading Indicator)</div>
+      <div class="section-sub">每月新进入 B2B Panel 的 panelist 数 · 2026-Q1 加速 = +260% in 4 months (Dec 11 → Apr 40)</div>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="newCohortChart" height="65"></canvas></div>
+  <p style="font-size:.74rem;color:var(--sub);margin-top:8px"><b>含义</b>：新客户获取速度是 ARR 加速的 leading indicator。Dec 2025 / Jan 2026 后新进入 panel 的客户数大幅跃升，对应 Claude 4 / Claude Code 的 viral 增长期，预示 Q2 2026 B2B Panel spend 会进一步 step-up。</p>
+</div>
+
+<!-- 14 + 15. OpenRouter Price/Volume + Token Volume Standalone -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="section-num">14</span>OpenRouter Price War (Dev 端价格 vs 用量)</div>
+      <div class="section-sub">单价 $3.44 → $1.80/M tokens (-48%) · token 量 360bn → 15,083bn (+42x) · 弹性 ~5 = 高弹性，降价换量 net positive</div>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="priceVolChart" height="80"></canvas></div>
+  <p style="font-size:.74rem;color:var(--sub);margin-top:8px"><b>转折点</b>：2025-06 Anthropic 上线 prompt caching，OR 单价一次性 step-down 35%。这不是被竞争压价，是 Anthropic 自己优化 caching 让客户少付 → 用换量逻辑 capture 更多 share。</p>
+</div>
+
+<!-- 16. Model Lifecycle -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="section-num">15</span>Claude 模型生命周期</div>
+      <div class="section-sub">主要模型的月度 spend ($M) / tokens (bn) · 新模型迭代 5-6 月，旧模型 1-2 月内被替代</div>
+    </div>
+    <div class="tabs" id="modelTabs">
+      <button class="tab active" onclick="setModelMetric('spend',this)">Spend ($M)</button>
+      <button class="tab" onclick="setModelMetric('tokens',this)">Tokens (bn)</button>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="modelChart" height="85"></canvas></div>
+  <p style="font-size:.74rem;color:var(--sub);margin-top:8px"><b>关键观察</b>：4.7 Opus 在 May 2026 hit $12M = 史上 ramp 最快 Opus；4.6 Opus 4月peak $18.7M 后 May -49%；3.5 Sonnet 14 个月生命周期完整 (peak Feb 2025 $3.5M → May 2026 ~0)。Anthropic 模型替代速度极快。</p>
+</div>
+
+<!-- 17 + 18. Tier Mix + $/M tokens by tier -->
+<div class="row2 fade-up">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span class="section-num">16</span>模型层级 Mix (Sonnet/Opus/Haiku, NEW)</div>
+        <div class="section-sub">按层级汇总 token 量 · <b style="color:var(--opus)">Opus 已超过 Sonnet (May 2026)</b> — mix 升级</div>
+      </div>
+      <div class="tabs" id="tierTabs">
+        <button class="tab active" onclick="setTier('tokens',this)">Tokens</button>
+        <button class="tab" onclick="setTier('spend',this)">Spend</button>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="tierChart" height="180"></canvas></div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title"><span class="section-num">17</span>$/M tokens by Tier (NEW, implied)</div>
+        <div class="section-sub">从 spend / tokens 反推每层级的 blended 单价</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="priceTierChart" height="180"></canvas></div>
+  </div>
+</div>
+
+<!-- 19. Coverage Ratio decay (NEW) -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title"><span class="section-num">18</span>Yipit Coverage Ratio 系统性下降 (NEW)</div>
+      <div class="section-sub">Tracked Reweighted ARR / Reported ARR · 2024 2.0% → 2026 1.5% · 含义：Anthropic 大单合约集中度在上升，越来越多收入走 Yipit 看不到的渠道</div>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="coverageChart" height="65"></canvas></div>
+</div>
+
+<!-- ════════════ Cross-check vs CFO ════════════ -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title">交叉验证：YipitData vs CFO 5/27 访谈披露</div>
+      <div class="section-sub">三大锚点全部得到 alt data 印证 → CFO 不是 hype，是 hard data</div>
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>CFO 5/27 披露</th><th>Yipit 数据 verdict</th><th>判断</th></tr></thead>
+    <tbody>
+      <tr><td>$9B → $30B+ in Q1 2026</td><td>2025-12 $9.25B → 2026-03 $30B (完全吻合)</td><td class="bull">✓ 强支持</td></tr>
+      <tr><td>NDR &gt; 500%</td><td>2025-06 cohort 10 月 164x；2025-09 cohort 7 月 57x；2025-12 cohort 4 月 95x</td><td class="bull">✓ 部分 cohort 远超 500%</td></tr>
+      <tr><td>5GW × 2 算力承诺 (AWS + GCP)</td><td>AWS Bedrock $290M T28D × 13 / GCP Vertex $58.6M · ratio 5:1</td><td class="neu">⚠ 算力 5:5 但 revenue 5:1 — GCP 兑现慢</td></tr>
+      <tr><td>80% revenue 来自 enterprise (Oct-25 披露)</td><td>API mix 87.2% (Cloud 48.5% + B2B Direct 19.2% + OR 19.5%)，Consumer 12.8%</td><td class="bull">✓ 一致</td></tr>
+      <tr><td>2026-05 ARR "imminently $45B" (FT 5/7)</td><td>Yipit Apr Est. $44.3B / May Est. $48.4B</td><td class="bull">✓ 5 月可能超 $50B</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════════ Bull/Bear ════════════ -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Bull / Bear 数据对照</div>
+      <div class="section-sub">把所有 verdict 排成两列</div>
+    </div>
+  </div>
+  <div class="verdict-row">
+    <div class="verdict-box verdict-bull">
+      <h4>Bull 数据点</h4>
+      <ul>
+        <li><b>+</b> ARR $45B Yipit cross-check 误差 &lt;3%，可信度高</li>
+        <li><b>+</b> 5 月仍在 reaccelerate，没有 plateau 信号</li>
+        <li><b>+</b> Mix shift to Enterprise (25% → 48.5%) — durable revenue</li>
+        <li><b>+</b> Cohort 扩张极强 (50-160x)，NDR &gt; 500% 印证</li>
+        <li><b>+</b> Token 量 +42x 说明使用深度涨，不只价格游戏</li>
+        <li><b>+</b> Opus 超过 Sonnet — mix 在向更贵 tier 升级</li>
+        <li><b>+</b> Azure Foundry 进入 (虽小)，三大云全覆盖</li>
+        <li><b>+</b> 新客户 cohort size 4 个月 +260% — acceleration 持续</li>
+        <li><b>+</b> 4.7 Opus 史上 ramp 最快，新模型采用速度更快</li>
+      </ul>
+    </div>
+    <div class="verdict-box verdict-bear">
+      <h4>Bear / Risk 数据点</h4>
+      <ul>
+        <li><b>−</b> AWS 占 cloud route 82.7% — single-cloud dependency</li>
+        <li><b>−</b> OpenRouter 价格 -48% — developer 端 commoditize</li>
+        <li><b>−</b> GCP/Vertex 仅占 cloud 16.7%，TPU narrative 落地慢</li>
+        <li><b>−</b> Consumer mix 缩到 12.8% — 错过 ChatGPT 式消费故事</li>
+        <li><b>−</b> Coverage ratio 系统性下降 — 大单集中度上升 = 客户集中风险</li>
+        <li><b>−</b> 老 cohort (2024) NDR 弱 — 扩张靠新客驱动</li>
+        <li><b>−</b> Panel 仅 1.5% coverage — 大单可能被低估或高估</li>
+        <li><b>−</b> 模型迭代加速 = 资本投入压力放大</li>
+        <li><b>−</b> Cohort dispersion 大 — outlier 驱动平均，统计意义弱</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ Position Implications ════════════ -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title">对仓位的含义</div>
+      <div class="section-sub">7 个 thesis 命题 × verdict × position implication</div>
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>Thesis 命题</th><th>Verdict</th><th>Position Implication</th></tr></thead>
+    <tbody>
+      <tr><td><b>Anthropic $45B ARR 真实</b></td><td class="bull">✓ 强支持</td><td>一级估值 anchor 上移 ($61B → $250B+ 区间)</td></tr>
+      <tr><td><b>AWS 是 Anthropic 最大杠杆</b></td><td class="bull">✓ 强支持</td><td>AMZN 长仓位优先；AWS AI revenue 拐点显现</td></tr>
+      <tr><td><b>AVGO/Trainium 中期</b></td><td class="bull">✓ 间接支持</td><td>AWS Bedrock 容量瓶颈 = Trainium 2/3 需求</td></tr>
+      <tr><td><b>GOOGL TPU 受 Anthropic 拉动</b></td><td class="neu">⚠ 弱兑现</td><td>Vertex 仍小 ($58M)；需 6-12 月看 inflection</td></tr>
+      <tr><td><b>Anthropic 消费品故事</b></td><td class="bear">✗ 否定</td><td>不要用 consumer 估值框架 (Spotify/Netflix style)</td></tr>
+      <tr><td><b>API 端价格压力</b></td><td class="bear">⚠ 明显</td><td>对 frontier lab 净利率假设保守</td></tr>
+      <tr><td><b>NDR &gt; 500% / 客户黏性</b></td><td class="bull">✓ 强支持</td><td>Enterprise contract 长期价值高；moat = 工作流嵌入</td></tr>
+      <tr><td><b>Anthropic vs OpenAI 路径差异</b></td><td class="bull">✓ 数据明确</td><td>不同 unit economics → 不同估值倍数适用</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════════════ 50+ Insights ════════════ -->
+<div class="section fade-up insights-section">
+  <div class="section-header">
+    <div>
+      <div class="section-title">50+ 条 alt data 洞察</div>
+      <div class="section-sub">按主题组织 · 每条带具体数字 · 大部分是 alt data 独有，公开披露看不到</div>
+    </div>
+  </div>
+
+  <h3>A. 模型生命周期 (10 条)</h3>
+  <div class="insights-grid">
+    <div class="insight-item"><span class="ins-num">1</span>Release cadence 加速 +33%：4.5→4.6→4.7 用 6mo (vs 3.5→3.7→4 用 8mo)</div>
+    <div class="insight-item"><span class="ins-num">2</span>4.7 Opus 史上 ramp 最快：launch month 2 即 <b>$12M</b>，对比 4.5 Opus 3 月才到 $6.5M</div>
+    <div class="insight-item"><span class="ins-num">3</span>Opus tier 已超 Sonnet：May 2026 Opus $25M vs Sonnet $15M ($，token 也是 Opus 12.5T vs Sonnet 10.9T)</div>
+    <div class="insight-item"><span class="ins-num">4</span>$/M tokens 分层：<b>Opus $2.00 / Sonnet $1.37 / Haiku $0.71</b>，比例 2.8:1.9:1</div>
+    <div class="insight-item"><span class="ins-num">5</span>4.5 Sonnet 2 月衰减 -58%：Mar $9.15M peak → May $3.8M，新模型出旧模型死得极快</div>
+    <div class="insight-item"><span class="ins-num">6</span>Claude 3.5 Sonnet 完整生命周期 14 月：Oct 2024 launch → Feb 2025 peak $3.5M → May 2026 归零</div>
+    <div class="insight-item"><span class="ins-num">7</span>Haiku 是 high-throughput 引擎：4.5 Haiku peak 2,265bn tokens/mo，spend 仅 $1.5M，cost-optimized 高频场景</div>
+    <div class="insight-item"><span class="ins-num">8</span>May 2026 token mix：4.6 Sonnet 24% + 4.6 Opus 15% + 4.7 Opus 16% + 4.5 Sonnet 8% = 4.6 后新模型占 55%+</div>
+    <div class="insight-item"><span class="ins-num">9</span>长尾顽固：Claude 3 Haiku May 2026 仍跑 36bn tokens — legacy 客户没升级 (fine-tuned 模型不易迁移)</div>
+    <div class="insight-item"><span class="ins-num">10</span>4.6 Opus 已下行：peaked Apr $18.7M → May $9.5M -49%，4.7 Opus 接班</div>
+  </div>
+
+  <h3>B. 客户获取 vs 客户扩张 (8 条)</h3>
+  <div class="insights-grid">
+    <div class="insight-item"><span class="ins-num">11</span>B2B 新客户加速 +260% in 4mo：Dec 2025 新增 11 panelist → Apr 2026 新增 40</div>
+    <div class="insight-item"><span class="ins-num">12</span>2024/2025/2026 cohort 尺寸：15 / 13 / 30+ panelists — 2026 才看到新客获取加速</div>
+    <div class="insight-item"><span class="ins-num">13</span>Pro 订阅 5 月翻 3.6x：Dec 2025 = 3056 → May 2026 = 11,103 panel users，订阅业务 2026 才爆发</div>
+    <div class="insight-item"><span class="ins-num">14</span>Max ($150) 增长更猛：launch Apr 2025 = 11 → May 2026 = 780，<b>71x in 13 月</b></div>
+    <div class="insight-item"><span class="ins-num">15</span>Pro:Max 比例 13.2:1 (May 2026)：Max 占用户 7% 但占订阅 $ 约 30% ($150 vs $18.50)</div>
+    <div class="insight-item"><span class="ins-num">16</span>B2B 客户 ACV 估算：$2.79M panel spend / 150 active panelists ≈ <b>$18,600/月 ≈ $223k ACV</b> mid-market</div>
+    <div class="insight-item"><span class="ins-num">17</span>NDR cohort 分层：2024 早期 5-15x | 2025-Q1 50-75x | 2025-Q2/Q3 60-160x | 2025-Q4/2026-Q1 50-95x in 3-5 月</div>
+    <div class="insight-item"><span class="ins-num">18</span>2025-06 cohort 是 GOAT：10 个月 <b>164x</b> 扩张，对应 Claude 4 release wave 进入的客户</div>
+  </div>
+
+  <h3>C. 价格 / Token 经济学 (8 条)</h3>
+  <div class="insights-grid">
+    <div class="insight-item"><span class="ins-num">19</span>Token 弹性 ~5：OR 价 -48%，量 +42x = 极高弹性，降价换量是 net positive</div>
+    <div class="insight-item"><span class="ins-num">20</span>Prompt caching 是定价 step-down 元凶：2025-06 上线，OR 单价一月 -38%</div>
+    <div class="insight-item"><span class="ins-num">21</span>OR 平均 token 价 $1.80/M：这是 frontier model API 在 dev 端的市场价 anchor</div>
+    <div class="insight-item"><span class="ins-num">22</span>Anthropic 总 token 量年化 <b>~400T tokens/年</b> (33T/月 × 12)</div>
+    <div class="insight-item"><span class="ins-num">23</span>Cloud 端 implied 单价比 OR 高 50-65%：Cloud premium 反映 enterprise pricing 抗压</div>
+    <div class="insight-item"><span class="ins-num">24</span>OR 上 Anthropic 占 60%+ 总 spend：Claude 在 OR 是绝对一哥 (Gemini+GPT+DeepSeek 加起来仍少)</div>
+    <div class="insight-item"><span class="ins-num">25</span>4.7 Opus 单价 $2.27/M vs 4.6 Opus $1.90 (+19%)：新模型定价权回来了</div>
+    <div class="insight-item"><span class="ins-num">26</span>Take rate 估算：blended ~75-80% net (Cloud 60-70%, OR 90%, Direct 100%, Subs 70%)</div>
+  </div>
+
+  <h3>D. Channel / Cloud 集中度 (8 条)</h3>
+  <div class="insights-grid">
+    <div class="insight-item"><span class="ins-num">27</span>AWS Bedrock $290M 年化 (May 2026 T28D × 13)，M/M 仍 +20%</div>
+    <div class="insight-item"><span class="ins-num">28</span>Bedrock 80-90% 来自 Anthropic 单家：作为 AWS 收入贡献，Anthropic 占 AWS 总收入 1.5-2%</div>
+    <div class="insight-item"><span class="ins-num">29</span>GCP Vertex 38x in 8mo：Sep 2025 $1.5M → May 2026 $58.6M，但仍仅 AWS 的 1/5</div>
+    <div class="insight-item"><span class="ins-num">30</span>Azure Foundry $2M 完全可忽略：Anthropic-MSFT 实质关系弱</div>
+    <div class="insight-item"><span class="ins-num">31</span>OpenRouter 含 cloud 子通道：客户可走 OR→AWS/GCP，真实 cloud 渗透率 60%+</div>
+    <div class="insight-item"><span class="ins-num">32</span>Direct vs Cloud-driven mix：71/29 (2024-11) → 21/79 (2026-04)，<b>客户基本中介化</b></div>
+    <div class="insight-item"><span class="ins-num">33</span>集中度量化：AWS × cloud mix = 82.7% × 48.5% ≈ <b>AWS 单独贡献 40% of Anthropic ARR</b></div>
+    <div class="insight-item"><span class="ins-num">34</span>5GW × 2 算力承诺反差：算力 5:5 (AWS+GCP)，但 revenue 5:1 倾斜 AWS</div>
+  </div>
+
+  <h3>E. 订阅业务深挖 (6 条)</h3>
+  <div class="insights-grid">
+    <div class="insight-item"><span class="ins-num">35</span>Claude Pro 18 个月 10.4x：1064 → 11,103 panel；按 ×25 reweight 推算真实 ~250k+ Pro 用户</div>
+    <div class="insight-item"><span class="ins-num">36</span>真实订阅 ARR ~$5.8B：按 reweight + mix 推算，对应 3-4M Pro+Max 总用户</div>
+    <div class="insight-item"><span class="ins-num">37</span>Anthropic 是全球第 2 大 AI 消费者订阅 (仅次 ChatGPT 20-30M paid)</div>
+    <div class="insight-item"><span class="ins-num">38</span>Max revenue mix：panel 推算 Max 占订阅 $ 7%，实际可能 15-25% (Max 用户在 panel 中 underrepresented)</div>
+    <div class="insight-item"><span class="ins-num">39</span>订阅 5 月仍 +9% M/M：消费者订阅虽小 (12.8%) 但绝对量持续涨 — Claude Code → Pro 转化飞轮</div>
+    <div class="insight-item"><span class="ins-num">40</span>Pro+Max 增长 2026 才爆发：Dec 2025 3056 → May 2026 11,103 = +263% in 5mo</div>
+  </div>
+
+  <h3>F. 方法学限制 / Methodology Caveats (5 条)</h3>
+  <div class="insights-grid">
+    <div class="insight-item"><span class="ins-num">41</span>Coverage ratio 系统性下降：2024 2.0% → 2026 1.5% = Anthropic 大单合约集中度上升</div>
+    <div class="insight-item"><span class="ins-num">42</span>Subs panel ×25 是最大假设：若 iPhone-only 海外用户 undercaptured，consumer mix 被低估 5-10pp</div>
+    <div class="insight-item"><span class="ins-num">43</span>误差中位 ±5%，最差 -18% (2025-04)：当前期 ±3%，5 月 $48.4B 估算 90% CI ≈ $44-53B</div>
+    <div class="insight-item"><span class="ins-num">44</span>OR pre-2025-06 有 caching bias：2024-end 数据可能高估 5-10%</div>
+    <div class="insight-item"><span class="ins-num">45</span>Cohort panelist 数小：outlier cohort (164x) 仅 ~21 panelists，方向性强统计意义弱</div>
+  </div>
+
+  <h3>G. 跨资产含义 (6 条)</h3>
+  <div class="insights-grid">
+    <div class="insight-item"><span class="ins-num">46</span>AMZN: 最大 Anthropic 受益者 — Bedrock 80%+ 来自 Anthropic，AWS Q1 AI revenue 拐点已现</div>
+    <div class="insight-item"><span class="ins-num">47</span>AVGO/Trainium: 强支撑 — AWS Bedrock $290M monthly run-rate 拉动 Trainium 2026 ramp</div>
+    <div class="insight-item"><span class="ins-num">48</span>GOOGL TPU: 拐点未到 — Vertex $58.6M 需 3-4x ($200M+) 才能 material 影响 GCP 增速</div>
+    <div class="insight-item"><span class="ins-num">49</span>OpenAI 对比：OpenAI ~50% ChatGPT + 50% API；Anthropic 87% API + 13% Subs — 完全分道扬镳</div>
+    <div class="insight-item"><span class="ins-num">50</span>Cursor/Replit/Lovable: 通过 OR + Direct API 用 Claude；这些 app layer 公司的"成本" = Anthropic 的"收入"</div>
+    <div class="insight-item"><span class="ins-num">51</span>Anthropic compute 反推：33T tokens/月 × ~$0.0001/token avg cost ≈ $3B/月 compute → 年化 $36B 接近 gross revenue 80%</div>
+  </div>
+</div>
+
+<!-- ════════════ Caveat ════════════ -->
+<div class="caveat-box fade-up">
+  <h4>使用本数据的 5 个 Caveat</h4>
+  <ol>
+    <li><b>Coverage 仅 1.5%</b>：Yipit 看不到 Anthropic 大量收入（私有合约、AWS rebate、co-sell deals）。Estimated ARR 是 coverage ratio 反推，依赖"看不见的部分"占比稳定的假设。</li>
+    <li><b>Subs 的 ×25 reweight</b>：calibrated to Anthropic 2025-Oct 披露的"80% enterprise"。若那条 disclosure 不准 / mix 已变，整个 ARR 拆分 mix 都要重算。</li>
+    <li><b>Cloud API 仅看 Bedrock/Vertex/Foundry 公开计费</b>：私有合约部分未计。</li>
+    <li><b>Cohort panelist 数小</b>：单点 outlier cohort (164x) 仅 21 panelists，统计意义弱方向性强。</li>
+    <li><b>OR pre-2025-06 有 caching bias</b>：早期 OR spend 略 overstated（Yipit 自己 footnote 提示）。</li>
+  </ol>
+</div>
+
+<!-- ════════════ Forward-looking ════════════ -->
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title">下次数据更新要重点看的 3 个信号</div>
+      <div class="section-sub">预计 YipitData 下次 release 在 2026-06-25 左右</div>
+    </div>
+  </div>
+  <ol style="padding-left:22px;font-size:.85rem;line-height:1.7">
+    <li style="margin-bottom:10px"><b>May 2026 full month 能否 break $50B</b>：当前 partial (thru 5/17) 已 $48.4B Yipit Est. = 4 月 +18%。若 May full = $52-55B，意味着 acceleration 持续，全年 (Dec 2026) 保守 $90B+。</li>
+    <li style="margin-bottom:10px"><b>GCP Vertex 是否连续两月 +50% M/M</b>：当前 $22M (Mar) → $48M (Apr) → $59M (May 部分)。若 June 突破 $90M，TPU narrative 进入 inflection，对 GOOGL thesis 是 step-change。</li>
+    <li style="margin-bottom:10px"><b>新 2026-Q1/Q2 cohort 是否 month 1-3 已 10x+</b>：若 2026-Q1 cohort 在月 3 已达 10-20x 扩张，说明 enterprise deployment 进入更快 ramp 期，预示 H2 2026 ARR 加速度可能再升一档。</li>
+  </ol>
+</div>
+
+<footer>
+  Source: YipitData Anthropic Data File 2026-05-27 release · 数据 cross-checked against Bloomberg 3/3, Anthropic blog 4/6, FT 5/7 · 报告生成 2026-05-29<br>
+  Methodology: OpenRouter ×0.4 · B2B Spend Panel ×3.5 · Cloud API ×1.0 · Subscriptions ×25 (calibrated to Anthropic Oct-25 disclosure of "80% enterprise")<br>
+  本文件 Internal research view · 不构成投资建议 · <a href="https://jjd200099-crypto.github.io/ai-tracking/">← 返回 AI Intelligence Dashboard</a>
+</footer>
+
+</div>
+
+<script>
+const D = {"months": ["2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05"], "arr_reported": [null, 1.0, 1.2, 1.6, 2.0, 2.5, 3.0, 4.0, 4.75, 5.25, 6.125, 7.0, 8.125, 9.25, 13.0, 19.0, 30.0, 41.0, null], "arr_yipit_est": [null, null, 1.226742454874506, 1.5037029260737218, 2.1221706010099357, 2.0448723252351795, 3.4076465408253904, 3.8460863958798868, 4.894703525476636, 5.732803069237487, 5.939755948464616, 6.886072234423908, 7.9424619910898455, 9.043395897550582, 13.410847122430615, 18.182835220573494, 29.11129044261965, 44.26433705188378, 48.443944145049116], "mm_growth": [null, 17.44460385294644, 22.674245487450605, 28.101126314837167, 31.51116590468497, 2.9004177297054845, 27.806691536181138, 21.040127570816438, 20.706859257517273, 16.121231374660105, 16.933966001257982, 15.399991504330535, 14.146854756659444, 10.923176585825889, 41.91896715376517, 38.758337201350734, 50.09223524651711, 40.169169070623624, 16.750627495690516], "mix_cloud": [24.500987092506406, 22.7260781626818, 15.891681548109716, 19.867240586346853, 21.250196666705122, 24.49506676312348, 25.250413523468808, 26.178368271377305, 29.36309041080894, 28.323101847037098, 29.73357043877789, 30.946980000387047, 36.3847929723138, 35.268769384696455, 37.36026594108085, 43.48040061482699, 45.125074889650676, 47.19653965354901, 48.542836544796], "mix_or": [23.14645904696433, 24.526393082425013, 38.29778175449835, 40.7126280924842, 45.74196381951701, 40.88028173426042, 38.825561769042736, 35.710009428097614, 33.83926745380539, 35.26486658045508, 30.4410690809869, 27.928410463200105, 23.826642508546303, 24.929331265485562, 26.710251085238962, 22.14057820492006, 20.880148210459613, 19.916552361694063, 19.532694222605986], "mix_b2b": [15.825169616112763, 18.98570782532894, 16.430417127784242, 14.587725343774386, 12.25846450241085, 13.014263030876794, 16.008376223701763, 16.92605332312404, 15.5708094520035, 15.787169604888792, 20.289773380517477, 21.639969652990924, 21.628272685583973, 21.975843425569842, 20.046312334367233, 19.139474222148177, 19.17944822842365, 19.15498134351788, 19.154981343517903], "mix_subs": [36.5273842444165, 33.76182092956426, 29.380119569607675, 24.83240597739455, 20.749375011367018, 21.610388471739302, 19.9156484837867, 21.18556897740104, 21.226832683382163, 20.624861967619033, 19.535587099717734, 19.484639883421913, 18.16029183355592, 17.82605592424813, 15.883170639312958, 15.239546958104766, 14.815328671466066, 13.731926641239037, 12.769487889080114], "aws_arr": [3.204816203540427, 3.609055744872597, 3.5774665740457627, 5.847157538715593, 7.995575862097928, 9.665452785084737, 12.72774988712266, 15.75105213191493, 21.105334189154657, 23.62392023179241, 28.932998945859826, 34.59425304654224, 46.317127181942745, 49.0638277109508, 73.88985336922745, 117.59242653739783, 176.19338555272466, 243.14067953215744, 290.5988160572302], "gcp_arr": [0.7561361605967571, 0.7058727314751748, 0.12398740840986996, 0.08063505811899575, 0.34279161335763314, 0.22494689843589666, 0.30263675368212467, 0.600566637666638, 1.0333544563296981, 1.1732758796511515, 1.5073414985606146, 1.9674564398123322, 2.7501632964518374, 3.64014464522313, 5.355746162275423, 10.215899711546164, 22.47481045852661, 47.62498719764362, 58.65411307742772], "azure_arr": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.05359634124897749, 0.06749001600124495, 0.2735062127851673, 0.8443250957476842, 1.7269298994626796, 1.9750406828252387], "pro_subs": [1.064, 1.155, 1.233, 1.335, 1.467, 1.483, 1.568, 1.76, 1.935, 2.086, 2.209, 2.445, 2.637, 2.81, 3.416, 4.594, 7.197, 9.366, 10.323], "max_subs": [0, 0, 0, 0, 0, 0.011, 0.035, 0.077, 0.117, 0.144, 0.172, 0.21, 0.219, 0.246, 0.328, 0.431, 0.568, 0.736, 0.78], "or_spend": [1.23814542369485, 1.50627444438195, 2.704003926255851, 3.6807868895031, 5.412690290877699, 5.142491037638552, 6.54820373565692, 4.289481523103809, 4.90645408958787, 5.937459552671161, 5.993203154154352, 6.34528442963278, 6.179191769977771, 7.171363753285501, 10.90459487865048, 12.54237005528383, 17.75343744684935, 23.73643752004855, 27.17832895797368], "or_tokens": [359.845499773, 447.81461742, 857.810971546, 1168.153899137, 1726.03007595, 1587.320301845999, 1926.735199953, 2051.922287922, 2570.061197003, 2936.900011819, 2871.568523621, 3423.920166503, 3325.696645236, 3350.909229961001, 5135.814587583998, 7109.859318048003, 10809.148722224, 13628.074056251, 15083.260403729], "or_price": [3.440769509347497, 3.3636116057579093, 3.152214200970789, 3.150943460636791, 3.1359188731972565, 3.2397311567539404, 3.398600770783995, 2.0904697747826524, 1.9090806457485856, 2.021675756333881, 2.0870834545146155, 1.8532220732568943, 1.85801425359386, 2.140124742611713, 2.123245435108327, 1.7640813262571435, 1.642445478647883, 1.7417308874368047, 1.8018868752842352], "cohorts": {"2024-11": [1, 2.265109251256082, 2.856290259612722, 3.285250550870258, 4.549923423076254, 4.288286943084065, 8.862919720775647, 4.698902529546925, 5.979159021814428, 8.213460991904142, 8.91669254772144, 14.77997154989003, 25.50948617893145], "2024-12": [1, 2.127821981548466, 1.916445742658754, 2.356002166239016, 1.651081989723988, 1.666918662376777, 3.103683360826988, 5.823269773406901, 7.818263113795987, 11.11430263119517, 12.83445524968568, 14.33310445071953, 14.54639155390442], "2025-01": [1, 1.212273687337838, 0.995046016598286, 3.372354808854597, 4.076637966964042, 4.445313001358643, 6.178242839603669, 6.635530421658331, 6.9963884401018, 9.188098819656886, 10.91666143412696, 10.72441959352137, 16.96811224760806], "2025-02": [1, 3.416722881606358, 4.993959699205872, 6.124015485276023, 4.971162929854041, 6.360583270891336, 8.346070889492308, 12.70564703851857, 28.42403664988055, 37.63213850364846, 42.74498727907013, 60.79476061546665, 76.46779826939034], "2025-03": [1, 2.401539180111409, 4.071623938273276, 6.256893546987961, 7.584831065310201, 9.647957483986286, 14.72358809136175, 21.98539264938428, 22.21375884509894, 21.14763656270711, 30.44607281130935, 45.25246741610655, 68.31668035197563], "2025-04": [1, 1.047956731557418, 1.047985530889505, 1.59498531591036, 2.188809152770169, 3.184518546219346, 7.722386003383214, 10.40380779463599, 10.48056170962688, 12.53128081752615, 13.28940259459193, 26.93291954062247, 37.32343630998751], "2025-05": [1, 1.043175422749294, 1.274975922199906, 1.540534016579306, 1.545702228423562, 1.749000910614419, 2.526632415551821, 2.687206204602147, 3.410203680665276, 4.801228003935708, 8.994644260285268, 11.03595542481364, null], "2025-06": [1, 2.234970514485271, 2.758926949465727, 3.659074046864022, 8.393719789699023, 16.05122933393468, 18.41583147325342, 17.91095889744253, 24.34919297360801, 103.227226494273, 163.9431695066201, null, null], "2025-07": [1, 2.588217516863551, 6.066732020549295, 10.9489877725597, 10.98904967280553, 12.73873368330438, 17.50773754072424, 22.30017070896494, 44.84442492418687, 63.41847526788764, null, null, null], "2025-08": [1, 1.077414234422701, 1.116819065516186, 1.100600658761463, 1.239488962136671, 1.635319968951645, 2.218491191729437, 5.429636671428087, 7.11211741568766, null, null, null, null], "2025-09": [1, 2.303656411833218, 4.090944290038902, 14.97887373931771, 54.12413163349456, 54.23416494980803, 59.2139177975324, 57.18598035681601, null, null, null, null, null], "2025-10": [1, 1.880620671809684, 2.009377613028486, 2.595173663692387, 1.88469182318206, 4.520100638456159, 8.757629659528565, null, null, null, null, null, null], "2025-11": [1, 1.656488027022599, 2.269888824022452, 5.948687068786762, 5.214852495192153, 13.38032865757247, null, null, null, null, null, null, null], "2025-12": [1, 8.526863078544501, 20.91457915900014, 62.93584728325775, 95.64105742158229, null, null, null, null, null, null, null, null], "2026-01": [1, 1.800268581663921, 6.179060317487336, 7.645695630550795, null, null, null, null, null, null, null, null, null], "2026-02": [1, 2.407281216145519, 4.183015154847413, null, null, null, null, null, null, null, null, null, null]}, "model_spend": {"Claude 2": [0.001909075072, 0.001989970511999999, 0.002256641519999999, 0.001853644976, 0.001634421896, 0.001820627488, 0.00107838472, 0.0007191804720000002, 0.000620943648, null, null, null, null, null, null, null, null, null, null], "Claude 3 Haiku": [0.009600940481502394, 0.008103662853888341, 0.01791137442067095, 0.02029754002835295, 0.02316825968143472, 0.02792727350688994, 0.02987355794587916, 0.0355695623466649, 0.1244164082825344, 0.02700062372432992, 0.0304375151951887, 0.03242310160372915, 0.03825121567726981, 0.03471021660958268, 0.0269385223714187, 0.02501984664894629, 0.02181937210836379, 0.02046215166276239, 0.01167390619560252], "Claude 3 Opus": [0.06066317281179369, 0.07417200992066551, 0.07400161985640623, 0.07114596441577399, 0.05153448648776163, 0.03346849895128948, 0.0368743179924434, 0.02177397886766162, 0.01985982594110859, 0.01700723137163197, 0.01518726790992176, 0.01913825820999904, 0.007794834611979019, 0.01849490345550126, 0.01003521404819165, 0.0003749752077353042, null, null, null], "Claude 3 Sonnet": [0.0497398621734519, 0.04830113243547323, 0.0536562618265826, 0.06182761970675834, 0.06460839580579597, 0.06814696564882221, 0.08167698248609631, 0.04434809927074387, 0.03909334538621533, 0.02634089404259547, 0.02272234824723255, 0.01987046392221672, 0.03276589766414937, 0.02238929910630006, 0.02515117781693155, 0.0245615528696644, 0.01231003993828278, 0.01752221149313479, 0.008270221460476016], "Claude 3.5 Haiku": [0.01452822141613858, 0.02446289658039346, 0.02098183015104205, 0.01757844815116196, 0.07054209349112335, 0.03261715258076743, 0.03322311860682449, 0.03057547746645225, 0.08523203610086887, 0.06927242548840988, 0.06886914202472007, 0.05872616226496313, 0.05869128402538152, 0.06230114882355784, 0.06393299073708916, 0.08164830263520058, 0.08969975651567909, 0.07916196773347617, 0.04539881948150363], "Claude 3.5 Sonnet": [1.40499257475479, 1.996482610937052, 3.029399876194239, 3.478199898308871, 1.34030544237862, 1.006141110338773, 1.005082141636141, 0.8426972005262274, 0.8601101465147757, 0.7559492901971644, 0.6520377876092219, 0.582520341476205, 0.5597951354556893, 0.4816913756135121, 0.4266887024056981, 0.4735633305220588, 0.466323326231781, 0.04794153181928356, 0.01893097391259181], "Claude 3.7 Sonnet": [null, null, null, 0.47270865413796, 4.967766451420068, 5.21342418153051, 5.593167559801779, 2.046868013845539, 1.720114959085548, 1.792948857437781, 1.522273489815124, 1.510755038409476, 1.1032018895989, 0.8177743144840061, 0.7944349335539834, 0.6569676357096245, 0.4406083324050891, 0.3678171896040562, 0.01823359959135033], "Claude 4 Opus": [null, null, null, null, null, null, 0.3577692471131829, 0.6246384973895606, 0.9749485917550909, 0.6260199009776369, 0.3362451415031822, 0.2720054640732629, 0.1601864286553763, 0.1236036070902658, 0.104338510315581, 0.1388804404997064, 0.148157684737484, 1.343788801135742, 2.497465968270921], "Claude 4 Sonnet": [null, null, null, null, null, null, 1.03413964375577, 2.195483173141026, 3.486433995438994, 4.263176315641463, 5.125906828769161, 2.875485419039685, 2.122569505292383, 1.783491564134235, 1.540004044274551, 1.583127824910639, 1.779314840564278, 1.498448539400902, 0.7016683184544377], "Claude 4.1 Opus": [null, null, null, null, null, null, null, null, null, 0.9132929071775523, 1.025834626547821, 0.5235701142776497, 0.5771829894523276, 0.2168443316309061, 0.137246821056866, 0.1571579542606076, 0.2257656827542514, 0.0625561332169295, 0.03267462529591897], "Claude 4.5 Haiku": [null, null, null, null, null, null, null, null, null, null, null, 0.1207733139183336, 0.273698327963982, 0.4380110277198471, 0.5656059333143998, 0.7616128887212636, 1.378625738694636, 1.49990831660969, 1.026692253999359], "Claude 4.5 Opus": [null, null, null, null, null, null, null, null, null, null, null, null, 0.3317870381931816, 2.816353375207375, 6.502264869721438, 3.252114507853062, 1.788278896025526, 1.548365786586063, 0.9324482244453136], "Claude 4.5 Sonnet": [null, null, null, null, null, null, null, null, null, null, 0.1227556996544688, 4.093538085167467, 5.067441921219978, 5.118593501387072, 7.61266462452759, 8.39365615569462, 9.145759762986087, 8.467379656478583, 3.823117651079644], "Claude 4.6 Opus": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 5.445069383542514, 13.02461313074503, 18.71971466860561, 9.540051328253575], "Claude 4.6 Sonnet": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1.380940984646974, 7.384174974499245, 11.64165185357496, 10.44346781048323], "Claude 4.7 Opus": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 3.780510384707846, 12.07672606375592], "Claude Instant": [0.002410840494935125, 0.0004545611884537484, 0.004461318028058289, 0.003635091134253477, 0.0008618754849233973, 0.001032371571711763, 0.001751618859256127, 0.0008957123353564566, 0.002486635321825789, 0.001606831997415647, 0.0007051867683819091, null, null, null, null, null, null, null, null], "Claude V2": [0.003580661280391651, 0.004008923199879675, 0.005592351937734085, 0.00279718932453476, 0.003156102970815729, 0.0007023824811279774, 0.0003191796556868939, 0.0003841441175102518, 0.0001682901729892182, 8.231974310269289e-05, 6.683794048767595e-06, null, null, null, null, null, null, null, null]}, "model_tokens": {"Claude 2": [0.20161296, 0.223292286, 0.247365998, 0.206883026, 0.184828543, 0.20444693, 0.115576282, 0.078313643, 0.068658684, null, null, null, null, null, null, null, null, null, null], "Claude 3 Haiku": [28.25719510181152, 24.28229732838697, 57.76065598577807, 68.46956789882088, 74.35365379989138, 89.68518198778312, 90.88129783759454, 76.12943768400618, 72.81008917110681, 78.93118952989663, 85.29500703172383, 92.54789566293321, 117.4146882418343, 101.9679669343528, 81.2451468019496, 83.8312356141026, 70.18763132721622, 67.01447466406275, 36.45096538362872], "Claude 3 Opus": [3.116549925446342, 3.812477865512368, 3.891492640211535, 3.847385218671576, 2.80595413650908, 1.730348149399857, 1.967225840275729, 1.298243507711158, 1.231023073268202, 1.031551548291601, 0.9122913112600967, 1.14485710715095, 0.504713479958444, 3.194343912937147, 2.65179623091997, 0.01333586591775641, null, null, null], "Claude 3 Sonnet": [12.93827304203797, 13.1959121859748, 14.80977807823831, 16.91506951104205, 15.98258059433243, 16.49756925007265, 13.49333139436131, 10.75998546216296, 10.58866312397479, 5.913329165251851, 5.46885670983717, 4.877396597984514, 6.840397070523525, 4.986311493502716, 5.802207420500625, 5.191269617876377, 2.98077102026842, 4.497476420469296, 2.125918372751444], "Claude 3.5 Haiku": [15.1364478779652, 26.07489427323804, 22.64183976342798, 18.99140979819282, 82.09338640042168, 36.23888147060983, 34.56973472405469, 35.63488477454295, 121.0841554654675, 97.09789792633393, 91.93322344773512, 69.46798798511684, 78.6231382371548, 77.18811130094991, 77.12235331096917, 110.8686721253617, 118.7107699693892, 104.9779433131605, 57.66142101298617], "Claude 3.5 Sonnet": [402.7068896372356, 601.0486394684918, 949.662904701443, 1086.931357167701, 411.3278659431294, 285.1625512176453, 289.9642926945548, 243.9012381630148, 263.8319607134962, 230.4261446995197, 196.4165867020836, 173.3996927515161, 161.8002513171057, 116.807801772028, 100.673441706307, 129.2658251745163, 134.25041697572, 12.27856532361472, 4.716448325232118], "Claude 3.7 Sonnet": [null, null, null, 147.8623529829137, 1537.031598480751, 1592.729174350854, 1670.513310485035, 839.5172302124545, 645.4910441989966, 811.7559228860858, 592.3522664464112, 583.7933808641312, 335.7776373888528, 253.101568132346, 260.3062992415023, 214.6430012254893, 153.8306876079532, 133.8432994356764, 16.35436380555299], "Claude 4 Opus": [null, null, null, null, null, null, 25.1027592260245, 85.00400349857573, 129.4578350455451, 77.82359155921571, 32.88574379884476, 22.30382240492035, 12.82017089291005, 10.32128150450714, 9.708860864474502, 14.42750627378321, 14.89241020078429, 821.1970489700409, 1859.664812965817], "Claude 4 Sonnet": [null, null, null, null, null, null, 356.6809318667097, 1344.331180509015, 2202.231393478464, 2639.159876445772, 3007.719153044944, 1381.86035514341, 952.4410818833018, 752.1994442005445, 615.2308453405709, 599.944199925427, 715.4820509193081, 654.2601540642152, 303.747399145164], "Claude 4.1 Opus": [null, null, null, null, null, null, null, null, null, 107.5254040193238, 109.7404494504782, 49.90678787632301, 45.88620152317459, 21.09343371512499, 14.91225209603443, 19.9622474561891, 26.83477043973279, 9.416044070250535, 3.532854975773408], "Claude 4.5 Haiku": [null, null, null, null, null, null, null, null, null, null, null, 181.3516449678047, 306.7317784464633, 526.7255361959673, 714.2083434693757, 984.1291256825214, 1936.228493603394, 2264.618342192622, 1422.744434507088], "Claude 4.5 Opus": [null, null, null, null, null, null, null, null, null, null, null, null, 121.1075541959455, 1025.848028626998, 2267.220577366788, 1541.782608647295, 802.4568939425158, 581.956004585296, 313.1155567581814], "Claude 4.5 Sonnet": [null, null, null, null, null, null, null, null, null, null, 61.50397794113221, 2555.162047715965, 3078.909623348104, 2711.524054661447, 4489.245207528816, 5340.164101796179, 5673.393728772484, 5219.988785601696, 2617.813420277666], "Claude 4.6 Opus": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 2605.041470062551, 6760.9521213672, 9778.71873381882, 5008.410024999195], "Claude 4.6 Sonnet": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 1059.373957536884, 5559.710992930432, 8656.620702801141, 7976.456516122162], "Claude 4.7 Opus": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 2100.975791092988, 5329.085802305586], "Claude Instant": [1.929227757192687, 0.5111832226347829, 3.613891265787158, 3.637576545523274, 0.9330551583712117, 0.9554590688682866, 1.445654902500725, 0.7787591690041519, 2.033503492278296, 1.319108403337933, 0.7881385322959892, null, null, null, null, null, null, null, null], "Claude V2": [0.3993261284416728, 0.4403881317124925, 0.6213720811158848, 0.3150039900459946, 0.3519458242860735, 0.07237337373036146, 0.02964859103780054, 0.03792632073730509, 0.01577694899667241, 0.009862433167803103, 0.0004871100034490228, null, null, null, null, null, null, null, null]}, "cohort_panelists": {"2024-11": 14, "2024-12": 14, "2025-01": 12, "2025-02": 14, "2025-03": 19, "2025-04": 10, "2025-05": 16, "2025-06": 21, "2025-07": 22, "2025-08": 14, "2025-09": 11, "2025-10": 9, "2025-11": 15, "2025-12": 11, "2026-01": 23, "2026-02": 32, "2026-03": 37, "2026-04": 40}, "ch_cloud_abs": [3.960952364137184, 4.314928476347772, 3.7014539824556327, 5.927792596834589, 8.338367475455561, 9.890399683520634, 13.030386640804785, 16.351618769581567, 22.138688645484354, 24.79719611144356, 30.44034044442044, 36.56170948635457, 49.06729047839458, 52.757568697422904, 79.31308954750412, 128.08183246172916, 199.51252110699895, 292.49259662926374, 351.22796981748314], "ch_or_abs": [3.7419725718527768, 4.6567485676977105, 8.920231403156098, 12.147435088200346, 17.948695221900007, 16.50627570999144, 20.035793905983336, 22.305303920139806, 25.51356126585692, 30.874789673890035, 31.164656401602628, 32.99547903409046, 32.13179720388441, 37.29109151708461, 56.7038933689825, 65.22032428747592, 92.31787472361663, 123.42947510425248, 141.32731058146314], "ch_b2b_abs": [2.5583762306044076, 3.6047562079432423, 3.8269350368575825, 4.352542564814362, 4.8101005044381955, 5.254783104147985, 8.261065962045455, 10.572407277039659, 11.739816810602996, 13.821845603326855, 20.77206336570984, 25.56612256628233, 29.167150661459132, 32.87305141163742, 42.556842817455255, 56.37986072029941, 84.79853116812387, 118.70976712864469, 138.5943980213658], "ch_subs_abs": [5.905200000000001, 6.41025, 6.8431500000000005, 7.40925, 8.14185, 8.72565, 10.2774, 13.232999999999997, 16.00425, 18.057299999999998, 19.999950000000002, 23.01975, 24.49035, 26.665499999999998, 33.7188, 44.8917, 65.50335000000001, 85.1013, 92.39265], "direct_mix_pct": [null, 71.0356462469435, 76.77897089881677, 79.67513985136034, 68.28148896477042, 56.39105512754702, 38.457198045391635, 31.05742736542772, 33.43747403110724, 32.06304382090126, 38.435548346263374, 38.15270847705902, 35.92075235990328, 33.66092618814958, 32.89292171567244, 31.822982342012118, 25.08079038036936, 22.33190488780296, 20.906289958666218], "cloud_driven_mix_pct": [null, 28.96435375305652, 23.22102910118324, 20.32486014863965, 31.718511035229568, 43.60894487245298, 61.542801954608365, 68.94257263457226, 66.56252596889274, 67.93695617909874, 61.56445165373664, 61.84729152294097, 64.07924764009672, 66.33907381185041, 67.10707828432756, 68.17701765798788, 74.91920961963065, 77.66809511219704, 79.09371004133378], "aws_share_pct": [80.91024352014729, 83.64114873874718, 96.6503052855026, 98.63971188597161, 95.88898409230993, 97.72560355866403, 97.67745376998704, 96.32717319227223, 95.33235923375041, 95.26851393045321, 95.04821077375006, 94.61880621160064, 94.39511888747394, 92.99865198933524, 93.16224319438666, 91.81038737288088, 88.31194381942164, 83.12712264657414, 82.73794829274014], "gcp_share_pct": [19.089756479852706, 16.358851261252823, 3.349694714497403, 1.36028811402839, 4.111015907690072, 2.2743964413359627, 2.3225462300129656, 3.672826807727773, 4.667640766249596, 4.731486069546794, 4.95178922624994, 5.3811937883993615, 5.604881112526063, 6.899758148636867, 6.752663643329175, 7.9760724180758995, 11.26486214189701, 16.28245902511119, 16.699727276249536], "azure_share_pct": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.10158986202788295, 0.08509316228416772, 0.21354020904322313, 0.42319403868134725, 0.5904183283146733, 0.5623244310103138], "coverage_ratio": [null, 1.8986683251988723, 1.9409808685391094, 1.8648137656155812, 1.9619506600896879, 1.6150843399064023, 1.720154883627786, 1.5615582491690256, 1.5872908783567217, 1.6676405978792466, 1.6714613912119658, 1.6877580155246767, 1.659773394999854, 1.6171590446069726, 1.6330201979533987, 1.5503879866816026, 1.4737742566624648, 1.511544241127222, null], "sonnet_spend": [1.454732436928242, 2.044783743372525, 3.083056138020822, 4.0127361721535895, 6.372680289604483, 6.287712257518105, 7.714066327679787, 5.129396486783536, 6.105752446425533, 6.838415357319004, 7.445696154095209, 9.08216934801505, 8.885774349231099, 8.223940054725126, 10.398943482578755, 12.512817484353581, 19.228491276624762, 22.04076098237092, 15.013688574981732], "opus_spend": [0.06066317281179369, 0.07417200992066551, 0.07400161985640623, 0.07114596441577399, 0.05153448648776163, 0.03346849895128948, 0.3946435651056263, 0.6464124762572222, 0.9948084176961994, 1.5563200395268213, 1.3772670359609251, 0.8147138365609117, 1.0769512909128645, 3.175296217384048, 6.753885415142077, 8.993597261363625, 15.186815394262291, 25.454935774252192, 25.07936621002165], "haiku_spend": [0.02412916189764097, 0.0325665594342818, 0.038893204571713, 0.037875988179514916, 0.09371035317255808, 0.060544426087657366, 0.06309667655270365, 0.06614503981311715, 0.20964844438340327, 0.0962730492127398, 0.09930665721990876, 0.2119225777870259, 0.37064082766663337, 0.5350223931529876, 0.6564774464229076, 0.8682810380054105, 1.4901448673186788, 1.5995324360059286, 1.0837649796764652], "sonnet_tokens": [415.64516267927354, 614.2445516544666, 964.4726827796813, 1251.7087796616568, 1964.3420450182127, 1894.389294818572, 2330.651866440661, 2438.5096343466475, 3122.1430615149316, 3687.25527319663, 3863.4608408444083, 4699.092873073007, 4535.768991007888, 3838.619180259868, 5471.258001237697, 7348.582355276372, 12239.648648226166, 14681.488983646814, 10921.214066048527], "opus_tokens": [3.116549925446342, 3.812477865512368, 3.891492640211535, 3.847385218671576, 2.80595413650908, 1.730348149399857, 27.069985066300227, 86.30224700628689, 130.6888581188133, 186.38054712683112, 143.53848456058304, 73.35546738839432, 180.31864009198858, 1060.4570877595672, 2294.493486558217, 4181.227168305736, 7605.136195950233, 13292.263622537394, 12513.809052004553], "haiku_tokens": [43.393642979776715, 50.35719160162501, 80.40249574920605, 87.4609776970137, 156.44704020031304, 125.92406345839296, 125.45103256164924, 111.76432245854912, 193.8942446365743, 176.02908745623057, 177.22823047945894, 343.3675286158548, 502.7696049254524, 705.88161443127, 872.5758435822945, 1178.8290334219857, 2125.1268948999996, 2436.6107601698454, 1516.856820903703], "sonnet_price_per_m": [3.4999383309334093, 3.328940790544912, 3.1966235986437965, 3.205806524132756, 3.2441805671096335, 3.3191236219059643, 3.309832085501728, 2.1034965023453194, 1.9556286583046227, 1.8546086046791403, 1.9272089095298965, 1.9327494887488144, 1.9590447324030498, 2.1424214459764097, 1.9006494448308466, 1.702752569054251, 1.5710002655518593, 1.501261963750498, 1.3747270664399611], "opus_price_per_m": [19.464848715075764, 19.45506637340106, 19.016255894135167, 18.492030397813725, 18.366118610860934, 19.342060707781542, 14.578639926806726, 7.490100184878532, 7.612036955681319, 8.350227872588832, 9.59510642861514, 11.106381917618439, 5.9724900895629185, 2.994271294930483, 2.9435191055055165, 2.1509468152164275, 1.9969156374016463, 1.9150188784318614, 2.0041352801371257], "haiku_price_per_m": [0.5560529202142855, 0.646711192552503, 0.4837313096975233, 0.43306156844857874, 0.5989908984700023, 0.48080108300874574, 0.5029586067511771, 0.5918260707718142, 1.0812515078844027, 0.5469155728974507, 0.5603320472774148, 0.6171887558538361, 0.7371981600231973, 0.7579491832834547, 0.752344281876735, 0.7365623117415973, 0.7012027709473788, 0.6564579218612793, 0.7144807372331865], "pro_max_ratio": [null, null, null, null, null, 134.81818181818184, 44.8, 22.857142857142858, 16.538461538461537, 14.48611111111111, 12.843023255813955, 11.642857142857142, 12.04109589041096, 11.422764227642277, 10.414634146341463, 10.65893271461717, 12.670774647887326, 12.72554347826087, 13.234615384615385]};
+
+// Color palette
+const C = {
+  reported:'#d97429', estimate:'#1c1917',
+  cloud:'#d97429', or:'#3b7dd8', b2b:'#0d9668', subs:'#a855f7',
+  aws:'#ff9500', gcp:'#4285f4', azure:'#0078d4',
+  opus:'#7c3aed', sonnet:'#d97429', haiku:'#0d9668',
+  pro:'#a855f7', max:'#7c3aed',
+  direct:'#3b7dd8', cloudDriven:'#d97429'
+};
+const GRID = {color:'rgba(0,0,0,.05)', drawBorder:false};
+const TICK = {font:{size:10, family:'IBM Plex Mono'}, color:'#57534e'};
+const TT = {padding:10,backgroundColor:'rgba(28,25,23,.95)',cornerRadius:6,titleFont:{size:12},bodyFont:{size:11}};
+
+function shortM(m){const [y,mo]=m.split('-');return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(mo)-1]+' '+y.slice(2);}
+const labels = D.months.map(shortM);
+
+// ── KPI Cards ──
+(function(){
+  const cloudM = D.mix_cloud.slice(-1)[0];
+  const apiM = cloudM + D.mix_or.slice(-1)[0] + D.mix_b2b.slice(-1)[0];
+  const awsShare = D.aws_share_pct.slice(-1)[0];
+  const totalSubs = D.pro_subs.slice(-1)[0] + D.max_subs.slice(-1)[0];
+  const subsGrowth5mo = (totalSubs / (D.pro_subs[D.pro_subs.length-6] + D.max_subs[D.max_subs.length-6]) - 1) * 100;
+  const yipitEst = D.arr_yipit_est.slice(-1)[0];
+  const opusToken = D.opus_tokens.slice(-1)[0];
+  const sonnetToken = D.sonnet_tokens.slice(-1)[0];
+  const opusShare = opusToken / (opusToken + sonnetToken + D.haiku_tokens.slice(-1)[0]) * 100;
+  
+  document.getElementById('kpiGrid').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Reported ARR Apr</div><div class="kpi-val">$41<small>B</small></div><div class="kpi-delta up">+37% M/M</div><div class="kpi-sub">May Yipit Est. $48.4B</div></div>
+    <div class="kpi"><div class="kpi-label">API 占比</div><div class="kpi-val">${apiM.toFixed(1)}<small>%</small></div><div class="kpi-delta up">+24pp vs 2024</div><div class="kpi-sub">Subs 仅 ${(100-apiM).toFixed(1)}%</div></div>
+    <div class="kpi"><div class="kpi-label">Enterprise (Cloud) Mix</div><div class="kpi-val">${cloudM.toFixed(1)}<small>%</small></div><div class="kpi-delta up">+24pp vs 2024</div><div class="kpi-sub">最大 channel</div></div>
+    <div class="kpi"><div class="kpi-label">AWS 占 Cloud</div><div class="kpi-val">${awsShare.toFixed(1)}<small>%</small></div><div class="kpi-delta dn">single-cloud risk</div><div class="kpi-sub">GCP ${D.gcp_share_pct.slice(-1)[0].toFixed(1)}% Azure ${D.azure_share_pct.slice(-1)[0].toFixed(1)}%</div></div>
+    <div class="kpi"><div class="kpi-label">Pro+Max Subs</div><div class="kpi-val">${totalSubs.toFixed(1)}<small>K</small></div><div class="kpi-delta up">+${subsGrowth5mo.toFixed(0)}% 5mo</div><div class="kpi-sub">Pro ${D.pro_subs.slice(-1)[0].toFixed(1)}K · Max ${D.max_subs.slice(-1)[0].toFixed(2)}K</div></div>
+    <div class="kpi"><div class="kpi-label">Opus Token Share</div><div class="kpi-val">${opusShare.toFixed(1)}<small>%</small></div><div class="kpi-delta up">超过 Sonnet!</div><div class="kpi-sub">${opusToken.toFixed(0)}bn vs ${sonnetToken.toFixed(0)}bn</div></div>
+  `;
+})();
+
+// ── Chart 1: ARR Trajectory ──
+let arrChart, arrScale='log';
+function buildArr(){
+  if(arrChart) arrChart.destroy();
+  arrChart = new Chart(document.getElementById('arrChart').getContext('2d'),{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'Anthropic 披露 ARR ($B)',data:D.arr_reported,borderColor:C.reported,backgroundColor:'rgba(217,116,41,.08)',borderWidth:3,pointRadius:5,pointHoverRadius:7,pointBackgroundColor:C.reported,fill:false,tension:.15,spanGaps:true},
+      {label:'YipitData 估算 ARR ($B)',data:D.arr_yipit_est,borderColor:C.estimate,borderWidth:2,borderDash:[6,3],pointRadius:4,pointHoverRadius:6,pointStyle:'rectRot',pointBackgroundColor:C.estimate,fill:false,tension:.15,spanGaps:true}
+    ]},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},tooltip:{...TT,callbacks:{label:i=>' '+i.dataset.label+': '+(i.parsed.y>=1?'$'+i.parsed.y.toFixed(1)+'B':'$'+(i.parsed.y*1000).toFixed(0)+'M')}}},
+      scales:{x:{grid:GRID,ticks:TICK},y:arrScale==='log'?{type:'logarithmic',grid:GRID,ticks:{...TICK,callback:v=>v>=1?'$'+v+'B':'$'+(v*1000).toFixed(0)+'M'}}:{grid:GRID,ticks:{...TICK,callback:v=>'$'+v+'B'}}}}
+  });
+}
+function setArrScale(s,btn){arrScale=s;document.querySelectorAll('#arrScaleTabs .tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildArr();}
+
+// ── Chart 2: M/M ──
+let mmChart;
+(function(){
+  const cols = D.mm_growth.map(v=>v==null?'#ccc':v>=30?C.cloud:v>=15?'#fb923c':'#94a3b8');
+  mmChart = new Chart(document.getElementById('mmChart').getContext('2d'),{
+    type:'bar',
+    data:{labels,datasets:[{label:'M/M Growth %',data:D.mm_growth,backgroundColor:cols,borderRadius:3,maxBarThickness:32}]},
+    options:{responsive:true,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:i=>' '+i.parsed.y.toFixed(1)+'%'}}},scales:{x:{grid:GRID,ticks:TICK},y:{grid:GRID,ticks:{...TICK,callback:v=>v+'%'}}}}
+  });
+})();
+
+// ── Chart 3: Mix % ──
+new Chart(document.getElementById('mixPctChart').getContext('2d'),{
+  type:'line',
+  data:{labels,datasets:[
+    {label:'Cloud API',data:D.mix_cloud,backgroundColor:C.cloud,borderColor:C.cloud,fill:'origin',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0},
+    {label:'OpenRouter',data:D.mix_or,backgroundColor:C.or,borderColor:C.or,fill:'-1',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0},
+    {label:'B2B Direct',data:D.mix_b2b,backgroundColor:C.b2b,borderColor:C.b2b,fill:'-1',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0},
+    {label:'Consumer Subs',data:D.mix_subs,backgroundColor:C.subs,borderColor:C.subs,fill:'-1',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0}
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},tooltip:{...TT,callbacks:{label:i=>' '+i.dataset.label+': '+i.parsed.y.toFixed(1)+'%'}}},scales:{x:{grid:GRID,ticks:{...TICK,maxTicksLimit:8},stacked:true},y:{grid:GRID,ticks:{...TICK,callback:v=>v+'%'},stacked:true,min:0,max:100}}}
+});
+
+// ── Chart 4: Mix Abs ──
+new Chart(document.getElementById('mixAbsChart').getContext('2d'),{
+  type:'line',
+  data:{labels,datasets:[
+    {label:'Cloud API',data:D.ch_cloud_abs,backgroundColor:C.cloud,borderColor:C.cloud,fill:'origin',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0},
+    {label:'OpenRouter',data:D.ch_or_abs,backgroundColor:C.or,borderColor:C.or,fill:'-1',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0},
+    {label:'B2B Direct',data:D.ch_b2b_abs,backgroundColor:C.b2b,borderColor:C.b2b,fill:'-1',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0},
+    {label:'Subs',data:D.ch_subs_abs,backgroundColor:C.subs,borderColor:C.subs,fill:'-1',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0}
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},tooltip:{...TT,callbacks:{label:i=>' '+i.dataset.label+': $'+i.parsed.y.toFixed(1)+'M'}}},scales:{x:{grid:GRID,ticks:{...TICK,maxTicksLimit:8},stacked:true},y:{grid:GRID,ticks:{...TICK,callback:v=>'$'+v+'M'},stacked:true,min:0}}}
+});
+
+// ── Chart 5: Direct vs Cloud ──
+new Chart(document.getElementById('directCloudChart').getContext('2d'),{
+  type:'line',
+  data:{labels,datasets:[
+    {label:'Anthropic Direct (OR + B2B Panel)',data:D.direct_mix_pct,backgroundColor:'rgba(59,125,216,.4)',borderColor:C.direct,fill:'origin',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0},
+    {label:'Cloud APIs (AWS/GCP/Azure)',data:D.cloud_driven_mix_pct,backgroundColor:'rgba(217,116,41,.4)',borderColor:C.cloudDriven,fill:'-1',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0}
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},tooltip:{...TT,callbacks:{label:i=>' '+i.dataset.label+': '+i.parsed.y.toFixed(1)+'%'}}},scales:{x:{grid:GRID,ticks:TICK,stacked:true},y:{grid:GRID,ticks:{...TICK,callback:v=>v+'%'},stacked:true,min:0,max:100}}}
+});
+
+// ── Chart 6: Channel Growth ──
+let channelChart, channelSel='all';
+function buildChannel(){
+  if(channelChart) channelChart.destroy();
+  const ch = {
+    cloud:{label:'Cloud API (Enterprise)',data:D.ch_cloud_abs,color:C.cloud},
+    or:{label:'OpenRouter (Developer)',data:D.ch_or_abs,color:C.or},
+    b2b:{label:'B2B Direct (SMB)',data:D.ch_b2b_abs,color:C.b2b},
+    subs:{label:'Subscriptions',data:D.ch_subs_abs,color:C.subs}
+  };
+  let ds;
+  if(channelSel==='all') ds = Object.values(ch).map(c=>({label:c.label,data:c.data,borderColor:c.color,backgroundColor:'transparent',borderWidth:2.5,pointRadius:3,pointHoverRadius:5,pointBackgroundColor:c.color,tension:.15,fill:false}));
+  else {const cc=ch[channelSel];ds=[{label:cc.label,data:cc.data,borderColor:cc.color,backgroundColor:cc.color+'22',borderWidth:3,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:cc.color,fill:true,tension:.15}];}
+  channelChart = new Chart(document.getElementById('channelChart').getContext('2d'),{
+    type:'line',data:{labels,datasets:ds},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},tooltip:{...TT,callbacks:{label:i=>' '+i.dataset.label+': $'+i.parsed.y.toFixed(1)+'M'}}},scales:{x:{grid:GRID,ticks:TICK},y:{grid:GRID,ticks:{...TICK,callback:v=>'$'+v+'M'},min:0}}}
+  });
+  if(channelSel==='all'){
+    document.getElementById('channelStats').innerHTML = `<span>Cloud: <b>$${D.ch_cloud_abs.slice(-1)[0].toFixed(0)}M</b></span><span>OR: <b>$${D.ch_or_abs.slice(-1)[0].toFixed(0)}M</b></span><span>B2B: <b>$${D.ch_b2b_abs.slice(-1)[0].toFixed(0)}M</b></span><span>Subs: <b>$${D.ch_subs_abs.slice(-1)[0].toFixed(0)}M</b></span>`;
+  } else {
+    const cc = ch[channelSel];
+    const m = (cc.data.slice(-1)[0]/cc.data[0]).toFixed(0);
+    const mm = (cc.data.slice(-1)[0]/cc.data.slice(-2,-1)[0] - 1)*100;
+    document.getElementById('channelStats').innerHTML = `<span>当前: <b>$${cc.data.slice(-1)[0].toFixed(1)}M</b></span><span>18mo: <b>${m}x</b></span><span>最近 M/M: <b>${mm.toFixed(1)}%</b></span>`;
+  }
+}
+function setChannel(c,btn){channelSel=c;document.querySelectorAll('#channelTabs .tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildChannel();}
+
+// ── Chart 7: Cloud Provider Abs (log) ──
+new Chart(document.getElementById('cloudAbsChart').getContext('2d'),{
+  type:'line',
+  data:{labels,datasets:[
+    {label:'AWS Bedrock',data:D.aws_arr,borderColor:C.aws,backgroundColor:C.aws+'22',borderWidth:3,pointRadius:3,pointHoverRadius:5,tension:.15,fill:false},
+    {label:'GCP Vertex',data:D.gcp_arr,borderColor:C.gcp,backgroundColor:C.gcp+'22',borderWidth:2.5,pointRadius:3,pointHoverRadius:5,tension:.15,fill:false},
+    {label:'Azure Foundry',data:D.azure_arr,borderColor:C.azure,borderWidth:2,borderDash:[4,3],pointRadius:3,pointHoverRadius:5,tension:.15,fill:false}
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},tooltip:{...TT,callbacks:{label:i=>' '+i.dataset.label+': $'+i.parsed.y.toFixed(1)+'M'}}},scales:{x:{grid:GRID,ticks:{...TICK,maxTicksLimit:8}},y:{type:'logarithmic',grid:GRID,ticks:{...TICK,callback:v=>'$'+v+'M'}}}}
+});
+
+// ── Chart 8: Cloud Provider Share % ──
+new Chart(document.getElementById('cloudShareChart').getContext('2d'),{
+  type:'line',
+  data:{labels,datasets:[
+    {label:'AWS Bedrock',data:D.aws_share_pct,backgroundColor:C.aws,borderColor:C.aws,fill:'origin',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0},
+    {label:'GCP Vertex',data:D.gcp_share_pct,backgroundColor:C.gcp,borderColor:C.gcp,fill:'-1',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0},
+    {label:'Azure Foundry',data:D.azure_share_pct,backgroundColor:C.azure,borderColor:C.azure,fill:'-1',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0}
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},tooltip:{...TT,callbacks:{label:i=>' '+i.dataset.label+': '+i.parsed.y.toFixed(1)+'%'}}},scales:{x:{grid:GRID,ticks:{...TICK,maxTicksLimit:8},stacked:true},y:{grid:GRID,ticks:{...TICK,callback:v=>v+'%'},stacked:true,min:0,max:100}}}
+});
+
+// ── Chart 9: Subscription Growth ──
+new Chart(document.getElementById('subsGrowthChart').getContext('2d'),{
+  type:'bar',
+  data:{labels,datasets:[
+    {label:'Claude Pro (K panel)',data:D.pro_subs,backgroundColor:C.pro,borderRadius:2,maxBarThickness:18},
+    {label:'Claude Max ($150)',data:D.max_subs,backgroundColor:C.max,borderRadius:2,maxBarThickness:18}
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},tooltip:{...TT,callbacks:{label:i=>' '+i.dataset.label+': '+i.parsed.y.toFixed(2)+'K'}}},scales:{x:{grid:GRID,ticks:{...TICK,maxTicksLimit:8},stacked:true},y:{grid:GRID,ticks:{...TICK,callback:v=>v+'K'},stacked:true,min:0}}}
+});
+
+// ── Chart 10: Subscription Behavior ──
+let subsBhChart, subsBhMode='mix';
+function buildSubsBh(){
+  if(subsBhChart) subsBhChart.destroy();
+  let ds, yLbl, stacked=false, yMax=undefined;
+  if(subsBhMode==='mix'){
+    const total = D.pro_subs.map((p,i)=>p+D.max_subs[i]);
+    const proMix = D.pro_subs.map((p,i)=>p/total[i]*100);
+    const maxMix = D.max_subs.map((m,i)=>m/total[i]*100);
+    ds = [
+      {label:'Pro mix %',data:proMix,backgroundColor:C.pro,borderColor:C.pro,fill:'origin',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0},
+      {label:'Max mix %',data:maxMix,backgroundColor:C.max,borderColor:C.max,fill:'-1',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0}
+    ];
+    yLbl='%'; stacked=true; yMax=100;
+  } else if(subsBhMode==='arr'){
+    const proARR = D.pro_subs.map(p=>p*18.5*12);
+    const maxARR = D.max_subs.map(m=>m*150*12);
+    ds = [
+      {label:'Pro implied $K/yr (panel)',data:proARR,borderColor:C.pro,borderWidth:2.5,pointRadius:3,fill:false,tension:.15},
+      {label:'Max implied $K/yr (panel)',data:maxARR,borderColor:C.max,borderWidth:2.5,pointRadius:3,fill:false,tension:.15}
+    ];
+    yLbl='$K/yr';
+  } else {
+    const proG = D.pro_subs.map((p,i)=>i===0?null:(p/D.pro_subs[i-1]-1)*100);
+    const maxG = D.max_subs.map((m,i)=>(i===0||D.max_subs[i-1]===0)?null:(m/D.max_subs[i-1]-1)*100);
+    ds = [
+      {label:'Pro M/M %',data:proG,borderColor:C.pro,borderWidth:2,pointRadius:3,fill:false,tension:.15,spanGaps:true},
+      {label:'Max M/M %',data:maxG,borderColor:C.max,borderWidth:2,pointRadius:3,fill:false,tension:.15,spanGaps:true}
+    ];
+    yLbl='%';
+  }
+  subsBhChart = new Chart(document.getElementById('subsBhChart').getContext('2d'),{
+    type:'line',data:{labels,datasets:ds},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},tooltip:{...TT}},
+      scales:{x:{grid:GRID,ticks:{...TICK,maxTicksLimit:8},stacked:stacked},y:{grid:GRID,ticks:{...TICK,callback:v=>v.toLocaleString()+(yLbl==='%'?'%':'')},stacked:stacked,min:stacked?0:undefined,max:yMax}}}
+  });
+}
+function setSubsBh(m,btn){subsBhMode=m;document.querySelectorAll('#subsBhTabs .tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildSubsBh();}
+
+// ── Chart 11: Cohort Heatmap (HTML table) ──
+(function(){
+  const cohortKeys = Object.keys(D.cohorts).sort();
+  const M = 13;
+  function colorFor(v){
+    if(v==null) return null;
+    const lv = Math.log10(Math.max(v,0.5));
+    const t = Math.min(1, Math.max(0, lv / 2.5));
+    const stops = [[0,[254,243,199]],[0.25,[254,215,170]],[0.5,[251,146,60]],[0.75,[217,116,41]],[1,[124,45,18]]];
+    let lo=stops[0], hi=stops[stops.length-1];
+    for(let i=0;i<stops.length-1;i++){if(t>=stops[i][0]&&t<=stops[i+1][0]){lo=stops[i];hi=stops[i+1];break;}}
+    const f = (t-lo[0])/(hi[0]-lo[0]||1);
+    const [r,g,b] = lo[1].map((v,j)=>Math.round(v+(hi[1][j]-v)*f));
+    return `rgb(${r},${g},${b})`;
+  }
+  function txtCol(v){return v==null?null:(Math.log10(Math.max(v,0.5))>1.2?'#fff':'#1c1917');}
+  let h = '<table class="cohort-table"><thead><tr><th>Cohort</th>';
+  for(let i=0;i<M;i++) h += `<th>M${i}</th>`;
+  h += '<th style="padding-left:12px;color:var(--sub);font-family:Plus Jakarta Sans;text-align:center">Panelists</th></tr></thead><tbody>';
+  cohortKeys.forEach(k=>{
+    h += `<tr><td class="cohort-label">${k}</td>`;
+    for(let i=0;i<M;i++){
+      const v=D.cohorts[k][i];
+      if(v==null) h += '<td class="empty">·</td>';
+      else {
+        const display = v>=100?Math.round(v)+'x':v>=10?v.toFixed(0)+'x':v.toFixed(1)+'x';
+        h += `<td style="background:${colorFor(v)};color:${txtCol(v)}" title="${k} M${i}: ${v.toFixed(2)}x">${display}</td>`;
+      }
+    }
+    h += `<td style="padding-left:12px;color:var(--muted);font-weight:400;text-align:center">${D.cohort_panelists[k]||'-'}</td></tr>`;
+  });
+  h += '</tbody></table>';
+  document.getElementById('cohortHeatmap').innerHTML = h;
+})();
+
+// ── Chart 12: Selected Cohort Lines ──
+(function(){
+  const keys = ['2024-12','2025-02','2025-06','2025-09','2025-12','2026-01'];
+  const cols = ['#94a3b8','#3b7dd8','#7c3aed','#d97429','#0d9668','#dc2626'];
+  const maxMonths = 13;
+  const xLabels = Array.from({length:maxMonths}, (_,i)=>'Month '+i);
+  const datasets = keys.map((k,i)=>({
+    label:k+' ('+(D.cohort_panelists[k]||'-')+' panelists)',
+    data:D.cohorts[k]?D.cohorts[k].slice(0,maxMonths):[],
+    borderColor:cols[i],
+    backgroundColor:'transparent',
+    borderWidth:2.5,pointRadius:3,pointHoverRadius:5,pointBackgroundColor:cols[i],
+    tension:.15,fill:false,spanGaps:true
+  }));
+  new Chart(document.getElementById('cohortLineChart').getContext('2d'),{
+    type:'line',data:{labels:xLabels,datasets},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},tooltip:{...TT,callbacks:{label:i=>' '+i.dataset.label+': '+i.parsed.y.toFixed(1)+'x'}}},scales:{x:{grid:GRID,ticks:TICK,title:{display:true,text:'Months Since First Transaction',font:{size:10},color:'#a8a29e'}},y:{type:'logarithmic',grid:GRID,ticks:{...TICK,callback:v=>v+'x'},title:{display:true,text:'Expansion Multiple (log)',font:{size:10},color:'#a8a29e'}}}}
+  });
+})();
+
+// ── Chart 13: New Cohort Acquisition ──
+(function(){
+  const keys = Object.keys(D.cohort_panelists).sort();
+  const counts = keys.map(k=>D.cohort_panelists[k]);
+  const cols = counts.map(c=>c>=25?C.cloud:c>=15?'#fb923c':'#94a3b8');
+  new Chart(document.getElementById('newCohortChart').getContext('2d'),{
+    type:'bar',data:{labels:keys.map(shortM),datasets:[{label:'New B2B Panelists',data:counts,backgroundColor:cols,borderRadius:3,maxBarThickness:32}]},
+    options:{responsive:true,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:i=>' '+i.parsed.y+' new panel customers'}}},scales:{x:{grid:GRID,ticks:TICK},y:{grid:GRID,ticks:TICK,min:0}}}
+  });
+})();
+
+// ── Chart 14: OR Price/Volume ──
+new Chart(document.getElementById('priceVolChart').getContext('2d'),{
+  type:'line',
+  data:{labels,datasets:[
+    {label:'$/M tokens',data:D.or_price,borderColor:C.cloud,backgroundColor:C.cloud+'22',borderWidth:3,pointRadius:4,pointHoverRadius:6,fill:false,tension:.15,yAxisID:'y1'},
+    {label:'Tokens (bn T28D)',data:D.or_tokens,borderColor:C.estimate,borderWidth:2.5,pointRadius:3,pointHoverRadius:5,fill:false,tension:.15,yAxisID:'y2'}
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},tooltip:{...TT,callbacks:{label:i=>i.dataset.yAxisID==='y1'?' $'+i.parsed.y.toFixed(2)+'/M':' '+i.parsed.y.toLocaleString(undefined,{maximumFractionDigits:0})+'bn'}}},
+    scales:{x:{grid:GRID,ticks:TICK},y1:{type:'linear',position:'left',grid:GRID,ticks:{...TICK,callback:v=>'$'+v.toFixed(2)},title:{display:true,text:'Price $/M tokens',font:{size:10},color:C.cloud}},y2:{type:'logarithmic',position:'right',grid:{display:false},ticks:{...TICK,callback:v=>v.toLocaleString()+'bn'},title:{display:true,text:'Volume (bn T28D, log)',font:{size:10},color:C.estimate}}}}
+});
+
+// ── Chart 15: Model Lifecycle ──
+let modelChart, modelMetric='spend';
+function buildModel(){
+  if(modelChart) modelChart.destroy();
+  const src = modelMetric==='spend'?D.model_spend:D.model_tokens;
+  const priority = ['Claude 3.5 Sonnet','Claude 3.7 Sonnet','Claude 4 Sonnet','Claude 4.5 Sonnet','Claude 4.6 Sonnet','Claude 4 Opus','Claude 4.5 Opus','Claude 4.6 Opus','Claude 4.7 Opus','Claude 4.5 Haiku','Claude 3.5 Haiku','Claude 3 Haiku'];
+  const cmap = {'Claude 3.5 Sonnet':'#94a3b8','Claude 3.7 Sonnet':'#64748b','Claude 4 Sonnet':'#fb923c','Claude 4.5 Sonnet':'#f97316','Claude 4.6 Sonnet':'#d97429','Claude 4 Opus':'#c084fc','Claude 4.5 Opus':'#a855f7','Claude 4.6 Opus':'#7c3aed','Claude 4.7 Opus':'#5b21b6','Claude 4.5 Haiku':'#0d9668','Claude 3.5 Haiku':'#16a34a','Claude 3 Haiku':'#22c55e'};
+  const ds = priority.filter(m=>src[m]).map(m=>({label:m,data:src[m].map(v=>(typeof v==='number'&&v>0.001)?v:null),borderColor:cmap[m]||'#999',backgroundColor:(cmap[m]||'#999')+'33',borderWidth:1.5,pointRadius:0,pointHoverRadius:4,fill:'origin',tension:.15,spanGaps:false}));
+  modelChart = new Chart(document.getElementById('modelChart').getContext('2d'),{
+    type:'line',data:{labels,datasets:ds},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:8,font:{size:9},padding:6}},tooltip:{...TT,callbacks:{label:i=>' '+i.dataset.label+': '+(modelMetric==='spend'?'$'+i.parsed.y.toFixed(2)+'M':i.parsed.y.toFixed(0)+'bn')}}},scales:{x:{grid:GRID,ticks:{...TICK,maxTicksLimit:10},stacked:true},y:{grid:GRID,ticks:{...TICK,callback:v=>modelMetric==='spend'?'$'+v+'M':v.toLocaleString()+'bn'},stacked:true,min:0}}}
+  });
+}
+function setModelMetric(m,btn){modelMetric=m;document.querySelectorAll('#modelTabs .tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildModel();}
+
+// ── Chart 16: Tier Mix ──
+let tierChart, tierMode='tokens';
+function buildTier(){
+  if(tierChart) tierChart.destroy();
+  const src = tierMode==='tokens'?
+    {sonnet:D.sonnet_tokens,opus:D.opus_tokens,haiku:D.haiku_tokens}:
+    {sonnet:D.sonnet_spend,opus:D.opus_spend,haiku:D.haiku_spend};
+  tierChart = new Chart(document.getElementById('tierChart').getContext('2d'),{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'Opus (premium)',data:src.opus,backgroundColor:C.opus,borderColor:C.opus,fill:'origin',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0},
+      {label:'Sonnet (balanced)',data:src.sonnet,backgroundColor:C.sonnet,borderColor:C.sonnet,fill:'-1',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0},
+      {label:'Haiku (cheap/fast)',data:src.haiku,backgroundColor:C.haiku,borderColor:C.haiku,fill:'-1',tension:.15,pointRadius:0,pointHoverRadius:4,borderWidth:0}
+    ]},
+    options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},tooltip:{...TT,callbacks:{label:i=>' '+i.dataset.label+': '+(tierMode==='tokens'?i.parsed.y.toFixed(0)+'bn':'$'+i.parsed.y.toFixed(1)+'M')}}},scales:{x:{grid:GRID,ticks:{...TICK,maxTicksLimit:8},stacked:true},y:{grid:GRID,ticks:{...TICK,callback:v=>tierMode==='tokens'?v.toLocaleString()+'bn':'$'+v+'M'},stacked:true,min:0}}}
+  });
+}
+function setTier(m,btn){tierMode=m;document.querySelectorAll('#tierTabs .tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildTier();}
+
+// ── Chart 17: $/M tokens by Tier ──
+new Chart(document.getElementById('priceTierChart').getContext('2d'),{
+  type:'line',
+  data:{labels,datasets:[
+    {label:'Opus $/M',data:D.opus_price_per_m,borderColor:C.opus,borderWidth:2.5,pointRadius:3,pointHoverRadius:5,fill:false,tension:.15,spanGaps:true},
+    {label:'Sonnet $/M',data:D.sonnet_price_per_m,borderColor:C.sonnet,borderWidth:2.5,pointRadius:3,pointHoverRadius:5,fill:false,tension:.15,spanGaps:true},
+    {label:'Haiku $/M',data:D.haiku_price_per_m,borderColor:C.haiku,borderWidth:2.5,pointRadius:3,pointHoverRadius:5,fill:false,tension:.15,spanGaps:true}
+  ]},
+  options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}},tooltip:{...TT,callbacks:{label:i=>' '+i.dataset.label+': $'+i.parsed.y.toFixed(2)}}},scales:{x:{grid:GRID,ticks:{...TICK,maxTicksLimit:8}},y:{grid:GRID,ticks:{...TICK,callback:v=>'$'+v.toFixed(2)},min:0}}}
+});
+
+// ── Chart 18: Coverage Ratio ──
+new Chart(document.getElementById('coverageChart').getContext('2d'),{
+  type:'line',
+  data:{labels,datasets:[{label:'Coverage Ratio %',data:D.coverage_ratio,borderColor:C.cloud,backgroundColor:C.cloud+'22',borderWidth:2.5,pointRadius:4,pointHoverRadius:6,fill:true,tension:.15,spanGaps:true}]},
+  options:{responsive:true,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:i=>' '+i.parsed.y.toFixed(2)+'% coverage'}}},scales:{x:{grid:GRID,ticks:TICK},y:{grid:GRID,ticks:{...TICK,callback:v=>v.toFixed(1)+'%'},min:0}}}
+});
+
+// Init all
+buildArr();
+buildChannel();
+buildSubsBh();
+buildModel();
+buildTier();
+</script>
+
+</body>
+</html>
