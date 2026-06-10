@@ -2023,7 +2023,7 @@ function coding_buildWeekly(){
         if(/^0\.0*1$/.test(s)) return v+'M';
         return '';
       }}}
-    : {type:'linear',grid:gridCfg,ticks:{callback:v=>v+'M',font:{size:11}}};
+    : {type:'linear',grid:gridCfg,min:0,max:30,ticks:{callback:v=>v+'M',font:{size:11}}};
   c_weeklyChart = new Chart(ctx,{
     type:'line',
     data:{labels, datasets:[
