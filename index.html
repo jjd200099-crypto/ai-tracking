@@ -119,11 +119,11 @@ footer{text-align:center;color:var(--muted);font-size:.72rem;margin-top:32px;pad
   <div class="header-top">
     <div>
       <div class="header-title">AI App Mobile Intelligence</div>
-      <div class="header-subtitle">ChatGPT · Gemini · Claude &nbsp;&mdash;&nbsp; Jan 2025 – Apr 2026 &nbsp;|&nbsp; iOS + Android &nbsp;|&nbsp; All Countries</div>
+      <div class="header-subtitle">ChatGPT · Gemini · Claude &nbsp;&mdash;&nbsp; Jan 2025 – May 2026 &nbsp;|&nbsp; iOS + Android &nbsp;|&nbsp; All Countries</div>
     </div>
     <div class="badges">
       <div class="badge">Source: <b>Sensor Tower</b></div>
-      <div class="badge">Updated: <b>Apr 2026</b></div>
+      <div class="badge">Updated: <b>May 2026</b></div>
     </div>
   </div>
 </div>
@@ -221,7 +221,7 @@ footer{text-align:center;color:var(--muted);font-size:.72rem;margin-top:32px;pad
     <div class="section-header">
       <div>
         <div class="section-title">Top 20 Countries</div>
-        <div class="section-sub">Apr 2026</div>
+        <div class="section-sub">May 2026</div>
       </div>
       <div class="tabs" id="ctryMetricTabs">
         <button class="tab" onclick="setCtryMetric('dau',this)">DAU</button>
@@ -235,7 +235,7 @@ footer{text-align:center;color:var(--muted);font-size:.72rem;margin-top:32px;pad
     <div class="section-header">
       <div>
         <div class="section-title" id="ctryTableTitle">Country MAU Growth</div>
-        <div class="section-sub" id="ctryTableSub">Mar → Apr 2026 · MAU Net Change (K) &amp; MoM %</div>
+        <div class="section-sub" id="ctryTableSub">Apr → May 2026 · MAU Net Change (K) &amp; MoM %</div>
       </div>
       <div class="tabs" id="ctryTableTabs">
         <button class="tab active" onclick="setCtryTableMetric('mau',this)">MAU</button>
@@ -683,7 +683,7 @@ function buildCtryTable(){
   const dau   = ctryTableMetric==='dau' ? DATA.country_dau_daily : DATA.country_dau;
   const label = ctryTableMetric==='dau' ? 'DAU' : 'MAU';
   document.getElementById('ctryTableTitle').textContent = 'Country '+label+' Growth';
-  document.getElementById('ctryTableSub').innerHTML = 'Mar &rarr; Apr 2026 &middot; '+label+' Net Change (K) &amp; MoM %';
+  document.getElementById('ctryTableSub').innerHTML = 'Apr &rarr; May 2026 &middot; '+label+' Net Change (K) &amp; MoM %';
   // Update thead
   const hdr = document.getElementById('ctryTableHead');
   hdr.innerHTML = '<tr><th rowspan="2" style="vertical-align:bottom">Country</th>'+
