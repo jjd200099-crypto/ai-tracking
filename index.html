@@ -721,7 +721,8 @@ function buildCtryTable(){
     rows += '<td style="font-weight:600">'+(names[c]||c)+'</td>';
     APPS.forEach(app=>{
       const a = d[app]||{mar:0,net:0,mom:0};
-      rows += '<td>'+fmtK(a.mar)+'</td>';
+      const curVal = a.apr !== undefined ? a.apr : a.mar;
+      rows += '<td>'+fmtK(curVal)+'</td>';
       rows += '<td style="font-weight:600">'+fmtNet(a.net)+'</td>';
       rows += '<td>'+fmtMom(a.mom)+'</td>';
     });
@@ -1240,8 +1241,8 @@ function web_buildCtryTable(){
     rows += '<tr>';
     rows += '<td style="font-weight:600">'+(names[c]||c)+'</td>';
     APPS.forEach(app=>{
-      const a = d[app]||{mar:0,net:0,mom:0};
-      rows += '<td>'+fmtK(a.mar)+'</td>';
+      const a = d[app]||{apr:0,net:0,mom:0};
+      rows += '<td>'+fmtK(a.apr)+'</td>';
       rows += '<td style="font-weight:600">'+fmtNet(a.net)+'</td>';
       rows += '<td>'+fmtMom(a.mom)+'</td>';
     });
