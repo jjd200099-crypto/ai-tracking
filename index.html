@@ -1955,6 +1955,7 @@ function coding_shortDate(d){
   return months[parseInt(parts[1])-1]+' '+parseInt(parts[2]);
 }
 
+let c_weeklyScale = 'log';
 function coding_buildWeekly(){
   const D = DATA_CODING;
   // All stored weeks are complete (5/4-5/10 finished before May 12)
