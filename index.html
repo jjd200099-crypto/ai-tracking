@@ -121,6 +121,7 @@ footer{text-align:center;color:var(--muted);font-size:.72rem;margin-top:32px;pad
     <button class="tab" onclick="setView('web',this)">Web</button>
     <button class="tab" onclick="setView('coding',this)">Coding / 2B</button>
     <button class="tab" onclick="setView('yipit',this)">Yipit ARR</button>
+    <button class="tab" onclick="setView('semi',this)">SemiAnalysis</button>
   </div>
 </div>
 <div class="container" id="mobileView">
@@ -1556,9 +1557,11 @@ function setView(view, btn){
   document.getElementById('webView').style.display = view === 'web' ? '' : 'none';
   document.getElementById('codingView').style.display = view === 'coding' ? '' : 'none';
   document.getElementById('yipitView').style.display = view === 'yipit' ? '' : 'none';
+  document.getElementById('semiView').style.display = view === 'semi' ? '' : 'none';
   if(view === 'web') web_rebuildAll();
   if(view === 'coding') coding_rebuildAll();
   if(view === 'yipit') yipit_rebuildAll();
+  if(view === 'semi') semi_rebuildAll();
 }
 
 // ── Time Spent Chart ─────────────────────────────────────────────────────────
@@ -2041,6 +2044,186 @@ buildDauRatio();
 <footer class="fade-up">Data: YipitData · "Anthropic - Jun-26 MTD Update" &amp; "OpenAI - Jun-26 MTD Update" (both published 2026-06-25) and their linked XLSX data files · B2B Spend Panel, Cloud Spend Panel, OpenRouter, E-Receipt/Transaction Panels, all thru 6/14/2026 &nbsp;|&nbsp; YipitData-labeled figures are panel-based estimates; "Disclosed" figures are sourced from company statements as reported by YipitData.</footer>
 
 </div><!-- /#yipitView -->
+
+<!-- ══════════════════ SEMIANALYSIS VIEW ══════════════════ -->
+<style>
+.sa-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.sa-fact{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+.sa-fact .fk{font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;color:var(--sub);margin-bottom:4px}
+.sa-fact .fv{font-size:.8rem;color:var(--text);line-height:1.5}
+.sa-fact .fv b{color:#d97429}
+@media(max-width:900px){.sa-facts{grid-template-columns:1fr}}
+</style>
+<div id="semiView" class="container" style="display:none">
+
+<div class="header fade-up">
+  <div class="header-top">
+    <div>
+      <div class="header-title">SemiAnalysis · Anthropic IPO Financials</div>
+      <div class="header-subtitle">"Anthropic 3Q26 Profit Over $1B: The Anthropic IPO Financials Sneak Peak" &nbsp;|&nbsp; Tokenomics Model — bottom-up by SKU / tier / customer &nbsp;|&nbsp; Confidential IPO filing Jun 1, 2026</div>
+    </div>
+    <div class="badges">
+      <div class="badge">Source: <b>SemiAnalysis</b></div>
+      <div class="badge">Report: <b>Jul 8, 2026</b></div>
+      <div class="badge">Brookhart · Huang · Patel</div>
+    </div>
+  </div>
+</div>
+
+<div class="kpi-row fade-up" style="grid-template-columns:repeat(4,1fr)">
+  <div class="kpi cla">
+    <div class="kpi-name">3Q26E GAAP EBIT — First Profitable Quarter</div>
+    <div class="kpi-metric"><div class="val">$1.2B</div></div>
+    <div class="kpi-note">~6% margin · 4Q26E <span class="chg up">$2.8B</span> · OpenAI ≈ <span class="chg down">-100%</span> EBIT margin</div>
+  </div>
+  <div class="kpi amber">
+    <div class="kpi-name">2Q26 EBTIT Margin</div>
+    <div class="kpi-metric"><div class="val">36%</div></div>
+    <div class="kpi-note">Earnings before Training, Interest &amp; Tax · FY26E EBTIT ≈ <span class="chg up">$27.6B</span></div>
+  </div>
+  <div class="kpi gem">
+    <div class="kpi-name">ARR (Jul 2026)</div>
+    <div class="kpi-metric"><div class="val">$60B+</div></div>
+    <div class="kpi-note">$9B (end-25) → $30B (1Q26) → $60B+ · NNARR <span class="chg up">$10B+/mo</span></div>
+  </div>
+  <div class="kpi purple">
+    <div class="kpi-name">Base-Case Valuation</div>
+    <div class="kpi-metric"><div class="val">$6T</div></div>
+    <div class="kpi-note">20× 2027E ending ARR of $300B — would be the world's largest company</div>
+  </div>
+</div>
+
+<div class="insight-box fade-up">
+  <div class="insight-title">Key Takeaways</div>
+  <div class="insight-text">
+    <b>AI labs can be wildly profitable.</b> Anthropic turns GAAP-profitable in 3Q26E ($1.2B EBIT, 6% margin) while growing NNARR faster than OpenAI, which sits at roughly -100% EBIT margins.
+    <b>The business model is the moat:</b> 75–85% of revenue is usage-based API (subscriptions just 15%, consumer only 5%), driving blended gross margin from -94% in 2024 to ~65% in 2026 (API GM 80%+).
+    <b>Reinvestment flywheel:</b> 2027E revenue-after-COGS of $160B vs OpenAI's $92B, and a cumulative EBTIT advantage of ~$250B through 2028, funds the next SOTA model and widens the lead.
+    <b>Valuation:</b> base case 20× 2027E ending ARR of $300B = $6T enterprise value; requires NNARR accelerating to ~$15B/month in 2027 (vs $10B+/mo today).
+  </div>
+</div>
+
+<div class="row2 fade-up">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Quarterly P&amp;L: Revenue → GAAP Profitability</div>
+        <div class="section-sub">Consolidated income statement, $M · 3Q26/4Q26 = SemiAnalysis estimates · EBTIT = earnings before training, interest, tax</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="sa_plChart" height="200"></canvas></div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Blended Gross Margin Swing</div>
+        <div class="section-sub">Total gross margin incl. free-user serving costs · -94% (2024) → ~65% (2026E) · API-only GM 80%+</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="sa_gmChart" height="200"></canvas></div>
+  </div>
+</div>
+
+<div class="row2 fade-up">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Path to $6T: ARR Milestones (log scale)</div>
+        <div class="section-sub">$9B end-2025 → $30B end-1Q26 → $60B+ Jul-26 · dashed = $300B base case requires ~$15B/mo NNARR in 2027</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="sa_pathChart" height="200"></canvas></div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Annual EBTIT: Anthropic vs OpenAI (FY24–28E)</div>
+        <div class="section-sub">$B · reinvestment firepower metric · FY27/28 read from report chart (approx.) · cumulative gap ≈ $250B through 2028</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="sa_ebtitChart" height="200"></canvas></div>
+  </div>
+</div>
+
+<div class="row2 fade-up">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">ARR Mix: Opposite Business Models</div>
+        <div class="section-sub">Share of ARR · Anthropic: API 75–85%, consumer subs just 5% · OpenAI 1Q26: &gt;65% subscription, ~40% consumer</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="sa_mixChart" height="200"></canvas></div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">500% Net Dollar Retention (CFO-Disclosed)</div>
+        <div class="section-sub">1Q25 cohort: $2B ARR → $12B a year later · + $18B from customers added within the year = $30B 1Q26 ARR</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="sa_ndrChart" height="200"></canvas></div>
+  </div>
+</div>
+
+<div class="row2 fade-up">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Funding History → $965B Post-Money</div>
+        <div class="section-sub">$100B+ raised to date · bars = amount raised · line = post-money valuation (log)</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="sa_fundChart" height="200"></canvas></div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">The Compute Wall (log scale)</div>
+        <div class="section-sub">OpenAI + Anthropic combined · &gt;100GW unconstrained demand by 2030 ⇒ &gt;90GW of net additions needed</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="sa_computeChart" height="200"></canvas></div>
+  </div>
+</div>
+
+<div class="sa-facts fade-up">
+  <div class="sa-fact"><div class="fk">Coding Engine</div><div class="fv">Claude Code = <b>7.3%</b> of all GitHub commits · coding ≈ <b>65%+</b> of total lab ARR · coding startups (Cursor, Cognition, Replit…) add $6B ARR</div></div>
+  <div class="sa-fact"><div class="fk">Largest Customer</div><div class="fv"><b>Meta</b> — 9-figure spend, yet only <b>3–5%</b> of Anthropic revenue; tokenmaxxing stories are the tail of the distribution</div></div>
+  <div class="sa-fact"><div class="fk">Indirect / TaaS Channel</div><div class="fv"><b>15–20%</b> of ARR via Bedrock / Foundry etc. (vs 5–10% a quarter ago) · TaaS market $28B ARR, 85% held by big-3 clouds</div></div>
+  <div class="sa-fact"><div class="fk">Inference Efficiency</div><div class="fv">ARR per inference MW: <b>$16M → ~$60M</b> in 9 months — fixed compute cost + better monetization = the margin upside</div></div>
+  <div class="sa-fact"><div class="fk">Consumer Funnel</div><div class="fv">Free MAU 55–60M, <b>9%</b> paying (vs OpenAI ~950M WAU, ~6%) · OpenAI's free users cost ~$0.70/mo each = 20–30pt GM drag</div></div>
+  <div class="sa-fact"><div class="fk">Training ROIC</div><div class="fv">Cumulative training spend since 1Q24: <b>$8B</b> → yielded a <b>$60B ARR</b> business · &gt;60% of compute is training/internal today</div></div>
+  <div class="sa-fact"><div class="fk">Customer Momentum</div><div class="fv">Customers &gt;$100k/yr: <b>+7×</b> in past year · &gt;$1M/yr: <b>+42×</b> in 2 years · avg Claude Code enterprise user just $150–250/mo</div></div>
+  <div class="sa-fact"><div class="fk">Reinvestment Firepower</div><div class="fv">2027E revenue-after-COGS: <b>$160B</b> vs OpenAI $92B · long-run: GM mid-70s, training 48% of compute, opex 20% of rev</div></div>
+  <div class="sa-fact"><div class="fk">Steady-State Margins</div><div class="fv"><b>30–40%</b> EBIT/FCF margins possible at maturity — "like the best software companies of yesteryears"</div></div>
+</div>
+
+<div class="row2 fade-up">
+  <div class="insight-box" style="margin-bottom:0">
+    <div class="insight-title">Risks (SemiAnalysis watchlist)</div>
+    <div class="insight-text">
+      <b>Tokenbudgeting</b> — enterprises capping spend; but Global 2000 AI spend is still tiny vs IT budgets, 90% of Claude Code users spend &lt;$30/day.
+      <b>OSS &amp; price cuts</b> — OpenAI rumored to cut token pricing to win back spend.
+      <b>Google / Meta coding models</b> — a 4-horse frontier race would pressure token pricing and gross margins.
+      <b>Regulatory model blockades</b> — Fable-style government delays at the frontier.
+      <b>Compute shortage</b> — where will the supply come from?
+    </div>
+  </div>
+  <div class="insight-box" style="margin-bottom:0">
+    <div class="insight-title">Upside</div>
+    <div class="insight-text">
+      <b>Fable</b> — higher pricing mix per M tokens + new workloads accelerate NNARR above the current $10B/mo pace in 2H26.
+      <b>Cyber</b> — Mythos/Fable as the next major vertical, ramping faster than coding did.
+      <b>Seat ramp</b> — Global 2000 / Fortune 500 deployment still nascent; per-seat budgets rise with ROI.
+      <b>New s-curves</b> — healthcare, finance, biotech verticals stack on top; $300B end-2027 ARR "easily possible" at $15B/mo NNARR.
+    </div>
+  </div>
+</div>
+
+<footer class="fade-up" style="margin-top:16px">Data: SemiAnalysis, "Anthropic 3Q26 Profit Over $1B: The Anthropic IPO Financials Sneak Peak" (Joey Brookhart, Crystal Huang, Dylan Patel · Jul 8, 2026) · SemiAnalysis Tokenomics Model, bottom-up by SKU / tier / customer type · 3Q26+ figures are SemiAnalysis estimates; FY27–28 EBTIT series read from report chart (approximate) · WSJ reporting confirmed model accuracy per SemiAnalysis.</footer>
+
+</div><!-- /#semiView -->
 
 <script>
 // ── Coding Agent Data ─────────────────────────────────────────────────────────
@@ -2632,6 +2815,221 @@ function yipit_rebuildAll(){
   y_buildAdoption();
   y_buildBigSpenders();
   y_chartsBuilt = true;
+}
+</script>
+
+<script>
+// ══════════════════ SEMIANALYSIS TAB ══════════════════
+const DATA_SEMI = {
+  pl: { // consolidated income statement, $M (SemiAnalysis Tokenomics Model, Anthropic tab)
+    labels:['1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26','3Q26E','4Q26E'],
+    revenue:[59,86,158,221,371,691,1191,1876,4890,11513,20125,30194],
+    gaapOI:[-555,-631,-796,-1033,-1069,-1287,-1447,-1587,-1120,-467,1232,2756],
+    ebtit:[-255,-281,-398,-458,-259,-337,-297,-187,934,4138,8880,13626],
+  },
+  gm: {
+    labels:['1Q24','2Q24','3Q24','4Q24','1Q25','2Q25','3Q25','4Q25','1Q26','2Q26','3Q26E','4Q26E'],
+    margin:[-94,-94,-94,-94,38,38,38,38,60,62,64,65],
+  },
+  path: {
+    labels:['Dec-24','Dec-25','Mar-26','Jul-26','Dec-27E'],
+    actual:[1.2,9,30,60,null],
+    est:[null,null,null,60,300],
+  },
+  ebtitAnnual: { // $B; FY27/28 read off report chart (approx.)
+    labels:['FY24','FY25','FY26E','FY27E','FY28E'],
+    ant:[-1.4,-1.1,27.6,105,225],
+    oa:[-2,-5,-15,15,72],
+  },
+  mix: { // % of ARR
+    labels:['Anthropic','OpenAI (1Q26)'],
+    api:[80,35],
+    bizSubs:[15,25],
+    consumerSubs:[5,40],
+  },
+  ndr: { // $B
+    labels:['1Q25 ARR','1Q26 ARR'],
+    cohort:[2,12],
+    newCust:[0,18],
+  },
+  funding: {
+    labels:['A May-21','B Apr-22','Google Feb-23','C Mar-23','Amazon Sep-23','Google Oct-23','E Mar-25','F Sep-25','G Feb-26','H May-26'],
+    raised:[0.124,0.58,0.3,0.3,4,2,3.5,13,30,65],
+    valuation:[null,null,null,4.1,null,null,61.5,183,380,965],
+  },
+  compute: {
+    labels:['Access today (OAI+Anth)','2025 net adds (industry)','2026E net adds','2030E unconstrained demand'],
+    gw:[6,2.5,5,100],
+  },
+};
+
+let sa_chartsBuilt=false;
+let sa_plChart,sa_gmChart,sa_pathChart,sa_ebtitChart,sa_mixChart,sa_ndrChart,sa_fundChart,sa_computeChart;
+const SA_ORANGE='#d97429', SA_GREEN='#0d9668', SA_BLUE='#3b7dd8', SA_AMBER='#f59e0b', SA_PURPLE='#8b5cf6', SA_RED='#ef4444';
+
+function sa_buildPl(){
+  const D=DATA_SEMI.pl;
+  const ctx=document.getElementById('sa_plChart').getContext('2d');
+  if(sa_plChart)sa_plChart.destroy();
+  sa_plChart=new Chart(ctx,{
+    data:{labels:D.labels,datasets:[
+      {type:'bar',label:'Revenue',data:D.revenue,backgroundColor:D.labels.map(l=>l.endsWith('E')?'rgba(217,116,41,.35)':'rgba(217,116,41,.75)'),borderRadius:3,yAxisID:'y'},
+      {type:'line',label:'GAAP Operating Income',data:D.gaapOI,borderColor:SA_GREEN,backgroundColor:SA_GREEN,borderWidth:2.5,pointRadius:3,tension:.3,yAxisID:'y2'},
+      {type:'line',label:'EBTIT',data:D.ebtit,borderColor:SA_BLUE,borderWidth:1.5,borderDash:[5,3],pointRadius:2,tension:.3,yAxisID:'y2'},
+    ]},
+    options:{
+      responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},
+        tooltip:{callbacks:{label:i=>` ${i.dataset.label}: ${i.parsed.y<0?'-':''}$${Math.abs(i.parsed.y).toLocaleString()}M`}}},
+      scales:{
+        x:{grid:gridCfg,ticks:{font:{size:9}}},
+        y:{position:'left',grid:gridCfg,ticks:{callback:v=>'$'+(v/1000)+'B',font:{size:9}},title:{display:true,text:'Revenue',font:{size:9}}},
+        y2:{position:'right',grid:{display:false},ticks:{callback:v=>'$'+(v/1000)+'B',font:{size:9}},title:{display:true,text:'GAAP OI / EBTIT',font:{size:9}}}
+      }
+    }
+  });
+}
+
+function sa_buildGm(){
+  const D=DATA_SEMI.gm;
+  const ctx=document.getElementById('sa_gmChart').getContext('2d');
+  if(sa_gmChart)sa_gmChart.destroy();
+  sa_gmChart=new Chart(ctx,{
+    type:'line',
+    data:{labels:D.labels,datasets:[
+      {label:'Total blended gross margin',data:D.margin,borderColor:SA_ORANGE,backgroundColor:'rgba(217,116,41,.10)',borderWidth:3,pointRadius:4,pointBackgroundColor:D.margin.map(v=>v<0?SA_RED:SA_ORANGE),tension:.15,fill:true},
+    ]},
+    options:{
+      responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>` GM: ${i.parsed.y}%`}}},
+      scales:{x:{grid:gridCfg,ticks:{font:{size:9}}},y:{grid:gridCfg,min:-100,max:80,ticks:{callback:v=>v+'%',font:{size:10}}}}
+    }
+  });
+}
+
+function sa_buildPath(){
+  const D=DATA_SEMI.path;
+  const ctx=document.getElementById('sa_pathChart').getContext('2d');
+  if(sa_pathChart)sa_pathChart.destroy();
+  sa_pathChart=new Chart(ctx,{
+    type:'line',
+    data:{labels:D.labels,datasets:[
+      {label:'ARR (actual)',data:D.actual,borderColor:SA_ORANGE,backgroundColor:'rgba(217,116,41,.08)',borderWidth:3,pointRadius:4,pointBackgroundColor:SA_ORANGE,tension:.2,fill:true,spanGaps:true},
+      {label:'Base case ($300B end-27)',data:D.est,borderColor:SA_PURPLE,borderWidth:2,borderDash:[6,4],pointRadius:4,pointBackgroundColor:SA_PURPLE,tension:.2,fill:false,spanGaps:true},
+    ]},
+    options:{
+      responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>i.parsed.y!==null?` ${i.dataset.label}: $${i.parsed.y}B`:null}}},
+      scales:{x:{grid:gridCfg,ticks:{font:{size:9}}},y:{type:'logarithmic',grid:gridCfg,min:1,max:400,ticks:{callback:v=>[1,3,10,30,100,300].includes(v)?'$'+v+'B':null,font:{size:10}}}}
+    }
+  });
+}
+
+function sa_buildEbtit(){
+  const D=DATA_SEMI.ebtitAnnual;
+  const ctx=document.getElementById('sa_ebtitChart').getContext('2d');
+  if(sa_ebtitChart)sa_ebtitChart.destroy();
+  sa_ebtitChart=new Chart(ctx,{
+    type:'bar',
+    data:{labels:D.labels,datasets:[
+      {label:'Anthropic',data:D.ant,backgroundColor:'rgba(217,116,41,.75)',borderRadius:3},
+      {label:'OpenAI',data:D.oa,backgroundColor:'rgba(13,150,104,.55)',borderRadius:3},
+    ]},
+    options:{
+      responsive:true,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>` ${i.dataset.label}: ${i.parsed.y<0?'-':''}$${Math.abs(i.parsed.y)}B`}}},
+      scales:{x:{grid:gridCfg,ticks:{font:{size:10}}},y:{grid:gridCfg,ticks:{callback:v=>'$'+v+'B',font:{size:10}}}}
+    }
+  });
+}
+
+function sa_buildMix(){
+  const D=DATA_SEMI.mix;
+  const ctx=document.getElementById('sa_mixChart').getContext('2d');
+  if(sa_mixChart)sa_mixChart.destroy();
+  sa_mixChart=new Chart(ctx,{
+    type:'bar',
+    data:{labels:D.labels,datasets:[
+      {label:'API / usage-based',data:D.api,backgroundColor:SA_AMBER},
+      {label:'Business + Enterprise subs',data:D.bizSubs,backgroundColor:SA_BLUE},
+      {label:'Consumer subs',data:D.consumerSubs,backgroundColor:SA_PURPLE},
+    ]},
+    options:{
+      responsive:true,indexAxis:'y',
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>` ${i.dataset.label}: ~${i.parsed.x}%`}}},
+      scales:{x:{stacked:true,grid:gridCfg,max:100,ticks:{callback:v=>v+'%',font:{size:10}}},y:{stacked:true,grid:{display:false},ticks:{font:{size:11,weight:'bold'}}}}
+    }
+  });
+}
+
+function sa_buildNdr(){
+  const D=DATA_SEMI.ndr;
+  const ctx=document.getElementById('sa_ndrChart').getContext('2d');
+  if(sa_ndrChart)sa_ndrChart.destroy();
+  sa_ndrChart=new Chart(ctx,{
+    type:'bar',
+    data:{labels:D.labels,datasets:[
+      {label:'1Q25 customer cohort (5× in a year)',data:D.cohort,backgroundColor:'rgba(217,116,41,.8)',borderRadius:3},
+      {label:'Customers added within the year',data:D.newCust,backgroundColor:'rgba(59,125,216,.6)',borderRadius:3},
+    ]},
+    options:{
+      responsive:true,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>` ${i.dataset.label}: $${i.parsed.y}B`}}},
+      scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11,weight:'bold'}}},y:{stacked:true,grid:gridCfg,ticks:{callback:v=>'$'+v+'B',font:{size:10}}}}
+    }
+  });
+}
+
+function sa_buildFund(){
+  const D=DATA_SEMI.funding;
+  const ctx=document.getElementById('sa_fundChart').getContext('2d');
+  if(sa_fundChart)sa_fundChart.destroy();
+  sa_fundChart=new Chart(ctx,{
+    data:{labels:D.labels,datasets:[
+      {type:'bar',label:'Amount raised',data:D.raised,backgroundColor:'rgba(217,116,41,.75)',borderRadius:3,yAxisID:'y'},
+      {type:'line',label:'Post-money valuation',data:D.valuation,borderColor:SA_PURPLE,borderWidth:2,pointRadius:4,pointBackgroundColor:SA_PURPLE,tension:.2,spanGaps:true,yAxisID:'y2'},
+    ]},
+    options:{
+      responsive:true,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},
+        tooltip:{callbacks:{label:i=>i.parsed.y!==null?` ${i.dataset.label}: $${i.parsed.y}B`:null}}},
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:8},maxRotation:60,minRotation:40}},
+        y:{position:'left',grid:gridCfg,ticks:{callback:v=>'$'+v+'B',font:{size:9}},title:{display:true,text:'Raised',font:{size:9}}},
+        y2:{position:'right',type:'logarithmic',grid:{display:false},min:1,max:1200,ticks:{callback:v=>[1,10,100,1000].includes(v)?'$'+v+'B':null,font:{size:9}},title:{display:true,text:'Valuation (log)',font:{size:9}}}
+      }
+    }
+  });
+}
+
+function sa_buildCompute(){
+  const D=DATA_SEMI.compute;
+  const ctx=document.getElementById('sa_computeChart').getContext('2d');
+  if(sa_computeChart)sa_computeChart.destroy();
+  sa_computeChart=new Chart(ctx,{
+    type:'bar',
+    data:{labels:D.labels,datasets:[
+      {label:'GW of compute',data:D.gw,backgroundColor:[SA_BLUE,'rgba(13,150,104,.6)','rgba(13,150,104,.6)',SA_AMBER],borderRadius:3},
+    ]},
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:i=>` ${i.parsed.y} GW`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{type:'logarithmic',grid:gridCfg,min:1,max:150,ticks:{callback:v=>[1,3,10,30,100].includes(v)?v+' GW':null,font:{size:10}}}}
+    }
+  });
+}
+
+function semi_rebuildAll(){
+  if(sa_chartsBuilt) return;
+  sa_buildPl();
+  sa_buildGm();
+  sa_buildPath();
+  sa_buildEbtit();
+  sa_buildMix();
+  sa_buildNdr();
+  sa_buildFund();
+  sa_buildCompute();
+  sa_chartsBuilt=true;
 }
 </script>
 
