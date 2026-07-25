@@ -122,6 +122,7 @@ footer{text-align:center;color:var(--muted);font-size:.72rem;margin-top:32px;pad
     <button class="tab" onclick="setView('coding',this)">Coding / 2B</button>
     <button class="tab" onclick="setView('yipit',this)">Yipit ARR</button>
     <button class="tab" onclick="setView('semi',this)">SemiAnalysis</button>
+    <button class="tab" onclick="setView('uptime',this)">Uptime</button>
   </div>
 </div>
 <div class="container" id="mobileView">
@@ -1558,10 +1559,12 @@ function setView(view, btn){
   document.getElementById('codingView').style.display = view === 'coding' ? '' : 'none';
   document.getElementById('yipitView').style.display = view === 'yipit' ? '' : 'none';
   document.getElementById('semiView').style.display = view === 'semi' ? '' : 'none';
+  document.getElementById('uptimeView').style.display = view === 'uptime' ? '' : 'none';
   if(view === 'web') web_rebuildAll();
   if(view === 'coding') coding_rebuildAll();
   if(view === 'yipit') yipit_rebuildAll();
   if(view === 'semi') semi_rebuildAll();
+  if(view === 'uptime') uptime_rebuildAll();
 }
 
 // ── Time Spent Chart ─────────────────────────────────────────────────────────
@@ -2224,6 +2227,99 @@ buildDauRatio();
 <footer class="fade-up" style="margin-top:16px">Data: SemiAnalysis, "Anthropic 3Q26 Profit Over $1B: The Anthropic IPO Financials Sneak Peak" (Joey Brookhart, Crystal Huang, Dylan Patel · Jul 8, 2026) · SemiAnalysis Tokenomics Model, bottom-up by SKU / tier / customer type · 3Q26+ figures are SemiAnalysis estimates; FY27–28 EBTIT series read from report chart (approximate) · WSJ reporting confirmed model accuracy per SemiAnalysis.</footer>
 
 </div><!-- /#semiView -->
+
+<!-- ══════════════════ UPTIME VIEW ══════════════════ -->
+<style>
+.up-table{width:100%;border-collapse:separate;border-spacing:0;font-size:.74rem}
+.up-table th{text-align:left;color:var(--muted);font-weight:600;padding:6px 10px;font-size:.62rem;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border)}
+.up-table td{padding:7px 10px;border-bottom:1px solid var(--card2);vertical-align:top}
+.up-table tr:last-child td{border-bottom:none}
+.up-src{display:inline-block;padding:1px 7px;border-radius:4px;font-size:.62rem;font-weight:700;font-family:var(--font-mono);letter-spacing:.02em}
+.up-src.oai{background:rgba(43,163,125,.12);color:#1d7a5c}
+.up-src.anth{background:rgba(205,167,122,.22);color:#8a6a3a}
+.up-impact{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.up-impact.critical{color:#b91c1c}
+.up-impact.major{color:#c2410c}
+.up-scroll{max-height:420px;overflow-y:auto}
+</style>
+<div id="uptimeView" class="container" style="display:none">
+
+<div class="header fade-up">
+  <div class="header-top">
+    <div>
+      <div class="header-title">AI Capacity Tracker</div>
+      <div class="header-subtitle">OpenAI vs. Anthropic — status-page incidents as a compute-pressure proxy &nbsp;|&nbsp; Daily automated snapshot, append-only archive since 2026-06-05</div>
+    </div>
+    <div class="badges">
+      <div class="badge">Source: <b>incident.io + Atlassian Statuspage</b></div>
+      <div class="badge">Archive: <b id="up_archiveBadge">–</b></div>
+      <div class="badge">Frequency: <b>Daily</b></div>
+    </div>
+  </div>
+</div>
+
+<div class="kpi-row fade-up" style="grid-template-columns:repeat(2,1fr)">
+  <div class="kpi gpt">
+    <div class="kpi-name">OpenAI — Capacity Events (90d)</div>
+    <div class="kpi-metric"><div class="val" id="up_oaiVal">–</div></div>
+    <div class="kpi-note" id="up_oaiNote">–</div>
+  </div>
+  <div class="kpi cla">
+    <div class="kpi-name">Anthropic — Capacity Events (90d)</div>
+    <div class="kpi-metric"><div class="val" id="up_anthVal">–</div></div>
+    <div class="kpi-note" id="up_anthNote">–</div>
+  </div>
+</div>
+
+<div class="insight-box fade-up">
+  <div class="insight-title">Key Takeaways</div>
+  <div class="insight-text">
+    <b>Both vendors hit their single worst week of the trailing ~4 months in the same week (Jul 20–26)</b> — OpenAI 11 capacity events, Anthropic 13, the first time both peaked simultaneously in this series. Reads more like an industry-wide demand pulse than either company's idiosyncratic ops issue.
+    <b>Anthropic is plateauing at an elevated level, not easing:</b> capacity incidents have run 33–42/month since February (vs. a Dec-25 trough of 14) with no clear downtrend; Opus's share of those incidents keeps rising (~49% of the last 90 days).
+    <b>OpenAI re-accelerated after a June lull:</b> 10 events in June vs. 22 already in July with days still left — tracking above the prior monthly high (18, in May).
+    <b>OpenAI's failure surface is broadening:</b> Codex is no longer the sole driver — image generation (Sora, gpt-image-2) produced a cluster of major/critical incidents around Jul 21, a second compute sink alongside coding-agent load.
+  </div>
+</div>
+
+<div class="section fade-up">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Weekly Capacity Events — Trailing 18 Weeks</div>
+      <div class="section-sub">Side-by-side weekly count · most legible view for spotting simultaneous stress (see Jul 20 week) · absolute levels not cross-comparable (Anthropic reports per-model, OpenAI tends to consolidate) — compare each company's own trend</div>
+    </div>
+  </div>
+  <div class="chart-wrap"><canvas id="up_weeklyChart" height="70"></canvas></div>
+</div>
+
+<div class="row2 fade-up">
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Monthly Capacity Events — Full History</div>
+        <div class="section-sub">Anthropic back to Jul-25 (Atlassian Statuspage, ~12mo retention) · OpenAI only from Mar-26 (incident.io exposes ~3mo; earlier history is unrecoverable, this archive is now the only record going forward)</div>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="up_monthlyChart" height="82"></canvas></div>
+  </div>
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Recent Major / Critical Incidents</div>
+        <div class="section-sub">Last 30 days · sorted newest first · duration where disclosed</div>
+      </div>
+    </div>
+    <div class="up-scroll">
+    <table class="up-table" id="up_severeTable">
+      <thead><tr><th>Date</th><th>Vendor</th><th>Impact</th><th>Incident</th><th>Dur.</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<footer class="fade-up" id="up_footer">Data: OpenAI Status (status.openai.com) + Anthropic Status (status.claude.com) · daily append-only archive, incident-id deduped · Methodology: keyword-classified against "capacity" language (elevated errors/rate limits/latency/degraded performance/overload); cross-vendor absolute counts are not comparable due to differing disclosure granularity — only within-vendor trend should be read.</footer>
+
+</div><!-- /#uptimeView -->
 
 <script>
 // ── Coding Agent Data ─────────────────────────────────────────────────────────
@@ -3030,6 +3126,163 @@ function semi_rebuildAll(){
   sa_buildFund();
   sa_buildCompute();
   sa_chartsBuilt=true;
+}
+</script>
+
+<script>
+// ══════════════════ UPTIME TAB (data/capacity_summary.json, refreshed by scripts/update_capacity.py) ══════════════════
+const UP_OAI='#2BA37D', UP_ANTH='#CDA77A';
+const CAPACITY_DATA = {
+ "generated_at": "2026-07-25T13:06:51.370268+00:00",
+ "archive_total": {"oai": 145, "anth": 507},
+ "capacity_90d": {"oai": 53, "anth": 120},
+ "major_critical_90d": {"oai": 7, "anth": 31},
+ "mttr_90d": {
+  "oai": {"median": 99.85, "p90": 974.2833333333333, "n": 41},
+  "anth": {"median": 57.0, "p90": 189.0, "n": 118}
+ },
+ "monthly": [
+  {"month": "2025-07", "oai": 0, "anth": 42, "oai_has_data": false},
+  {"month": "2025-08", "oai": 0, "anth": 27, "oai_has_data": false},
+  {"month": "2025-09", "oai": 0, "anth": 26, "oai_has_data": false},
+  {"month": "2025-10", "oai": 0, "anth": 17, "oai_has_data": false},
+  {"month": "2025-11", "oai": 0, "anth": 21, "oai_has_data": false},
+  {"month": "2025-12", "oai": 0, "anth": 14, "oai_has_data": false},
+  {"month": "2026-01", "oai": 0, "anth": 16, "oai_has_data": false},
+  {"month": "2026-02", "oai": 0, "anth": 41, "oai_has_data": false},
+  {"month": "2026-03", "oai": 10, "anth": 42, "oai_has_data": true},
+  {"month": "2026-04", "oai": 11, "anth": 33, "oai_has_data": true},
+  {"month": "2026-05", "oai": 18, "anth": 37, "oai_has_data": true},
+  {"month": "2026-06", "oai": 10, "anth": 41, "oai_has_data": true},
+  {"month": "2026-07", "oai": 22, "anth": 35, "oai_has_data": true}
+ ],
+ "weekly": [
+  {"week": "2026-03-23", "oai": 3, "anth": 8},
+  {"week": "2026-03-30", "oai": 2, "anth": 7},
+  {"week": "2026-04-06", "oai": 1, "anth": 8},
+  {"week": "2026-04-13", "oai": 0, "anth": 4},
+  {"week": "2026-04-20", "oai": 5, "anth": 9},
+  {"week": "2026-04-27", "oai": 6, "anth": 7},
+  {"week": "2026-05-04", "oai": 4, "anth": 10},
+  {"week": "2026-05-11", "oai": 5, "anth": 8},
+  {"week": "2026-05-18", "oai": 4, "anth": 11},
+  {"week": "2026-05-25", "oai": 2, "anth": 8},
+  {"week": "2026-06-01", "oai": 5, "anth": 11},
+  {"week": "2026-06-08", "oai": 1, "anth": 10},
+  {"week": "2026-06-15", "oai": 2, "anth": 9},
+  {"week": "2026-06-22", "oai": 2, "anth": 9},
+  {"week": "2026-06-29", "oai": 0, "anth": 5},
+  {"week": "2026-07-06", "oai": 4, "anth": 10},
+  {"week": "2026-07-13", "oai": 7, "anth": 9},
+  {"week": "2026-07-20", "oai": 11, "anth": 13}
+ ],
+ "recent_severe": [
+  {"date": "2026-07-21 19:33", "src": "openai", "impact": "major", "title": "Elevated errors for API image generation", "duration_min": 166.06666666666666},
+  {"date": "2026-07-21 18:36", "src": "openai", "impact": "major", "title": "Issues with logins and signups", "duration_min": 23.5},
+  {"date": "2026-07-21 17:40", "src": "anthropic", "impact": "critical", "title": "Service disruption on Claude services", "duration_min": 23.0},
+  {"date": "2026-07-21 15:35", "src": "anthropic", "impact": "critical", "title": "Elevated errors on several models", "duration_min": 163.0},
+  {"date": "2026-07-21 13:04", "src": "anthropic", "impact": "major", "title": "Elevated errors on Haiku 4.5", "duration_min": 214.0},
+  {"date": "2026-07-21 10:36", "src": "openai", "impact": "major", "title": "Image generation unavailable in ChatGPT", "duration_min": 974.2833333333333},
+  {"date": "2026-07-19 14:49", "src": "openai", "impact": "major", "title": "Elevated errors affecting ChatGPT", "duration_min": 135.33333333333334},
+  {"date": "2026-07-17 18:32", "src": "anthropic", "impact": "major", "title": "Elevated errors across Fable 5", "duration_min": 71.0},
+  {"date": "2026-07-17 18:12", "src": "anthropic", "impact": "major", "title": "Elevated error rates for Sonnet 5", "duration_min": 15.0},
+  {"date": "2026-07-17 15:32", "src": "openai", "impact": "major", "title": "New ChatGPT App Not Available For Enterprise Users Without Codex Permissions", "duration_min": 852.9833333333333},
+  {"date": "2026-07-16 18:36", "src": "anthropic", "impact": "major", "title": "Elevated errors for multiple models", "duration_min": 257.0},
+  {"date": "2026-07-16 09:23", "src": "anthropic", "impact": "major", "title": "Enterprise SSO sign-in failures", "duration_min": 64.0},
+  {"date": "2026-07-15 00:36", "src": "openai", "impact": "critical", "title": "Issue affecting voice mode in ChatGPT", "duration_min": 1.45},
+  {"date": "2026-07-14 23:57", "src": "openai", "impact": "major", "title": "Elevated errors affecting ChatGPT", "duration_min": 41.78333333333333},
+  {"date": "2026-07-14 21:31", "src": "anthropic", "impact": "major", "title": "Partial outage of claude.ai: container creation", "duration_min": 45.0},
+  {"date": "2026-07-11 06:35", "src": "openai", "impact": "critical", "title": "Elevated Errors for Sora API", "duration_min": 28.533333333333335},
+  {"date": "2026-07-09 03:28", "src": "anthropic", "impact": "major", "title": "Elevated errors for Claude Opus 4.8", "duration_min": 22.0},
+  {"date": "2026-07-07 20:02", "src": "anthropic", "impact": "major", "title": "Elevated errors for some models", "duration_min": 224.0},
+  {"date": "2026-07-06 19:18", "src": "anthropic", "impact": "critical", "title": "Elevated errors on Claude.ai", "duration_min": 47.0}
+ ],
+ "methodology_note": "OpenAI 状态页(incident.io)只暴露最近约 3 个月 incident,过期永久消失;本数据集每日快照按 incident id 去重累加,逐步攒出状态页给不了的 OAI 长历史。Anthropic(Atlassian Statuspage)可追 ~12 个月。跨厂商绝对值不可比(Anthropic 按模型拆分上报,OpenAI 倾向合并上报),只比较各自趋势。"
+};
+
+function up_fmtDur(m){
+  if(m===null||m===undefined) return '–';
+  if(m<60) return Math.round(m)+'m';
+  return (m/60).toFixed(1)+'h';
+}
+function up_fmtMonth(m){
+  const [y,mo]=m.split('-');
+  return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(mo,10)-1]+"'"+y.slice(2);
+}
+
+let up_chartsBuilt=false, up_weeklyChart, up_monthlyChart;
+
+function up_fillHeader(){
+  const D=CAPACITY_DATA;
+  document.getElementById('up_archiveBadge').textContent = `OAI ${D.archive_total.oai} / Anth ${D.archive_total.anth} incidents`;
+  document.getElementById('up_oaiVal').textContent = D.capacity_90d.oai;
+  document.getElementById('up_anthVal').textContent = D.capacity_90d.anth+` (${(D.capacity_90d.anth/D.capacity_90d.oai).toFixed(1)}×)`;
+  const om=D.mttr_90d.oai, am=D.mttr_90d.anth;
+  document.getElementById('up_oaiNote').textContent = `Major+Critical: ${D.major_critical_90d.oai} · MTTR median ${up_fmtDur(om.median)} / p90 ${up_fmtDur(om.p90)}`;
+  document.getElementById('up_anthNote').textContent = `Major+Critical: ${D.major_critical_90d.anth} · MTTR median ${up_fmtDur(am.median)} / p90 ${up_fmtDur(am.p90)}`;
+  const gen = new Date(D.generated_at);
+  document.getElementById('up_footer').textContent = `Data: OpenAI Status (status.openai.com) + Anthropic Status (status.claude.com) · daily append-only archive, incident-id deduped, last refreshed ${gen.toISOString().slice(0,10)} · Methodology: keyword-classified against "capacity" language (elevated errors/rate limits/latency/degraded performance/overload); cross-vendor absolute counts are not comparable due to differing disclosure granularity — only within-vendor trend should be read.`;
+}
+
+function up_buildWeekly(){
+  const D=CAPACITY_DATA.weekly;
+  const labels=D.map(r=>{const d=new Date(r.week+'T00:00:00Z');return (d.getUTCMonth()+1)+'/'+d.getUTCDate();});
+  const ctx=document.getElementById('up_weeklyChart').getContext('2d');
+  if(up_weeklyChart) up_weeklyChart.destroy();
+  up_weeklyChart=new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'OpenAI',data:D.map(r=>r.oai),backgroundColor:UP_OAI,borderRadius:3},
+      {label:'Anthropic',data:D.map(r=>r.anth),backgroundColor:UP_ANTH,borderRadius:3},
+    ]},
+    options:{
+      responsive:true,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},
+        tooltip:{callbacks:{title:i=>'Week of '+D[i[0].dataIndex].week,label:i=>` ${i.dataset.label}: ${i.parsed.y} capacity events`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:gridCfg,ticks:{stepSize:2,font:{size:10}},title:{display:true,text:'capacity events / week',font:{size:9}}}}
+    }
+  });
+}
+
+function up_buildMonthly(){
+  const D=CAPACITY_DATA.monthly;
+  const labels=D.map(r=>up_fmtMonth(r.month));
+  const ctx=document.getElementById('up_monthlyChart').getContext('2d');
+  if(up_monthlyChart) up_monthlyChart.destroy();
+  up_monthlyChart=new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'OpenAI',data:D.map(r=>r.oai_has_data?r.oai:null),backgroundColor:UP_OAI,borderRadius:3},
+      {label:'Anthropic',data:D.map(r=>r.anth),backgroundColor:UP_ANTH,borderRadius:3},
+    ]},
+    options:{
+      responsive:true,
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},
+        tooltip:{callbacks:{label:i=>i.parsed.y===null?' OpenAI: no data (pre status-page retention window)':` ${i.dataset.label}: ${i.parsed.y} capacity events`}}},
+      scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:gridCfg,ticks:{font:{size:10}},title:{display:true,text:'capacity events / month',font:{size:9}}}}
+    }
+  });
+}
+
+function up_buildTable(){
+  const tbody=document.querySelector('#up_severeTable tbody');
+  tbody.innerHTML = CAPACITY_DATA.recent_severe.map(r=>`
+    <tr>
+      <td style="font-family:var(--font-mono);white-space:nowrap">${r.date.slice(5)}</td>
+      <td><span class="up-src ${r.src==='openai'?'oai':'anth'}">${r.src==='openai'?'OAI':'ANTH'}</span></td>
+      <td><span class="up-impact ${r.impact}">${r.impact}</span></td>
+      <td>${r.title}</td>
+      <td style="font-family:var(--font-mono);white-space:nowrap">${up_fmtDur(r.duration_min)}</td>
+    </tr>`).join('');
+}
+
+function uptime_rebuildAll(){
+  if(up_chartsBuilt) return;
+  up_fillHeader();
+  up_buildWeekly();
+  up_buildMonthly();
+  up_buildTable();
+  up_chartsBuilt=true;
 }
 </script>
 

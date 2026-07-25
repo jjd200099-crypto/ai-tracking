@@ -1,0 +1,335 @@
+{
+ "generated_at": "2026-07-25T13:06:51.370268+00:00",
+ "archive_total": {
+  "oai": 145,
+  "anth": 507
+ },
+ "capacity_90d": {
+  "oai": 53,
+  "anth": 120
+ },
+ "major_critical_90d": {
+  "oai": 7,
+  "anth": 31
+ },
+ "mttr_90d": {
+  "oai": {
+   "median": 99.85,
+   "p90": 974.2833333333333,
+   "n": 41
+  },
+  "anth": {
+   "median": 57.0,
+   "p90": 189.0,
+   "n": 118
+  }
+ },
+ "monthly": [
+  {
+   "month": "2025-07",
+   "oai": 0,
+   "anth": 42,
+   "oai_has_data": false
+  },
+  {
+   "month": "2025-08",
+   "oai": 0,
+   "anth": 27,
+   "oai_has_data": false
+  },
+  {
+   "month": "2025-09",
+   "oai": 0,
+   "anth": 26,
+   "oai_has_data": false
+  },
+  {
+   "month": "2025-10",
+   "oai": 0,
+   "anth": 17,
+   "oai_has_data": false
+  },
+  {
+   "month": "2025-11",
+   "oai": 0,
+   "anth": 21,
+   "oai_has_data": false
+  },
+  {
+   "month": "2025-12",
+   "oai": 0,
+   "anth": 14,
+   "oai_has_data": false
+  },
+  {
+   "month": "2026-01",
+   "oai": 0,
+   "anth": 16,
+   "oai_has_data": false
+  },
+  {
+   "month": "2026-02",
+   "oai": 0,
+   "anth": 41,
+   "oai_has_data": false
+  },
+  {
+   "month": "2026-03",
+   "oai": 10,
+   "anth": 42,
+   "oai_has_data": true
+  },
+  {
+   "month": "2026-04",
+   "oai": 11,
+   "anth": 33,
+   "oai_has_data": true
+  },
+  {
+   "month": "2026-05",
+   "oai": 18,
+   "anth": 37,
+   "oai_has_data": true
+  },
+  {
+   "month": "2026-06",
+   "oai": 10,
+   "anth": 41,
+   "oai_has_data": true
+  },
+  {
+   "month": "2026-07",
+   "oai": 22,
+   "anth": 35,
+   "oai_has_data": true
+  }
+ ],
+ "weekly": [
+  {
+   "week": "2026-03-23",
+   "oai": 3,
+   "anth": 8
+  },
+  {
+   "week": "2026-03-30",
+   "oai": 2,
+   "anth": 7
+  },
+  {
+   "week": "2026-04-06",
+   "oai": 1,
+   "anth": 8
+  },
+  {
+   "week": "2026-04-13",
+   "oai": 0,
+   "anth": 4
+  },
+  {
+   "week": "2026-04-20",
+   "oai": 5,
+   "anth": 9
+  },
+  {
+   "week": "2026-04-27",
+   "oai": 6,
+   "anth": 7
+  },
+  {
+   "week": "2026-05-04",
+   "oai": 4,
+   "anth": 10
+  },
+  {
+   "week": "2026-05-11",
+   "oai": 5,
+   "anth": 8
+  },
+  {
+   "week": "2026-05-18",
+   "oai": 4,
+   "anth": 11
+  },
+  {
+   "week": "2026-05-25",
+   "oai": 2,
+   "anth": 8
+  },
+  {
+   "week": "2026-06-01",
+   "oai": 5,
+   "anth": 11
+  },
+  {
+   "week": "2026-06-08",
+   "oai": 1,
+   "anth": 10
+  },
+  {
+   "week": "2026-06-15",
+   "oai": 2,
+   "anth": 9
+  },
+  {
+   "week": "2026-06-22",
+   "oai": 2,
+   "anth": 9
+  },
+  {
+   "week": "2026-06-29",
+   "oai": 0,
+   "anth": 5
+  },
+  {
+   "week": "2026-07-06",
+   "oai": 4,
+   "anth": 10
+  },
+  {
+   "week": "2026-07-13",
+   "oai": 7,
+   "anth": 9
+  },
+  {
+   "week": "2026-07-20",
+   "oai": 11,
+   "anth": 13
+  }
+ ],
+ "recent_severe": [
+  {
+   "date": "2026-07-21 19:33",
+   "src": "openai",
+   "impact": "major",
+   "title": "Elevated errors for API image generation",
+   "duration_min": 166.06666666666666
+  },
+  {
+   "date": "2026-07-21 18:36",
+   "src": "openai",
+   "impact": "major",
+   "title": "Issues with logins and signups",
+   "duration_min": 23.5
+  },
+  {
+   "date": "2026-07-21 17:40",
+   "src": "anthropic",
+   "impact": "critical",
+   "title": "Service disruption on Claude services",
+   "duration_min": 23.0
+  },
+  {
+   "date": "2026-07-21 15:35",
+   "src": "anthropic",
+   "impact": "critical",
+   "title": "Elevated errors on several models",
+   "duration_min": 163.0
+  },
+  {
+   "date": "2026-07-21 13:04",
+   "src": "anthropic",
+   "impact": "major",
+   "title": "Elevated errors on Haiku 4.5",
+   "duration_min": 214.0
+  },
+  {
+   "date": "2026-07-21 10:36",
+   "src": "openai",
+   "impact": "major",
+   "title": "Image generation unavailable in ChatGPT",
+   "duration_min": 974.2833333333333
+  },
+  {
+   "date": "2026-07-19 14:49",
+   "src": "openai",
+   "impact": "major",
+   "title": "Elevated errors affecting ChatGPT",
+   "duration_min": 135.33333333333334
+  },
+  {
+   "date": "2026-07-17 18:32",
+   "src": "anthropic",
+   "impact": "major",
+   "title": "Elevated errors across Fable 5",
+   "duration_min": 71.0
+  },
+  {
+   "date": "2026-07-17 18:12",
+   "src": "anthropic",
+   "impact": "major",
+   "title": "Elevated error rates for Sonnet 5",
+   "duration_min": 15.0
+  },
+  {
+   "date": "2026-07-17 15:32",
+   "src": "openai",
+   "impact": "major",
+   "title": "New ChatGPT App Not Available For Enterprise Users Without Codex Permissions",
+   "duration_min": 852.9833333333333
+  },
+  {
+   "date": "2026-07-16 18:36",
+   "src": "anthropic",
+   "impact": "major",
+   "title": "Elevated errors for multiple models",
+   "duration_min": 257.0
+  },
+  {
+   "date": "2026-07-16 09:23",
+   "src": "anthropic",
+   "impact": "major",
+   "title": "Enterprise SSO sign-in failures",
+   "duration_min": 64.0
+  },
+  {
+   "date": "2026-07-15 00:36",
+   "src": "openai",
+   "impact": "critical",
+   "title": "Issue affecting voice mode in ChatGPT",
+   "duration_min": 1.45
+  },
+  {
+   "date": "2026-07-14 23:57",
+   "src": "openai",
+   "impact": "major",
+   "title": "Elevated errors affecting ChatGPT",
+   "duration_min": 41.78333333333333
+  },
+  {
+   "date": "2026-07-14 21:31",
+   "src": "anthropic",
+   "impact": "major",
+   "title": "Partial outage of claude.ai: container creation",
+   "duration_min": 45.0
+  },
+  {
+   "date": "2026-07-11 06:35",
+   "src": "openai",
+   "impact": "critical",
+   "title": "Elevated Errors for Sora API",
+   "duration_min": 28.533333333333335
+  },
+  {
+   "date": "2026-07-09 03:28",
+   "src": "anthropic",
+   "impact": "major",
+   "title": "Elevated errors for Claude Opus 4.8",
+   "duration_min": 22.0
+  },
+  {
+   "date": "2026-07-07 20:02",
+   "src": "anthropic",
+   "impact": "major",
+   "title": "Elevated errors for some models",
+   "duration_min": 224.0
+  },
+  {
+   "date": "2026-07-06 19:18",
+   "src": "anthropic",
+   "impact": "critical",
+   "title": "Elevated errors on Claude.ai",
+   "duration_min": 47.0
+  }
+ ],
+ "methodology_note": "OpenAI 状态页(incident.io)只暴露最近约 3 个月 incident,过期永久消失;本数据集每日快照按 incident id 去重累加,逐步攒出状态页给不了的 OAI 长历史。Anthropic(Atlassian Statuspage)可追 ~12 个月。跨厂商绝对值不可比(Anthropic 按模型拆分上报,OpenAI 倾向合并上报),只比较各自趋势。"
+}
