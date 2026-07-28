@@ -1922,11 +1922,11 @@ buildDauRatio();
   <div class="header-top">
     <div>
       <div class="header-title">Yipit ARR Tracker</div>
-      <div class="header-subtitle">Anthropic vs. OpenAI — Competitive ARR Landscape &nbsp;|&nbsp; YipitData Run-Rate Revenue Estimates thru Jun 14, 2026 (MTD) &nbsp;|&nbsp; B2B / Cloud / OpenRouter / Consumer Panels</div>
+      <div class="header-subtitle">Anthropic vs. OpenAI — Competitive ARR Landscape &nbsp;|&nbsp; YipitData Run-Rate Revenue Estimates thru Jul 12, 2026 (MTD) &nbsp;|&nbsp; B2B / Cloud / OpenRouter / Consumer Panels</div>
     </div>
     <div class="badges">
       <div class="badge">Source: <b>YipitData</b></div>
-      <div class="badge">Report: <b>Jun 25, 2026</b></div>
+      <div class="badge">Report: <b>Jul 23, 2026</b></div>
       <div class="badge">Frequency: <b>Biweekly</b></div>
     </div>
   </div>
@@ -1934,25 +1934,29 @@ buildDauRatio();
 
 <div class="kpi-row fade-up" style="grid-template-columns:repeat(2,1fr)">
   <div class="kpi cla">
-    <div class="kpi-name">Anthropic ARR (thru 6/14)</div>
-    <div class="kpi-metric"><div class="val">$62.4B</div></div>
-    <div class="kpi-note">Net add vs end of May: <span class="chg up">+$8.4B</span> (from $54.0B)</div>
+    <div class="kpi-name">Anthropic ARR (thru 7/12)</div>
+    <div class="kpi-metric"><div class="val">$73.1B</div></div>
+    <div class="kpi-note">Net add vs end of Jun: <span class="chg up">+$5.9B</span> (from $67.2B)</div>
   </div>
   <div class="kpi gpt">
-    <div class="kpi-name">OpenAI ARR (thru 6/14)</div>
-    <div class="kpi-metric"><div class="val">$39.5B</div></div>
-    <div class="kpi-note">Net add vs end of May: <span class="chg up">+$2.6B</span> (from $36.9B)</div>
+    <div class="kpi-name">OpenAI ARR (thru 7/12)</div>
+    <div class="kpi-metric"><div class="val">$44.9B</div></div>
+    <div class="kpi-note">Net add vs end of Jun: <span class="chg up">+$3.1B</span> (from $41.8B)</div>
   </div>
 </div>
 
-<!-- Key Takeaways temporarily hidden (2026-07-21)
+<div style="font-size:.72rem;color:var(--muted);margin:-6px 0 16px;font-style:italic">
+  Restatement note: YipitData lowered its end-Jun Anthropic estimate from ~$69B to $67.2B after B2B panel data landed through June and new customers entered the panel. All B2B panel series below are on the restated basis and differ from the Jun-25 file.
+</div>
+
+<!-- Key Takeaways temporarily hidden (2026-07-21); text refreshed for the Jul-26 report
 <div class="insight-box fade-up">
   <div class="insight-title">Key Takeaways</div>
   <div class="insight-text">
-    <b>Growth is accelerating, not slowing.</b> Anthropic's sequential ARR added in Jun-26 MTD accelerated, driven by Cloud API and OpenRouter, and its share vs. OpenAI reached 61% through 6/14 — up from 59% in May and 56% in April, the third straight month of gains.
-    <b>B2B is the primary engine:</b> Anthropic's B2B panel spend grew ~2,000% Y/Y in May (subscription spend alone +3,800%) vs. OpenAI's ~125% Y/Y. Among customers who use both, Anthropic now captures ~70% of wallet share (+54pp Y/Y).
-    <b>Consumer is diverging:</b> Anthropic's consumer net adds slowed for a third straight month in Jun-26 MTD, while OpenAI's per-day Plus-tier net adds in Jun-26 MTD are the strongest observed since Nov-25.
-    <b>Pricing strategies are opposite:</b> Anthropic's blended token price fell ~5% M/M in Jun-26 MTD (after -1% in both April and May); OpenAI's rose ~1% M/M MTD (after +9% in May).
+    <b>Share has stopped moving.</b> Anthropic's share of combined run-rate revenue held at 62% in Jul-26 MTD after six straight months of gains; Claude still gained on Cloud API (78%) but gave back a point on OpenRouter.
+    <b>The gap is partly an assumption.</b> On observed reweighted panel ARR Anthropic is 1.93x OpenAI ($1,147M vs $593M); the published estimates are only 1.63x apart because OpenAI's assumed capture rate has been cut from 1.65% to 1.32% since January. Hold it flat and OpenAI's Jul-26 estimate is ~$35.9B, not $44.9B.
+    <b>B2B panel crossed over.</b> Anthropic's panel adoption passed OpenAI's for the first time in Jun-26 (79.8% vs 79.3%) on effectively equal customer counts (525 vs 522), with 98 accounts >$100K vs OpenAI's 37 and median monthly spend of $1,480 vs $348.
+    <b>Consumer diverged again.</b> ChatGPT per-day net adds are the best since Aug-25 while Claude's slowed for a third month — but consumer is now only 47% of OpenAI's tracked ARR (60% in Jan) and 9% of Anthropic's.
   </div>
 </div>
 -->
@@ -1962,7 +1966,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">ARR Growth Trajectory (log scale)</div>
-        <div class="section-sub">Dashed = company-disclosed/interpolated · Solid = YipitData estimate · $B · Anthropic frm Jan-25, OpenAI frm Jun-25</div>
+        <div class="section-sub">Dashed = company-disclosed/interpolated · Solid = YipitData estimate · $B · Anthropic frm Jan-25, OpenAI frm Jun-25 · latest point Jul-26 (MTD 7/12)</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_arrChart" height="200"></canvas></div>
@@ -1971,7 +1975,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">Market Share Evolution (total run-rate revenue)</div>
-        <div class="section-sub">Share of combined Anthropic + OpenAI run-rate revenue · Dec 2025 → Jun 2026 (MTD)</div>
+        <div class="section-sub">Share of combined Anthropic + OpenAI run-rate revenue · Dec 2025 → Jul 2026 (MTD thru 7/12)</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_shareChart" height="200"></canvas></div>
@@ -1983,7 +1987,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">B2B Daily Spend Growth (raw panel data)</div>
-        <div class="section-sub">B2B Spend Panel · average spend per day ($K/day) · log scale · Jun 2023 – May 2026</div>
+        <div class="section-sub">B2B Spend Panel · average spend per day ($K/day) · log scale · Jun 2023 – Jun 2026 · B2B panel runs ~14 days behind, Jul-26 not published yet · history restated in the Jul-23 file</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_b2bChart" height="200"></canvas></div>
@@ -1991,8 +1995,8 @@ buildDauRatio();
   <div class="section">
     <div class="section-header">
       <div>
-        <div class="section-title">Revenue Channel Mix (May 2026)</div>
-        <div class="section-sub">Reweighted observed panel spend by channel · $M / month</div>
+        <div class="section-title">Revenue Channel Mix (Jun 2026)</div>
+        <div class="section-sub">Reweighted observed panel spend by channel · $M / month · Jun-26 = latest complete channel month</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_channelChart" height="200"></canvas></div>
@@ -2004,7 +2008,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">Total Consumer Subscriptions</div>
-        <div class="section-sub">Panel-observed active subs (EOM) · Claude Pro+Max vs. ChatGPT Plus+Pro+Go · Nov 2024 – Jun 2026</div>
+        <div class="section-sub">Panel-observed active subs (EOM) · Claude Pro+Max vs. ChatGPT Plus+Pro+Go · Nov 2024 – Jul 2026 (MTD)</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_subChart" height="200"></canvas></div>
@@ -2013,7 +2017,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">Subscriptions Net Adds</div>
-        <div class="section-sub">M/M change in panel-observed subs · Jun-26 = MTD thru 6/14</div>
+        <div class="section-sub">M/M change in panel-observed subs · Jul-26 = MTD (Claude thru 7/8, ChatGPT thru 7/12)</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_netAddsChart" height="200"></canvas></div>
@@ -2025,7 +2029,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">B2B Panel Adoption</div>
-        <div class="section-sub">Share of B2B spend panel with any observed spend on each vendor · Jun 2023 – May 2026</div>
+        <div class="section-sub">Share of B2B spend panel with any observed spend on each vendor · Jun 2023 – Jun 2026 (latest B2B month) · Anthropic crossed above OpenAI in Jun-26</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_adoptionChart" height="200"></canvas></div>
@@ -2034,14 +2038,14 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">Big-Account Count (&gt;$100K annualized)</div>
-        <div class="section-sub">B2B Spend Panel · Oct 2023 – May 2026</div>
+        <div class="section-sub">B2B Spend Panel · Jun 2023 – Jun 2026 (latest B2B month)</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_bigSpenderChart" height="200"></canvas></div>
   </div>
 </div>
 
-<footer class="fade-up">Data: YipitData · "Anthropic - Jun-26 MTD Update" &amp; "OpenAI - Jun-26 MTD Update" (both published 2026-06-25) and their linked XLSX data files · B2B Spend Panel, Cloud Spend Panel, OpenRouter, E-Receipt/Transaction Panels, all thru 6/14/2026 &nbsp;|&nbsp; YipitData-labeled figures are panel-based estimates; "Disclosed" figures are sourced from company statements as reported by YipitData.</footer>
+<footer class="fade-up">Data: YipitData · "Anthropic - Jul-26 MTD Update" &amp; "OpenAI - Jul-26 MTD Update" (both published 2026-07-23) and their linked XLSX data files · B2B Spend Panel, Cloud Spend Panel, OpenRouter, E-Receipt/Transaction Panels · run-rate thru 7/12/2026, Anthropic e-receipts thru 7/8 &nbsp;|&nbsp; B2B panel is complete only through Jun-26; Jul-26 is assumed in YipitData's model. YipitData-labeled figures are panel-based estimates; "Disclosed" figures are sourced from company statements as reported by YipitData.</footer>
 
 </div><!-- /#yipitView -->
 
@@ -2595,60 +2599,91 @@ function coding_rebuildAll(){
 // ════════════════════════════════════════════════════════════
 // ── Yipit ARR Tab (Anthropic vs OpenAI) ───────────────────────
 // ════════════════════════════════════════════════════════════
-// All figures below are transcribed directly from YipitData's "Anthropic - Jun-26 MTD
-// Update" and "OpenAI - Jun-26 MTD Update" reports (both dated 2026-06-25, run-rate
-// revenue thru 6/14) and their linked XLSX data files (Key Metrics Data, B2B Spend
-// Panel, Channel Mix sheets). No figures from any other source are used.
+// All figures below are transcribed directly from YipitData's "Anthropic - Jul-26 MTD
+// Update" and "OpenAI - Jul-26 MTD Update" reports (both dated 2026-07-23, run-rate
+// thru 7/12) and their linked XLSX files (Key Metrics Data, B2B Spend Panel, Channel
+// Mix, Historical Accuracy sheets). No figures from any other source are used.
 function ymShort(ym){
   const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const p=ym.split('-'); return M[+p[1]-1]+'-'+p[0].slice(2);
 }
 
+/* ── x-axis tick helper ───────────────────────────────────────────────────────
+   Chart.js autoSkip anchors on index 0, so the newest month gets dropped
+   whenever (n-1) % spacing !== 0 — this spaces ticks BACKWARDS from the last
+   point instead, so the right-hand label is always the latest date. */
+function xTicks(step, size){
+  return {
+    autoSkip:false,
+    maxRotation:0,
+    minRotation:0,
+    font:{size: size || 9},
+    callback: function(val, idx, ticks){
+      var last = ticks.length - 1;
+      if(idx === last) return this.getLabelForValue(val);
+      return ((last - idx) % step === 0) ? this.getLabelForValue(val) : '';
+    }
+  };
+}
+
 const DATA_YIPIT = {
+  // Historical Accuracy sheet + ARR estimate table. Backtest values were restated
+  // slightly vs the Jun-25 file: ant Jun-25 4.0→3.9, Oct-25 6.9→6.8; oa Jul-25
+  // 11.3→11.4, Dec-25 19.0→18.9, May-26 36.9→36.5, Jun-26 39.5→41.8.
   arr: {
-    labels:['2025-01','2025-03','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'],
-    antReported:[1.2,2.0,3.0,4.0,4.8,5.3,null,7.0,null,9.3,13.0,19.0,30.0,41.0,null,null],
-    antYipit:   [1.2,2.1,3.3,4.0,5.1,5.6,null,6.9,null,9.1,13.4,18.2,29.0,44.1,54.0,62.4],
-    oaReported: [null,null,null,10.5,12.0,13.6,15.2,16.8,18.4,20.0,22.5,25.0,null,null,null,null],
-    oaYipit:    [null,null,null,10.2,11.3,13.4,15.6,17.2,18.0,19.0,21.7,26.1,29.4,31.9,36.9,39.5],
+    labels:['2025-01','2025-03','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07'],
+    antReported:[1.2,2.0,3.0,4.0,4.8,5.3,null,7.0,null,9.3,13.0,19.0,30.0,41.0,null,null,null],
+    antYipit:   [1.2,2.1,3.3,3.9,5.1,5.6,null,6.8,null,9.1,13.6,18.3,28.9,44.2,52.8,67.2,73.1],
+    oaReported: [null,null,null,10.5,12.0,13.6,15.2,16.8,18.4,20.0,22.5,25.0,null,null,null,null,null],
+    oaYipit:    [null,null,null,10.2,11.4,13.4,15.6,17.2,18.0,18.9,21.9,26.2,29.3,31.9,36.5,41.8,44.9],
   },
+  // Market Share table, "Total Run-Rate Revenue" row. Mar-26 restated 50/50 → 51/49.
   share: {
-    labels:['2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'],
-    ant:[33,37,43,50,56,59,61],
-    oa:[67,63,57,50,44,41,39],
+    labels:['2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07'],
+    ant:[33,37,43,51,56,59,62,62],
+    oa: [67,63,57,49,44,41,38,38],
   },
+  // B2B Spend Panel · "Spend Per Day" row ÷ 1000 → $K/day. Restated history.
   b2bSpend: {
-    labels:['2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05'],
-    ant:[0.008,0.03,0.045,0.048,0.052,0.06,0.059,0.049,0.052,0.084,0.303,0.349,0.618,0.748,0.965,0.884,1.254,1.991,2.812,3.002,3.358,3.77,4.096,5.095,7.144,9.165,10.718,14.965,17.486,20.292,23.075,30.5,41.252,63.015,89.285,108.794],
-    oa:[0.929,1.074,1.248,1.654,2.065,2.552,2.975,3.004,3.956,4.677,5.7,7.133,8.147,9.341,9.424,9.035,10.108,10.681,11.412,11.049,13.093,15.307,16.33,20.399,23.199,23.074,25.396,29.573,36.974,40.079,39.645,37.417,43.476,46.655,45.342,45.903],
+    labels:['2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'],
+    ant:[0.009,0.031,0.045,0.048,0.052,0.059,0.058,0.048,0.052,0.088,0.309,0.356,0.644,0.750,0.979,0.896,1.305,2.041,2.880,3.098,3.513,3.913,4.228,5.211,7.254,9.428,11.240,15.691,18.333,21.299,24.470,34.680,50.062,78.377,115.326,137.390,160.946],
+    oa: [1.299,1.435,1.713,2.169,2.508,2.868,3.108,3.218,4.252,5.748,6.830,8.095,9.397,10.664,10.784,10.705,11.992,12.534,13.027,14.010,16.152,18.997,20.162,23.592,25.550,26.218,28.612,33.807,42.575,46.175,43.606,42.861,50.259,54.359,54.200,53.937,57.409],
   },
+  // Channel Mix sheet, Jun-26 column. "openrouter" = all OpenRouter routes summed
+  // (direct + Bedrock + Vertex + Foundry + 3P inference). "spendhound" = B2B panel.
   channel: {
     labels:['Anthropic','OpenAI'],
-    awsCloud:[26.52,0.01],
-    azureCloud:[0.18,11.19],
-    gcpCloud:[4.56,0.00],
-    openrouter:[14.36,3.58],
-    spendhound:[6.37,3.62],
+    awsCloud:  [38.69, 0.08],
+    azureCloud:[ 0.25,13.52],
+    gcpCloud:  [ 5.01, 0.00],
+    openrouter:[17.79, 4.71],
+    spendhound:[ 9.33, 4.24],
   },
+  // Key Metrics Data · Active Subscriptions (EOM). Claude = Pro+Max,
+  // ChatGPT = Plus+Pro+Go. Jul-26 is MTD. Panel-observed counts, not user totals.
   subs: {
-    labels:['2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'],
-    claude: [1051,1142,1215,1319,1450,1483,1591,1818,2029,2204,2352,2626,2826,3027,3707,4984,7689,10010,11564,12257],
-    chatgpt:[11211,11797,12467,13317,14513,17368,19053,20753,22481,24492,25982,27536,28802,29694,31059,32374,33240,34538,35816,36378],
+    labels:['2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07'],
+    claude: [1039,1128,1201,1305,1431,1469,1582,1804,2014,2186,2334,2606,2800,2999,3668,4929,7601,9898,11426,12635,12880],
+    chatgpt:[11103,11670,12350,13195,14363,17179,18849,20535,22243,24243,25733,27277,28540,29442,30804,32103,32974,34273,35560,36959,37547],
   },
   netAdds: {
-    labels:['2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'],
-    claude: [91,73,104,131,33,108,227,211,175,148,274,200,201,680,1277,2705,2321,1554,693],
-    chatgpt:[586,670,850,1196,2855,1685,1700,1728,2011,1490,1554,1266,892,1365,1315,866,1298,1278,562],
+    labels:['2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07'],
+    claude: [89,73,104,126,38,113,222,210,172,148,272,194,199,669,1261,2672,2297,1528,1209,245],
+    chatgpt:[567,680,845,1168,2816,1670,1686,1708,2000,1490,1544,1263,902,1362,1299,871,1299,1287,1399,588],
   },
+  // B2B Spend Panel · Adoption row ×100. Restated; Anthropic crosses above
+  // OpenAI in Jun-26 (79.8 vs 79.3) for the first time.
   adoption: {
-    labels:['2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05'],
-    ant:[0.3,0.5,0.3,0.8,1.3,2.1,2.1,2.4,2.4,7.2,9.0,10.6,12.9,15.0,16.6,18.3,21.4,23.0,24.6,25.9,28.7,30.8,32.0,33.0,37.0,41.9,43.7,46.8,47.6,50.4,52.0,56.9,63.6,71.3,76.7,79.3],
-    oa: [37.4,42.4,45.4,46.0,48.6,48.8,51.5,53.5,55.3,56.4,58.4,60.5,62.8,65.4,66.7,67.9,68.4,69.3,70.3,71.5,72.8,73.6,75.2,76.7,76.7,77.7,78.1,78.3,78.1,78.1,79.0,79.1,79.3,79.3,79.8,78.3],
+    labels:['2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'],
+    ant:[0.3,0.5,0.3,0.8,1.2,1.8,2.0,2.1,2.3,7.1,9.3,10.8,12.9,15.3,16.7,18.5,21.6,22.9,24.5,25.8,28.4,30.4,31.6,32.4,36.6,42.2,43.8,46.4,47.1,50.2,52.1,56.2,63.1,71.3,76.9,79.2,79.8],
+    oa: [37.8,42.4,45.4,46.5,49.1,49.2,51.5,53.5,55.3,56.8,58.5,60.2,62.3,64.9,66.1,67.0,67.3,68.7,69.5,70.7,72.5,73.4,74.9,76.3,77.2,78.4,79.0,79.2,79.2,79.0,79.9,79.3,79.6,79.6,80.2,79.8,79.3],
   },
+  // B2B Spend Panel · "Panelists >$100k ARR" row. Restated upward materially
+  // for Anthropic (May-26 was 74 in the Jun file, now 89).
   bigSpenders: {
-    labels:['2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05'],
-    ant:[0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,2,1,1,1,2,2,6,5,7,12,15,17,24,34,51,59,74],
-    oa: [1,1,2,1,0,4,5,6,6,8,8,7,9,8,11,10,9,10,10,14,17,18,20,20,28,27,25,25,24,28,25,26],
+    labels:['2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'],
+    ant:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,2,1,1,1,2,2,6,5,6,12,17,20,28,41,56,67,89,98],
+    oa: [0,0,1,1,2,2,2,1,0,5,6,6,7,9,10,9,11,10,12,13,12,13,14,19,22,22,22,25,33,32,28,28,26,31,30,29,37],
   },
 };
 
@@ -2670,7 +2705,7 @@ function y_buildArr(){
     options:{
       responsive:true,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>i.parsed.y!==null?` ${i.dataset.label}: $${i.parsed.y}B`:null}}},
-      scales:{x:{grid:gridCfg,ticks:{font:{size:9},maxTicksLimit:10}},y:{type:'logarithmic',grid:gridCfg,ticks:{callback:v=>'$'+v+'B',font:{size:10}},min:0.8,max:100}}
+      scales:{x:{grid:gridCfg,ticks:xTicks(2)},y:{type:'logarithmic',grid:gridCfg,ticks:{callback:v=>'$'+v+'B',font:{size:10}},min:0.8,max:100}}
     }
   });
 }
@@ -2688,7 +2723,7 @@ function y_buildShare(){
     options:{
       responsive:true,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>` ${i.dataset.label}: ${i.parsed.y}%`}}},
-      scales:{x:{grid:gridCfg,ticks:{font:{size:9}}},y:{grid:gridCfg,ticks:{callback:v=>v+'%',font:{size:10}},max:80,min:20}}
+      scales:{x:{grid:gridCfg,ticks:xTicks(1)},y:{grid:gridCfg,ticks:{callback:v=>v+'%',font:{size:10}},max:80,min:20}}
     }
   });
 }
@@ -2706,7 +2741,7 @@ function y_buildB2b(){
     options:{
       responsive:true,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>` ${i.dataset.label}: $${i.parsed.y.toFixed(1)}K/day`}}},
-      scales:{x:{grid:gridCfg,ticks:{font:{size:9},maxTicksLimit:10}},y:{type:'logarithmic',grid:gridCfg,ticks:{callback:v=>'$'+v+'K',font:{size:9}},min:0.005}}
+      scales:{x:{grid:gridCfg,ticks:xTicks(6)},y:{type:'logarithmic',grid:gridCfg,ticks:{callback:v=>'$'+v+'K',font:{size:9}},min:0.005}}
     }
   });
 }
@@ -2745,7 +2780,7 @@ function y_buildSub(){
     options:{
       responsive:true,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>` ${i.dataset.label}: ${i.parsed.y.toLocaleString()} (panel-observed)`}}},
-      scales:{x:{grid:gridCfg,ticks:{font:{size:9},maxTicksLimit:10}},y:{grid:gridCfg,ticks:{callback:v=>(v/1000).toFixed(0)+'K',font:{size:9}}}}
+      scales:{x:{grid:gridCfg,ticks:xTicks(4)},y:{grid:gridCfg,ticks:{callback:v=>(v/1000).toFixed(0)+'K',font:{size:9}}}}
     }
   });
 }
@@ -2763,7 +2798,7 @@ function y_buildNetAdds(){
     options:{
       responsive:true,
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>` ${i.dataset.label}: ${i.parsed.y.toLocaleString()}`}}},
-      scales:{x:{grid:gridCfg,ticks:{font:{size:8},maxTicksLimit:10}},y:{grid:gridCfg,ticks:{font:{size:9}}}}
+      scales:{x:{grid:gridCfg,ticks:xTicks(3,8)},y:{grid:gridCfg,ticks:{font:{size:9}}}}
     }
   });
 }
@@ -2781,7 +2816,7 @@ function y_buildAdoption(){
     options:{
       responsive:true,interaction:{mode:'index',intersect:false},
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>` ${i.dataset.label}: ${i.parsed.y.toFixed(1)}%`}}},
-      scales:{x:{grid:gridCfg,ticks:{font:{size:9},maxTicksLimit:10}},y:{grid:gridCfg,ticks:{callback:v=>v+'%',font:{size:9}},min:0,max:90}}
+      scales:{x:{grid:gridCfg,ticks:xTicks(6)},y:{grid:gridCfg,ticks:{callback:v=>v+'%',font:{size:9}},min:0,max:90}}
     }
   });
 }
@@ -2798,8 +2833,8 @@ function y_buildBigSpenders(){
     ]},
     options:{
       responsive:true,interaction:{mode:'index',intersect:false},
-      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>` ${i.dataset.label}: ${i.parsed.y} panelists`}}},
-      scales:{x:{grid:gridCfg,ticks:{font:{size:9},maxTicksLimit:10}},y:{grid:gridCfg,ticks:{font:{size:9}},min:0}}
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},usePointStyle:true}},tooltip:{callbacks:{label:i=>` ${i.dataset.label}: ${i.parsed.y}`}}},
+      scales:{x:{grid:gridCfg,ticks:xTicks(6)},y:{grid:gridCfg,ticks:{font:{size:9}},min:0}}
     }
   });
 }
