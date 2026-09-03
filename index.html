@@ -2291,11 +2291,11 @@ buildDauRatio();
   <div class="header-top">
     <div>
       <div class="header-title">Yipit ARR Tracker</div>
-      <div class="header-subtitle">Anthropic vs. OpenAI — Competitive ARR Landscape &nbsp;|&nbsp; YipitData Run-Rate Revenue Estimates thru Jul 26, 2026 (MTD) &nbsp;|&nbsp; B2B / Cloud / OpenRouter / Consumer Panels</div>
+      <div class="header-subtitle">Anthropic vs. OpenAI — Competitive ARR Landscape &nbsp;|&nbsp; YipitData Run-Rate Revenue Estimates thru Aug 16, 2026 (MTD) &nbsp;|&nbsp; B2B / Cloud / OpenRouter / Consumer Panels</div>
     </div>
     <div class="badges">
       <div class="badge">Source: <b>YipitData</b></div>
-      <div class="badge">Report: <b>Aug 5, 2026</b></div>
+      <div class="badge">Data file: <b>Aug 20, 2026</b></div>
       <div class="badge">Frequency: <b>Biweekly</b></div>
     </div>
   </div>
@@ -2303,19 +2303,19 @@ buildDauRatio();
 
 <div class="kpi-row fade-up" style="grid-template-columns:repeat(2,1fr)">
   <div class="kpi cla">
-    <div class="kpi-name">Anthropic ARR (thru 7/26)</div>
-    <div class="kpi-metric"><div class="val">$80.0B</div></div>
-    <div class="kpi-note">Net add vs end of Jun: <span class="chg up">+$12.8B</span> (from $67.2B)</div>
+    <div class="kpi-name">Anthropic ARR (Aug-26 MTD)</div>
+    <div class="kpi-metric"><div class="val">$64.4B</div></div>
+    <div class="kpi-note">vs Jul-26 $68.2B: <span class="chg down">-$3.8B</span> · Jul-26 itself restated down from $80.0B</div>
   </div>
   <div class="kpi gpt">
-    <div class="kpi-name">OpenAI ARR (thru 7/26)</div>
-    <div class="kpi-metric"><div class="val">$47.0B</div></div>
-    <div class="kpi-note">Net add vs end of Jun: <span class="chg up">+$5.2B</span> (from $41.8B)</div>
+    <div class="kpi-name">OpenAI ARR (Aug-26 MTD)</div>
+    <div class="kpi-metric"><div class="val">$39.5B</div></div>
+    <div class="kpi-note">vs Jul-26 $38.4B: <span class="chg up">+$1.2B</span> · Jul-26 itself restated down from $47.0B</div>
   </div>
 </div>
 
 <div style="font-size:.72rem;color:var(--muted);margin:-6px 0 16px;font-style:italic">
-  Restatement note: YipitData lowered its end-Jun Anthropic estimate from ~$69B to $67.2B after B2B panel data landed through June and new customers entered the panel. All B2B panel series below are on the restated basis and differ from the Jun-25 file. Anthropic's May-26 ARR is now company-confirmed at ~$47B (was a $52.8B YipitData estimate in the prior file); B2B adoption % series were also revised (see Aug-05 update note below).
+  Restatement note (Aug-20 data file): this release cut both estimates hard. Anthropic's Jul-26 run-rate goes from $80.0B to <b>$68.2B</b> and Jun-26 from $67.2B to <b>$59.1B</b>; OpenAI's Jul-26 goes from $47.0B to <b>$38.4B</b> and Jun-26 from $41.8B to <b>$34.6B</b>. The ratio barely moves (1.70x → 1.78x), so the restatement is about the level, not the race. Two other definitional changes matter: Anthropic's May-26 is <b>no longer treated as a disclosure</b> — YipitData interpolates the month-end at $49B and footnotes the company's ~$47B as a mid-May (5/15) figure — while Jul-26 is newly disclosed for both (Bloomberg: Anthropic over $65B, OpenAI over $38B). B2B panel adoption was restated <b>up</b>, and the Jun-26 crossover reversed: OpenAI is back ahead in Jun-26 (79.9% vs 79.5%) and Anthropic only leads in Jul-26 (79.8% vs 79.0%).
 </div>
 
 <!-- Key Takeaways temporarily hidden (2026-07-21); text refreshed for the Jul-26 report
@@ -2335,7 +2335,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">ARR Growth Trajectory</div>
-        <div class="section-sub">Dashed = company-disclosed/interpolated · Solid = YipitData estimate · $B · Anthropic frm Jan-25, OpenAI frm Jun-25 · latest point Jul-26 (MTD 7/26)</div>
+        <div class="section-sub">Dashed = company-disclosed only (months YipitData interpolates are left blank) · Solid = YipitData estimate · $B · both series frm Jan-25 · latest point Aug-26 (MTD, OpenRouter thru 8/16)</div>
       </div>
       <div class="tabs">
         <button class="tab" onclick="y_setArrScale('linear',this)" id="y_arrScaleLinear">Linear</button>
@@ -2348,7 +2348,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title" id="yp_shareTitle">Monthly Net-New ARR (total run-rate revenue)</div>
-        <div class="section-sub" id="yp_shareSub">M/M change in YipitData run-rate estimate · $B · Jan → Jul 2026 · Jul = MTD 7/26 vs end-Jun</div>
+        <div class="section-sub" id="yp_shareSub">M/M change in YipitData run-rate estimate · $B · Jan → Aug 2026 · Aug = MTD vs end-Jul, on the restated basis</div>
       </div>
       <div class="tabs">
         <button class="tab active" onclick="y_setShareMode('net',this)" id="y_shareModeNet">Net Adds</button>
@@ -2364,7 +2364,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">B2B Daily Spend Growth (raw panel data)</div>
-        <div class="section-sub">B2B Spend Panel · average spend per day ($K/day) · log scale · Jun 2023 – Jun 2026 · B2B panel runs ~14 days behind, Jul-26 not published yet · history restated in the Jul-23 file</div>
+        <div class="section-sub">B2B Spend Panel · average spend per day ($K/day) · log scale · Jun 2023 – <b>Jul 2026</b> · panel runs ~3 weeks behind, so Aug-26 is not published yet · full history restated in the Aug-20 file</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_b2bChart" height="200"></canvas></div>
@@ -2373,7 +2373,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">Revenue Channel Mix (Jun 2026)</div>
-        <div class="section-sub">Reweighted observed panel spend by channel · $M / month · Jun-26 = latest complete channel month</div>
+        <div class="section-sub">Observed panel spend by channel · $M / month · <b>Jul-26</b> = latest complete channel month · levels are ~half the Jun-26 figures shown here previously (cloud rows restated; block rebuilt from the Aug-20 file rather than reconciled)</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_channelChart" height="200"></canvas></div>
@@ -2385,7 +2385,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">Total Consumer Subscriptions</div>
-        <div class="section-sub">Panel-observed active subs (EOM) · Claude Pro+Max vs. ChatGPT Plus+Pro+Go · Nov 2024 – Jul 2026 (MTD)</div>
+        <div class="section-sub">Panel-observed active subs (EOM) · Claude Pro+Max vs. ChatGPT Plus+Pro+Go · Nov 2024 – <b>Aug 2026</b> (MTD, thru 8/15) · whole series restated slightly lower in the Aug-20 file</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_subChart" height="200"></canvas></div>
@@ -2394,7 +2394,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">Subscriptions Net Adds</div>
-        <div class="section-sub">M/M change in panel-observed subs · Jul-26 = MTD (Claude &amp; ChatGPT active-subscription counts thru 7/26)</div>
+        <div class="section-sub">M/M change in panel-observed subs · <b>Aug-26 = MTD</b> (counts only thru 8/15, so the last bar is a partial month and understates the full-month add)</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_netAddsChart" height="200"></canvas></div>
@@ -2406,7 +2406,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">B2B Panel Adoption</div>
-        <div class="section-sub">Share of B2B spend panel with any observed spend on each vendor · Jun 2023 – Jun 2026 (latest B2B month) · Anthropic crossed above OpenAI in Jun-26</div>
+        <div class="section-sub">Share of B2B spend panel with any observed spend on each vendor · Jun 2023 – <b>Jul 2026</b> (latest B2B month) · restated up in the Aug-20 file and the crossover moved: OpenAI is ahead again in Jun-26 (79.9 vs 79.5), Anthropic leads only in Jul-26 (79.8 vs 79.0)</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_adoptionChart" height="200"></canvas></div>
@@ -2415,7 +2415,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">Big-Account Count (&gt;$100K annualized)</div>
-        <div class="section-sub">B2B Spend Panel · Jun 2023 – Jun 2026 (latest B2B month)</div>
+        <div class="section-sub">B2B Spend Panel · Jun 2023 – <b>Jul 2026</b> (latest B2B month) · Anthropic 111 accounts &gt;$100K vs OpenAI 44 in Jul-26</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_bigSpenderChart" height="200"></canvas></div>
@@ -2427,7 +2427,7 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">Monthly Net-New Adopting Companies (NEW)</div>
-        <div class="section-sub">Same 674-company Yipit B2B panel sample, OpenAI vs Anthropic · Jul 2025 – Jun 2026 (latest B2B month) · Anthropic net-new peaked Mar-26 (54), OpenAI has been net-negative several months</div>
+        <div class="section-sub">Same 674-company Yipit B2B panel sample, OpenAI vs Anthropic · Jul 2025 – Jun 2026 · <b>not refreshed by the Aug-20 file</b> (no counterpart sheet) — still on the Aug-05 basis, while the adoption chart above was restated</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_monthlyNetAddsChart" height="200"></canvas></div>
@@ -2436,14 +2436,14 @@ buildDauRatio();
     <div class="section-header">
       <div>
         <div class="section-title">Adoption MoM Growth Rate (NEW)</div>
-        <div class="section-sub">M/M % growth in adopting-company count, same sample · Jul 2025 – Jun 2026 (latest B2B month) · Anthropic's growth rate has cooled from its Mar-26 peak (13%) to under 1% by Jun-26</div>
+        <div class="section-sub">M/M % growth in adopting-company count, same sample · Jul 2025 – Jun 2026 · <b>not refreshed by the Aug-20 file</b> — Anthropic's growth rate cooled from its Mar-26 peak (13%) to under 1% by Jun-26 on that older basis</div>
       </div>
     </div>
     <div class="chart-wrap"><canvas id="yp_momGrowthChart" height="200"></canvas></div>
   </div>
 </div>
 
-<footer class="fade-up">Data: YipitData · "Anthropic - Jul-26 MTD Update" &amp; "OpenAI - Jul-26 MTD Update" (both published 2026-08-05) and their linked XLSX data files · B2B Spend Panel, Cloud Spend Panel, OpenRouter, E-Receipt/Transaction Panels · run-rate thru 7/26/2026 &nbsp;|&nbsp; B2B panel is complete only through Jun-26; Jul-26 is assumed in YipitData's model. YipitData-labeled figures are panel-based estimates; "Disclosed" figures are sourced from company statements as reported by YipitData. Updated 2026-08-19.</footer>
+<footer class="fade-up">Data: YipitData Anthropic &amp; OpenAI data files dated <b>2026-08-20</b> · Key Metrics Modeling, ARR Metrics Data, B2B Spend Panel, Channel Mix sheets · B2B / Cloud / OpenRouter / Consumer Transaction panels &nbsp;|&nbsp; Panel cut-offs differ: OpenRouter thru 8/16, Cloud API thru 8/09, subscriptions thru 8/15, and the <b>B2B panel has no Aug-26 data at all</b> (complete only thru Jul-26) — YipitData rescales its coverage ratio to fill the gap, so the Aug-26 point is the softest on the page. YipitData-labeled figures are panel-based estimates; "Disclosed" figures are company statements as reported by YipitData. The workbooks ship formulas without cached values; all series here were recomputed from the models. Updated 2026-09-03.</footer>
 
 </div><!-- /#yipitView -->
 
@@ -3202,17 +3202,23 @@ function coding_rebuildAll(){
 // ════════════════════════════════════════════════════════════
 // ── Yipit ARR Tab (Anthropic vs OpenAI) ───────────────────────
 // ════════════════════════════════════════════════════════════
-// All figures below are transcribed directly from YipitData's "Anthropic - Jul-26 MTD
-// Update" and "OpenAI - Jul-26 MTD Update" reports (both dated 2026-08-05, run-rate
-// thru 7/26) and their linked XLSX files (Key Metrics Data, B2B Spend Panel, Channel
-// Mix, Historical Accuracy sheets). No figures from any other source are used.
-// 2026-08-19 update: arr.antYipit/oaYipit Jul-26 refreshed to $80.0B / $47.0B (MTD
-// thru 7/26); arr.antReported May-26 set to $47B (now company-confirmed, was null);
-// share Jul-26 refreshed to 63/37; subs.claude/chatgpt + netAdds recomputed thru
-// Jul-26 from the Aug-05 Key Metrics Data sheets; adoption.ant/oa refreshed for all
-// months (Yipit revised the panel-adoption denominator between the Jul-23 and Aug-05
-// files — b2bSpend, channel and bigSpenders were checked against the Aug-05 file and
-// left unchanged, as they matched to within rounding).
+// All figures below are transcribed directly from the YipitData Anthropic and OpenAI
+// data files dated 2026-08-20 (Key Metrics Modeling, ARR Metrics Data, B2B Spend
+// Panel, Channel Mix sheets). No figures from any other source are used.
+// 2026-09-03 update — this was a REBUILD, not an append. The Aug-20 files ship
+// formulas with no cached values; every series here was recomputed from the workbook
+// and the whole history was restated, in several places materially:
+//   · Anthropic Jul-26 estimate $80.0B → $68.2B; Jun-26 $67.2B → $59.1B
+//   · OpenAI    Jul-26 estimate $47.0B → $38.4B; Jun-26 $41.8B → $34.6B
+//   · Anthropic May-26 is no longer a disclosure — YipitData now interpolates the
+//     month-end at $49B and footnotes the company's ~$47B as a mid-May (5/15) figure,
+//     so arr.antReported May-26 goes back to null.
+//   · Jul-26 IS newly disclosed for both (Bloomberg: Anthropic >$65B, OpenAI >$38B).
+//   · B2B adoption restated UP and the Jun-26 crossover reversed (see adoption note).
+//   · Channel Mix cloud rows are ~half their prior level and are not reproducible
+//     from this file; that block was rebuilt wholesale rather than reconciled.
+// monthlyAdoption is the one block NOT refreshed — it has no counterpart in these
+// files. See its own note.
 function ymShort(ym){
   const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const p=ym.split('-'); return M[+p[1]-1]+'-'+p[0].slice(2);
@@ -3237,70 +3243,75 @@ function xTicks(step, size){
 }
 
 const DATA_YIPIT = {
-  // Historical Accuracy sheet + ARR estimate table. Backtest values were restated
-  // slightly vs the Jun-25 file: ant Jun-25 4.0→3.9, Oct-25 6.9→6.8; oa Jul-25
-  // 11.3→11.4, Dec-25 19.0→18.9, May-26 36.9→36.5, Jun-26 39.5→41.8.
+  // ARR estimates: Key Metrics Modeling r93 (YipitData estimate, $B) and r73
+  // (disclosed benchmark, $M/1000). antReported/oaReported carry ONLY months where
+  // r73 is a hard-coded disclosure; months YipitData linearly interpolates are null.
+  // Aug-26 is MTD (OpenRouter thru 8/16, Cloud API thru 8/09, subs thru 8/15) and the
+  // B2B panel has NO Aug data at all — the model rescales coverage to compensate.
   arr: {
-    labels:['2025-01','2025-03','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07'],
-    antReported:[1.2,2.0,3.0,4.0,4.8,5.3,null,7.0,null,9.3,13.0,19.0,30.0,41.0,47.0,null,null],
-    antYipit:   [1.2,2.1,3.3,3.9,5.1,5.6,null,6.8,null,9.1,13.6,18.3,28.9,44.2,52.8,67.2,80.0],
-    oaReported: [null,null,null,10.5,12.0,13.6,15.2,16.8,18.4,20.0,22.5,25.0,null,null,null,null,null],
-    oaYipit:    [null,null,null,10.2,11.4,13.4,15.6,17.2,18.0,18.9,21.9,26.2,29.3,31.9,36.5,41.8,47.0],
+    labels:['2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08'],
+    antReported:[1.2,null,2.0,null,3.0,4.0,4.75,5.25,null,7.0,null,9.25,13.0,19.0,30.0,41.0,null,null,65.0,null],
+    antYipit:   [1.2,1.6,1.9,2.1,2.6,4.0,5.1,5.6,5.9,6.6,7.6,8.4,13.8,18.5,29.9,43.7,50.4,59.1,68.2,64.4],
+    oaReported: [null,null,null,null,null,10.5,12.0,null,null,null,null,20.0,null,25.0,null,null,null,null,38.0,null],
+    oaYipit:    [6.3,7.0,8.2,9.1,10.3,11.4,11.2,13.4,14.9,16.4,17.5,17.8,21.3,24.1,29.1,31.2,30.8,34.6,38.4,39.5],
   },
-  // Market Share table, "Total Run-Rate Revenue" row. Mar-26 restated 50/50 → 51/49.
+  // Derived: antYipit / (antYipit + oaYipit). Not a YipitData-published series.
   share: {
-    labels:['2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07'],
-    ant:[33,37,43,51,56,59,62,63],
-    oa: [67,63,57,49,44,41,38,37],
+    labels:['2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08'],
+    ant:[32,39,43,51,58,62,63,64,62],
+    oa: [68,61,57,49,42,38,37,36,38],
   },
-  // B2B Spend Panel · "Spend Per Day" row ÷ 1000 → $K/day. Restated history.
+  // B2B Spend Panel r11 "Spend Per Day" ÷ 1000 → $K/day. Panel now complete thru Jul-26.
   b2bSpend: {
-    labels:['2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'],
-    ant:[0.009,0.031,0.045,0.048,0.052,0.059,0.058,0.048,0.052,0.088,0.309,0.356,0.644,0.750,0.979,0.896,1.305,2.041,2.880,3.098,3.513,3.913,4.228,5.211,7.254,9.428,11.240,15.691,18.333,21.299,24.470,34.680,50.062,78.377,115.326,137.390,160.946],
-    oa: [1.299,1.435,1.713,2.169,2.508,2.868,3.108,3.218,4.252,5.748,6.830,8.095,9.397,10.664,10.784,10.705,11.992,12.534,13.027,14.010,16.152,18.997,20.162,23.592,25.550,26.218,28.612,33.807,42.575,46.175,43.606,42.861,50.259,54.359,54.200,53.937,57.409],
+    labels:['2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07'],
+    ant:[0.009,0.031,0.045,0.048,0.052,0.059,0.058,0.048,0.052,0.083,0.297,0.321,0.594,0.702,0.925,0.834,1.233,1.961,2.536,2.691,3.171,3.574,3.922,4.93,6.944,9.072,10.833,15.138,17.855,20.332,22.867,32.605,47.135,73.801,104.361,128.088,153.367,178.483],
+    oa: [1.294,1.464,1.749,2.22,2.553,2.874,3.056,2.966,4.164,5.803,7.044,8.311,9.692,10.862,10.244,11.191,12.522,12.035,12.806,13.627,14.908,17.934,18.817,21.826,25.071,26.238,31.821,36.671,41.717,44.729,43.695,40.491,47.422,49.8,48.479,49.363,56.927,59.502],
   },
-  // Channel Mix sheet, Jun-26 column. "openrouter" = all OpenRouter routes summed
-  // (direct + Bedrock + Vertex + Foundry + 3P inference). "spendhound" = B2B panel.
+  // Channel Mix sheet, Jul-26 column, observed monthly panel spend ($M).
+  // "openrouter" sums every OpenRouter route (direct + Bedrock + Azure + Vertex +
+  // 3P inference + other); "spendhound" is the B2B panel. NOTE: these levels are
+  // roughly half the Jun-26 figures transcribed from the Aug-05 file and are not
+  // reproducible from this file — the cloud rows were restated. Rebuilt wholesale.
   channel: {
     labels:['Anthropic','OpenAI'],
-    awsCloud:  [38.69, 0.08],
-    azureCloud:[ 0.25,13.52],
-    gcpCloud:  [ 5.01, 0.00],
-    openrouter:[17.79, 4.71],
-    spendhound:[ 9.33, 4.24],
+    awsCloud:  [17.53, 0.05],
+    azureCloud:[0.28, 5.59],
+    gcpCloud:  [3.83, 0.0],
+    openrouter:[9.75, 3.14],
+    spendhound:[10.84, 4.77],
   },
-  // Key Metrics Data · Active Subscriptions (EOM). Claude = Pro+Max,
-  // ChatGPT = Plus+Pro+Go. Jul-26 is MTD. Panel-observed counts, not user totals.
+  // ARR Metrics Data · Active Subscriptions (EOM), panel-observed counts (000s-scale
+  // panel units, not user totals). Claude = Pro+Max, ChatGPT = Plus+Pro+Go.
+  // Aug-26 is MTD (thru 8/15). Whole series restated slightly vs the Aug-05 file.
   subs: {
-    labels:['2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07'],
-    claude: [1030,1116,1195,1296,1422,1461,1573,1792,2003,2176,2321,2595,2790,2987,3650,4908,7559,9840,11358,12552,13114],
-    chatgpt:[11026,11592,12272,13110,14277,17075,18737,20409,22115,24097,25573,27123,28383,29277,30624,31925,32792,34076,35366,36754,38162],
+    labels:['2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08'],
+    claude: [1021,1105,1183,1284,1410,1447,1556,1779,1989,2162,2306,2577,2775,2963,3624,4878,7514,9784,11294,12489,13182,13348],
+    chatgpt:[10954,11515,12187,13024,14191,16973,18623,20279,21966,23945,25420,26964,28223,29096,30454,31760,32617,33898,35180,36575,38409,39063],
   },
   netAdds: {
-    labels:['2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07'],
-    claude: [86,79,101,126,39,112,219,211,173,145,274,195,197,663,1258,2651,2281,1518,1194,562],
-    chatgpt:[566,680,838,1167,2798,1662,1672,1706,1982,1476,1550,1260,894,1347,1301,867,1284,1290,1388,1408],
+    labels:['2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07','2026-08'],
+    claude: [84,78,101,126,37,109,223,210,173,144,271,198,188,661,1254,2636,2270,1510,1195,693,166],
+    chatgpt:[561,672,837,1167,2782,1650,1656,1687,1979,1475,1544,1259,873,1358,1306,857,1281,1282,1395,1834,654],
   },
-  // B2B Spend Panel · Adoption row ×100. Restated again in the Aug-05 file (denominator
-  // revised down across the whole series); Anthropic still leads OpenAI in Jun-26
-  // (77.89 vs 77.45, previously 79.8 vs 79.3) — ordering holds, absolute level lower.
+  // B2B Spend Panel r23 Adoption ×100. Restated up vs the Aug-05 file (Jun-26 ant
+  // 77.89→79.46, oa 77.45→79.91) — and the Jun-26 crossover REVERSED: on this file
+  // OpenAI is back ahead in Jun-26 (79.91 vs 79.46) and Anthropic only leads in Jul-26
+  // (79.76 vs 79.00).
   adoption: {
-    labels:['2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'],
-    ant:[0.3,0.45,0.3,0.74,1.19,1.78,1.93,2.08,2.23,6.97,9.05,10.53,12.61,14.99,16.32,18.1,21.07,22.4,23.89,25.22,27.74,29.67,30.86,31.6,35.76,41.25,42.73,45.25,45.99,48.96,50.89,54.9,61.57,69.58,75.07,77.3,77.89],
-    oa: [36.94,41.39,44.36,45.4,47.92,48.07,50.3,52.23,54.01,55.49,57.12,58.75,60.83,63.35,64.54,65.43,65.73,67.06,67.8,68.99,70.77,71.66,73.15,74.48,75.37,76.56,77.15,77.3,77.3,77.15,78.04,77.45,77.74,77.74,78.34,77.89,77.45],
+    labels:['2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07'],
+    ant:[0.3,0.45,0.3,0.76,1.21,1.81,1.96,2.11,2.27,6.65,8.91,10.42,12.69,14.8,15.86,17.67,20.85,22.21,23.41,24.77,27.34,28.85,30.21,31.12,34.89,40.79,42.45,45.02,45.77,48.79,50.76,55.29,61.93,70.69,76.28,78.85,79.46,79.76],
+    oa: [37.61,41.54,44.71,45.77,48.49,49.09,51.66,52.72,54.83,56.8,58.46,60.27,61.93,64.95,65.86,66.77,67.22,68.28,69.03,70.39,72.36,73.11,74.47,75.98,76.74,78.25,79.0,79.46,79.15,79.15,80.06,79.61,79.76,79.91,80.06,79.61,79.91,79.0],
   },
-  // B2B Spend Panel · "Panelists >$100k ARR" row. Restated upward materially
-  // for Anthropic (May-26 was 74 in the Jun file, now 89).
+  // B2B Spend Panel r26 "Panelists >$100k ARR".
   bigSpenders: {
-    labels:['2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'],
-    ant:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,2,1,1,1,2,2,6,5,6,12,17,20,28,41,56,67,89,98],
-    oa: [0,0,1,1,2,2,2,1,0,5,6,6,7,9,10,9,11,10,12,13,12,13,14,19,22,22,22,25,33,32,28,28,26,31,30,29,37],
+    labels:['2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12','2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12','2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06','2026-07'],
+    ant:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,2,1,1,1,2,2,6,5,6,13,16,17,25,39,52,62,87,95,111],
+    oa: [0,0,1,1,2,2,2,1,0,5,6,6,7,9,9,9,10,9,9,10,9,11,12,16,20,20,20,23,31,30,27,26,23,27,26,26,32,44],
   },
-  // NEW (2026-08-19): same-sample (674-company) monthly net-new adopting
-  // companies + MoM adoption growth rate, OpenAI vs Anthropic. Ported from a
-  // separate Yipit B2B panel comparison export (SQL run against saved monthly
-  // snapshots from both companies' workbooks), not from the ARR data files
-  // above. Same B2B panel lag as everything else here — Jun-26 is latest.
+  // NOT refreshed by the Aug-20 files: ported from a separate 674-company same-sample
+  // B2B comparison export (Aug-05 vintage) and still ends at Jun-26. The adoption
+  // series above was restated in the Aug-20 file, so this block is on an older basis
+  // and should not be read against it month-for-month.
   monthlyAdoption: {
     labels:['2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'],
     antNet:[37,10,17,5,20,13,27,45,54,37,15,4],
@@ -3365,7 +3376,7 @@ function y_buildShare(){
   if(y_shareMode==='net'){
     const N=y_arrNetAdds();
     title.textContent='Monthly Net-New ARR (total run-rate revenue)';
-    sub.textContent='M/M change in YipitData run-rate estimate · $B · Jan → Jul 2026 · Jul = MTD 7/26 vs end-Jun';
+    sub.textContent='M/M change in YipitData run-rate estimate · $B · Jan → Aug 2026 · Aug = MTD vs end-Jul, on the restated basis';
     const fmt=v=>(v<0?'−$':'+$')+Math.abs(v)+'B';
     yp_shareChart=new Chart(ctx,{
       type:'bar',
