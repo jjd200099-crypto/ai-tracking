@@ -2243,16 +2243,17 @@ buildDauRatio();
       <div class="section-title">Public GitHub Repository Activity</div>
       <div class="section-sub">OpenAI vs Anthropic · Jan 2025 – Aug 2026 · 官方公开仓库修改量 · Collected Sep 10, 2026</div>
     </div>
-    <div class="tabs" id="c_publicGithubTabs">
-      <button class="tab active" aria-pressed="true" onclick="coding_setPublicGithub('lines_changed',this)">Lines changed</button>
-      <button class="tab" aria-pressed="false" onclick="coding_setPublicGithub('commits',this)">Commits</button>
-    </div>
   </div>
   <div class="row2" style="margin-bottom:16px">
 <div class="kpi"><div class="kpi-name">OpenAI · August 2026</div><div class="kpi-metrics"><div class="kpi-metric"><label>Lines changed</label><div class="val">3,958,685</div><div class="chg">+119.5% MoM</div></div><div class="kpi-metric"><label>Commits</label><div class="val">3,543</div><div class="chg">+71.4% MoM</div></div></div></div>
 <div class="kpi"><div class="kpi-name">Anthropic · August 2026</div><div class="kpi-metrics"><div class="kpi-metric"><label>Lines changed</label><div class="val">1,316,469</div><div class="chg">+209.4% MoM</div></div><div class="kpi-metric"><label>Commits</label><div class="val">2,785</div><div class="chg">-13.1% MoM</div></div></div></div>
   </div>
-  <div class="chart-wrap" style="height:320px"><canvas id="c_publicGithubChart" role="img" aria-label="OpenAI 与 Anthropic 公开仓库月度活动趋势，完整数据可下载下方 CSV"></canvas></div>
+  <div class="section-title" style="margin:20px 0 6px">Monthly Lines Changed</div>
+  <div class="section-sub" style="margin-bottom:12px">新增 + 删除文本行数 · 不含合并提交</div>
+  <div class="chart-wrap" style="height:320px"><canvas id="c_publicGithubLinesChart" role="img" aria-label="OpenAI 与 Anthropic 每月文本变动行数，完整数据可下载下方 CSV"></canvas></div>
+  <div class="section-title" style="margin:24px 0 6px">Monthly Commits</div>
+  <div class="section-sub" style="margin-bottom:12px">每月提交次数 · 包含合并提交</div>
+  <div class="chart-wrap" style="height:320px"><canvas id="c_publicGithubCommitsChart" role="img" aria-label="OpenAI 与 Anthropic 每月提交次数，完整数据可下载下方 CSV"></canvas></div>
   <p class="section-sub" style="margin-top:12px;line-height:1.8"><b>口径：</b>321 个公开、非 fork 仓库，按当前默认分支历史及 UTC 提交时间归月。提交数包含合并；变动行数 = 新增 + 删除，排除合并并识别文件改名。包括文档、生成文件与数据集。这里统计公司仓库活动，与下方 Claude Code co-authored commits（工具使用痕迹）不同。</p>
   <details style="font-size:12px;line-height:1.8;margin-top:12px">
     <summary style="cursor:pointer;font-weight:600">复现核对与关键解释 · 8 月四项数字精确匹配 TickerTrends 原图</summary>
@@ -3216,11 +3217,11 @@ function coding_buildRamp(){
   });
 }
 
-let c_publicGithubChart, c_publicGithubMetric = 'lines_changed';
+let c_publicGithubCharts = [];
 function coding_buildPublicGithub(){
-  if(c_publicGithubChart) c_publicGithubChart.destroy();
-  const D = DATA_PUBLIC_GITHUB, metric = c_publicGithubMetric;
-  c_publicGithubChart = new Chart(document.getElementById('c_publicGithubChart'), {
+  c_publicGithubCharts.forEach(chart=>chart.destroy());
+  const D = DATA_PUBLIC_GITHUB;
+  c_publicGithubCharts = [['lines_changed','c_publicGithubLinesChart'],['commits','c_publicGithubCommitsChart']].map(([metric,id])=>new Chart(document.getElementById(id), {
     type:'bar',
     data:{labels:D.months.map(coding_shortDate),datasets:[
       {label:'OpenAI',data:D.organizations.openai[metric],backgroundColor:'#5946db',borderRadius:3},
@@ -3230,13 +3231,7 @@ function coding_buildPublicGithub(){
       plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},tooltip:{callbacks:{label:i=>' '+i.dataset.label+': '+i.parsed.y.toLocaleString('en-US')+(metric==='commits'?' commits':' lines changed')}}},
       scales:{x:{grid:{display:false},ticks:{maxTicksLimit:10,font:{size:10}}},y:{beginAtZero:true,grid:gridCfg,ticks:{callback:coding_fmtNum,font:{size:10}}}}
     }
-  });
-}
-function coding_setPublicGithub(metric,btn){
-  c_publicGithubMetric=metric;
-  document.querySelectorAll('#c_publicGithubTabs .tab').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false')});
-  btn.classList.add('active');btn.setAttribute('aria-pressed','true');
-  coding_buildPublicGithub();
+  }));
 }
 function coding_openGithubAnchor(){
   if(location.hash!=='#coding-github') return;
