@@ -113,6 +113,7 @@ footer{text-align:center;color:var(--muted);font-size:.72rem;margin-top:32px;pad
   .upload-grid{grid-template-columns:1fr}
 }
 </style>
+<script src="data/github-activity/monthly.js"></script>
 </head>
 <body>
 <div style="max-width:1100px;margin:0 auto 16px;display:flex;justify-content:flex-end;padding:0 0 0">
@@ -2235,6 +2236,37 @@ buildDauRatio();
   <div class="chart-wrap"><canvas id="c_cumulativeChart" height="90"></canvas></div>
 </div>
 
+<!-- Public organization repository activity; independent of co-authored commits -->
+<div class="section fade-up" id="coding-github" style="scroll-margin-top:24px">
+  <div class="section-header">
+    <div>
+      <div class="section-title">Public GitHub Repository Activity</div>
+      <div class="section-sub">OpenAI vs Anthropic · Jan 2025 – Aug 2026 · 官方公开仓库修改量 · Collected Sep 10, 2026</div>
+    </div>
+    <div class="tabs" id="c_publicGithubTabs">
+      <button class="tab active" aria-pressed="true" onclick="coding_setPublicGithub('lines_changed',this)">Lines changed</button>
+      <button class="tab" aria-pressed="false" onclick="coding_setPublicGithub('commits',this)">Commits</button>
+    </div>
+  </div>
+  <div class="row2" style="margin-bottom:16px">
+<div class="kpi"><div class="kpi-name">OpenAI · August 2026</div><div class="kpi-metrics"><div class="kpi-metric"><label>Lines changed</label><div class="val">3,958,685</div><div class="chg">+119.5% MoM</div></div><div class="kpi-metric"><label>Commits</label><div class="val">3,543</div><div class="chg">+71.4% MoM</div></div></div></div>
+<div class="kpi"><div class="kpi-name">Anthropic · August 2026</div><div class="kpi-metrics"><div class="kpi-metric"><label>Lines changed</label><div class="val">1,316,469</div><div class="chg">+209.4% MoM</div></div><div class="kpi-metric"><label>Commits</label><div class="val">2,785</div><div class="chg">-13.1% MoM</div></div></div></div>
+  </div>
+  <div class="chart-wrap" style="height:320px"><canvas id="c_publicGithubChart" role="img" aria-label="OpenAI 与 Anthropic 公开仓库月度活动趋势，完整数据可下载下方 CSV"></canvas></div>
+  <p class="section-sub" style="margin-top:12px;line-height:1.8"><b>口径：</b>321 个公开、非 fork 仓库，按当前默认分支历史及 UTC 提交时间归月。提交数包含合并；变动行数 = 新增 + 删除，排除合并并识别文件改名。包括文档、生成文件与数据集。这里统计公司仓库活动，与下方 Claude Code co-authored commits（工具使用痕迹）不同。</p>
+  <details style="font-size:12px;line-height:1.8;margin-top:12px">
+    <summary style="cursor:pointer;font-weight:600">复现核对与关键解释 · 8 月四项数字精确匹配 TickerTrends 原图</summary>
+    <p>原图披露的 5–8 月八个行数中，六个精确一致；本次 OpenAI 5 月多 112 行、6 月多 197 行，均不足 0.02%，原因尚未确证。两次采集分别为 9 月 8 日和 9 月 10 日。</p>
+    <ul>
+      <li><b>历史归属：</b><a href="https://github.com/anthropics/OpenROAD-flow-scripts">Anthropic OpenROAD 镜像</a>在 8 月才创建，却继承了上游历史；其中 353,465 行计入 6 月，占当月总量 40.8%。GitHub 未将其标为 fork，因此原口径会纳入。</li>
+      <li><b>大批量文件：</b><a href="https://github.com/openai/ten-proofs/commit/94bc0feb6a9ff12c7d31d6de640a725c9d43d2b6">ten-proofs 一次提交</a>贡献 550,770 行，主要为 Lean 证明文件；tunnel-client 还包含大量 SPDX 软件组件清单增删。</li>
+      <li><b>提交时间不等于公开时间：</b>Anthropic commerce-agents 于 9 月 1 日创建，一条 8 月 31 日提交贡献 88,497 行，归入 8 月。</li>
+    </ul>
+  </details>
+  <p class="section-sub" style="line-height:1.8;margin-top:12px"><b>研究边界：</b>公开修改量可以反映仓库活动，不能直接衡量公司研发效率、模型进步或产品采用率；镜像历史与批量导入尤其需要拆开解读。</p>
+  <div class="section-sub" style="margin-top:12px;line-height:1.9">Source: GitHub organization API + Git history · 50,451 commits audited · <a href="data/github-activity/monthly_totals.csv" download>月度 CSV</a> · <a href="data/github-activity/repository_monthly.csv" download>仓库明细</a> · <a href="data/github-activity/复现报告.md">完整报告</a> · <a href="data/github-activity/github_activity_reproduction.zip" download>数据与脚本 ZIP</a></div>
+</div>
+
 <!-- GitHub Commits + WAU side-by-side -->
 <div class="row2 fade-up" style="margin-bottom:16px">
   <div class="section" style="margin-bottom:0">
@@ -3184,10 +3216,41 @@ function coding_buildRamp(){
   });
 }
 
+let c_publicGithubChart, c_publicGithubMetric = 'lines_changed';
+function coding_buildPublicGithub(){
+  if(c_publicGithubChart) c_publicGithubChart.destroy();
+  const D = DATA_PUBLIC_GITHUB, metric = c_publicGithubMetric;
+  c_publicGithubChart = new Chart(document.getElementById('c_publicGithubChart'), {
+    type:'bar',
+    data:{labels:D.months.map(coding_shortDate),datasets:[
+      {label:'OpenAI',data:D.organizations.openai[metric],backgroundColor:'#5946db',borderRadius:3},
+      {label:'Anthropic',data:D.organizations.anthropics[metric],backgroundColor:'#c67e64',borderRadius:3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:11}}},tooltip:{callbacks:{label:i=>' '+i.dataset.label+': '+i.parsed.y.toLocaleString('en-US')+(metric==='commits'?' commits':' lines changed')}}},
+      scales:{x:{grid:{display:false},ticks:{maxTicksLimit:10,font:{size:10}}},y:{beginAtZero:true,grid:gridCfg,ticks:{callback:coding_fmtNum,font:{size:10}}}}
+    }
+  });
+}
+function coding_setPublicGithub(metric,btn){
+  c_publicGithubMetric=metric;
+  document.querySelectorAll('#c_publicGithubTabs .tab').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false')});
+  btn.classList.add('active');btn.setAttribute('aria-pressed','true');
+  coding_buildPublicGithub();
+}
+function coding_openGithubAnchor(){
+  if(location.hash!=='#coding-github') return;
+  const btn=Array.from(document.querySelectorAll('#viewToggle .tab')).find(b=>(b.getAttribute('onclick')||'').includes("'coding'"));
+  if(btn){setView('coding',btn);requestAnimationFrame(()=>document.getElementById('coding-github').scrollIntoView());}
+}
+window.addEventListener('DOMContentLoaded',coding_openGithubAnchor);
+window.addEventListener('hashchange',coding_openGithubAnchor);
+
 function coding_rebuildAll(){
   if(c_chartsBuilt){
     [c_weeklyChart, c_shareChart, c_ratioChart, c_cumulativeChart, c_githubChart, c_vscodeChart, c_rampChart, c_wauChart].forEach(c=>{if(c)c.destroy()});
   }
+  coding_buildPublicGithub();
   coding_buildRamp();
   coding_buildWeekly();
   coding_buildShare();

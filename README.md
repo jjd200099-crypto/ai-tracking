@@ -28,6 +28,7 @@ ChatGPT / Gemini / Claude 全平台数据追踪仪表盘，覆盖 Mobile、Web�
 - 国家数据按 ChatGPT / Gemini / Claude 分别展示
 
 ### Coding / 2B
+- **Public GitHub Repository Activity**：OpenAI / Anthropic 官方公开非 fork 仓库，2025-01 至 2026-08 月度提交次数和变动行数。2026-09-10 独立复现，8 月四项数字与 TickerTrends 原图精确一致。附仓库明细、口径说明和完整数据包；镜像历史、生成文件与批量导入会影响总量。入口：[#coding-github](https://jjd200099-crypto.github.io/ai-tracking/#coding-github)
 - **Ramp AI Index B2B Penetration**：6 个 AI 供应商在美国企业付费订阅渗透率的月度趋势（Anthropic / OpenAI / Google / xAI / DeepSeek + Overall），数据从 Ramp 每月发布的 AI Index 图中数字化
 - 其余 Coding 内容（Claude Code vs Codex npm + GitHub）见下
 - **Claude Code vs Codex**：npm 周下载量趋势
